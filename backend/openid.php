@@ -37,7 +37,6 @@
             }
 
             echo "<p>User <b>" . ($isLoggedIn ? $openid->identity . "</b> has " : "has not ") . "logged in.<p>\n";
-            // $location = "intent://scan/#Intent;scheme=PeerNUS://open";
             $count = 0;
             foreach ($openid->getAttributes() as $key => $value) {
                 echo "$key => $value<br/>";
@@ -55,12 +54,8 @@
 			            . " VALUES ('%s', '%s')", $nusnet, $name);
             $rsInsertLogin = mysqli_query($conn, $queryInsertLogin);
             $rsID = mysqli_insert_id($conn);
+            # redirect to frontend
             header("Location: http://116.14.246.142:3000");
-            // $location .= ";package=edu.nus.sunlabitro.peernus;end";
-
-            // echo "<script type='application/javascript'>";
-            // echo 'window.location.href = ' . '"' . $location . '";';
-            // echo "</script>";
         }
     } catch(ErrorException $e) {
         echo $e->getMessage();
