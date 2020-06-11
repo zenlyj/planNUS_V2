@@ -39,7 +39,12 @@ class App extends Component {
 
   readCookie() {
     const user = Cookies.get("user");
-    this.setState({loggedIn: true});
+    const loggedIn = Cookies.get("loggedIn");
+    if (loggedIn === "true") {
+      Auth.login(() => {this.setState(() => ({loggedIn: true}))});
+    } else {
+      Auth.logout(() => {this.setState(() => ({loggedIn: false}))});
+    }
   }
 
   useEffect() {
@@ -58,6 +63,7 @@ class App extends Component {
 
 
   componentDidMount() {
+    this.readCookie();
     this.getData();
   }
 
