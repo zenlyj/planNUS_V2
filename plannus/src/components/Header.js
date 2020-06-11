@@ -19,7 +19,7 @@ export const Header = () => (
     <Navbar expand="lg">
       <Navbar.Brand href="/">PlanNUS</Navbar.Brand>
         <Nav className="ml-auto">
-          <Nav.Item><Nav.Link href="/">Login</Nav.Link></Nav.Item>
+          <Nav.Item><Nav.Link href="http://116.14.246.142:80/openid.php?nusnet_id">Login</Nav.Link></Nav.Item>
         </Nav>
     </Navbar>
   </Styles>

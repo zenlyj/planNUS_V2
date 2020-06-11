@@ -30,16 +30,8 @@
 <body>
 <?php
             $isLoggedIn = $openid->validate();
-            if ($isLoggedIn) {
-                echo "<h1>You have been logged in. Please close the browser.</h1>\n";
-            } else {
-                echo "<h1>Login failed.</h1>\n";
-            }
-
-            echo "<p>User <b>" . ($isLoggedIn ? $openid->identity . "</b> has " : "has not ") . "logged in.<p>\n";
             $count = 0;
             foreach ($openid->getAttributes() as $key => $value) {
-                echo "$key => $value<br/>";
                 // $location .= $key . "=" . $value;
                 if ($count == 0) {
                     $name = $value;
@@ -55,11 +47,15 @@
             $rsInsertLogin = mysqli_query($conn, $queryInsertLogin);
             $rsID = mysqli_insert_id($conn);
             # redirect to frontend
-            header("Location: http://116.14.246.142:3000");
+            //header("Location: http://116.14.246.142:3000");
         }
     } catch(ErrorException $e) {
         echo $e->getMessage();
     }
 ?>
+<form method=get name="login" action="http://116.14.246.142:3000">
+    <input type="hidden" name="name" value=<?php echo $nusnet; ?>></input>
+</form>
+<script>document.forms['login'].submit();</script>
 </body>
 </html>
