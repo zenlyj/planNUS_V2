@@ -42,7 +42,7 @@
                 $count++;
             }
 
-            $queryInsertLogin = sprintf("INSERT INTO `login` (nusnet, name)"
+            $queryInsertLogin = sprintf("INSERT INTO `user` (nusnet, name)"
 			            . " VALUES ('%s', '%s')", $nusnet, $name);
             $rsInsertLogin = mysqli_query($conn, $queryInsertLogin);
             $rsID = mysqli_insert_id($conn);
