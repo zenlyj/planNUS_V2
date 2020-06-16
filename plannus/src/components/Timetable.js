@@ -1,21 +1,44 @@
 import React, { Component } from 'react'
 import Table from 'react-bootstrap/Table'
+import Task from './Task'
 
 class Timetable extends Component {
     
     constructor() {
         super();
         this.state = {
-            buttonToShow: null
+            tasksAdded: new Map()
         }
-        this.handleMouseOver = this.handleMouseOver.bind(this); 
-        this.handleMouseOut = this.handleMouseOut.bind(this)
+        this.updateTable = this.updateTable.bind(this)
+    }
+
+    updateTable(id, timeFrom, timeTo, toAdd) {
+        let duration = (timeTo-timeFrom)/100
+        let updated = new Map(this.state.tasksAdded)
+        this.setState(prevState => {
+            if (toAdd) {
+                if (this.state.tasksAdded.has(id)) {
+                    // edit task info
+                    updated.delete(id)
+                    updated.set(id, duration)
+                    return {tasksAdded: updated}
+                } else {
+                    // add brand new task
+                    updated.set(id, duration)
+                    return {tasksAdded: updated}
+                }
+            } else {
+                // to delete task from table
+                updated.delete(id)
+                return {tasksAdded: updated}
+            }
+        })
     }
 
     genTableHead() {
         let hours = []
-        hours.push(<th key="h0000">FROM TO</th>)
-        for (let x = 7; x <= 22; x++) {
+        hours.push(<th key="h0000">{"FROM"} <br /> {"TO"}</th>)
+        for (let x = 9; x <= 21; x++) {
             let from = "00";
             let to = "00"
             if (x < 10) {
@@ -25,8 +48,8 @@ class Timetable extends Component {
                 from = x + from;
                 to = (x+1) + to;
             }
-            hours.push(<th key={"h"+from}>
-                {from + "  " + to}</th>)
+            hours.push(<th style={{textAlign:'center'}} key={"h"+from}>
+                {from} <br /> {to}</th>)
         }
         return (<thead>
                     <tr>
@@ -35,40 +58,24 @@ class Timetable extends Component {
                 </thead>)
     }
 
-    handleMouseOver(cellKey) {
-        this.setState({
-            buttonToShow: cellKey
-        })
-    }
-
-    handleMouseOut() {
-        this.setState({
-            buttonToShow: null
-        })
-    }
-
     genTableBody() {
-        let buttonStyle = {
-            background: 'transparent',
-            border: 0,
-            color: 'white',
-            fontSize: 18
-        }
         let days = ["MON", "TUES", "WED", "THURS", "FRI", "SAT", "SUN"]
         let daysRows = days.map(day => {
             let row = []
             row.push(<td key={day+"0"}>{day}</td>)
-            for (let x = 1; x <= 16; x++) {
+            for (let x = 1; x <= 13; x++) {
                 let cellKey = day+x
-                row.push(<td key={cellKey} onMouseOver={() => this.handleMouseOver(cellKey)} onMouseOut={this.handleMouseOut}> 
-                <button style={buttonStyle}> {this.state.buttonToShow===cellKey ? '+' : null} </button>
-                    </td>)
+                let colSpan = this.state.tasksAdded.has(cellKey) ? this.state.tasksAdded.get(cellKey) : 1
+                row.push(<td key={cellKey} colSpan={colSpan}> 
+                            <Task id={cellKey} updateTable={this.updateTable} timeFrom={x===9 ? '0'+(x+8)*100 : ""+(x+8)*100} />
+                        </td>)
+                x += (colSpan-1)
             }
             return <tr key={day}>{row}</tr>
         });
         return (<tbody>
-            {daysRows}
-        </tbody>)
+                    {daysRows}
+                </tbody>)
     }
 
     render() {
