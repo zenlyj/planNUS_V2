@@ -6,8 +6,8 @@
         # Change 'localhost' to your domain name.
         $openid = new LightOpenID('116.14.246.142:80');
         if(!$openid->mode) {
-            if (isset($_GET['nusnet_id'])) {
-                $openid->identity = "https://openid.nus.edu.sg/".$_GET['nusnet_id'];
+            if (isset($_GET['nusnet'])) {
+                $openid->identity = "https://openid.nus.edu.sg/".$_GET['nusnet'];
             }
             elseif (isset($_POST['openid_identifier'])) {
                 $openid->identity = $_POST['openid_identifier'];
@@ -42,7 +42,7 @@
                 $count++;
             }
 
-            $queryInsertLogin = sprintf("INSERT INTO `login` (nusnet, name)"
+            $queryInsertLogin = sprintf("INSERT INTO `user` (nusnet, name)"
 			            . " VALUES ('%s', '%s')", $nusnet, $name);
             $rsInsertLogin = mysqli_query($conn, $queryInsertLogin);
             $rsID = mysqli_insert_id($conn);
