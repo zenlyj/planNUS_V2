@@ -14,9 +14,11 @@
             $querySearch = sprintf("Select * from `task` where nusnet = '%s'", $_GET['nusnet']);
             $result = $conn->query($querySearch);
             if ($result->num_rows > 0 ) {
+                $resultArr = array();
                 while ($row = $result->fetch_assoc()) {
-                    echo json_encode($row);
+                    $resultArr[] = $row;
                 }
+                echo json_encode($resultArr);
             }
         } else {
             echo "failed";
