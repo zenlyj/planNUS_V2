@@ -8,7 +8,7 @@
 </head>
 <body>
 <?php
-    # usage http://116.14.246.142/addtask.php?nusnet=e0407306&moduleCode=cp2106&date=2020-05-05&startTime=1600&endTime=1700
+    # usage http://116.14.246.142/retrievetask.php?nusnet=e0407306
     try {
         if (isset($_GET['nusnet'])) {
             $querySearch = sprintf("Select * from `task` where nusnet = '%s'", $_GET['nusnet']);
