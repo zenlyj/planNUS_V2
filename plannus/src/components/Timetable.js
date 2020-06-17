@@ -67,7 +67,7 @@ class Timetable extends Component {
                 let cellKey = day+x
                 let colSpan = this.state.tasksAdded.has(cellKey) ? this.state.tasksAdded.get(cellKey) : 1
                 row.push(<td key={cellKey} colSpan={colSpan}> 
-                            <Task id={cellKey} updateTable={this.updateTable} timeFrom={x===9 ? '0'+(x+8)*100 : ""+(x+8)*100} />
+                            <Task id={cellKey} updateTable={this.updateTable} timeFrom={x===1 ? '0'+(x+8)*100 : ""+(x+8)*100} />
                         </td>)
                 x += (colSpan-1)
             }
