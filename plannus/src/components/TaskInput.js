@@ -86,7 +86,7 @@ class TaskInput extends Component {
         }
 
         const modalStyle = {
-            font: '12px'
+            font: '12px',
         }
         
         const headerStyle = {
@@ -101,7 +101,7 @@ class TaskInput extends Component {
         const contentStyle = {
             color: 'black',
             width: '100%',
-            padding: '10px 50px'
+            padding: '3% 50px'
         }
 
         const closeStyle = {
@@ -142,12 +142,13 @@ class TaskInput extends Component {
                         </a>
                         <div style={headerStyle}> {this.props.taskInfo.taskPresent ? this.props.taskInfo.taskName : "New Task"} </div>
                         <form style={contentStyle}>
-                           <div>
+                           <div style={{paddingBottom:'2%'}}>
                                <div style={{float: 'left'}}> Task Name: </div>
                                <div style={{float:'left', paddingLeft:'4.5%'}}> 
                                     <input 
                                         type='text' 
                                         name='taskName'
+                                        style={{width:'120%'}}
                                         value={this.state.taskName}
                                         onChange={this.handleChange}
                                     >
@@ -158,12 +159,13 @@ class TaskInput extends Component {
                             <br />
                             <br />
 
-                            <div>
+                            <div style={{paddingBottom:'2%'}}>
                                 <div style={{float: 'left'}}> Module: </div>
                                 <div style={{float:'left', paddingLeft:'7.7%'}}> 
                                     <input 
                                         type='text' 
                                         name="module"
+                                        style={{width:'120%'}}
                                         value={this.state.module}
                                         onChange={this.handleChange}
                                     >
@@ -174,22 +176,25 @@ class TaskInput extends Component {
                             <br />
                             <br />
 
-                            <div>
+                            <div style={{paddingBottom:'2%'}}>
                                 <div style={{float: 'left'}}> From: </div>
                                 <div style={{float:'left', paddingLeft:'10.5%'}}> 
                                     <input 
                                         type='text' 
                                         name="timeFrom"
-                                        value={this.state.timeFrom}   
+                                        style={{width:'70%'}}
+                                        value={this.state.timeFrom}
                                 >        
                                     </input> 
                                 </div>
 
-                                <div style={{float: 'left', paddingLeft:"10%"}}> To: </div>
+                                <div style={{float: 'left', paddingLeft:"9%"}}> To: </div>
                                 <div style={{float:'left', paddingLeft:'10%'}}> 
                                     <input 
                                         type='text' 
                                         name="timeTo"
+                                        style={{width:'70%'}}
+                                        placeholder="24hr format"
                                         value={this.state.timeTo}
                                         onChange={this.handleChange}
                                     >

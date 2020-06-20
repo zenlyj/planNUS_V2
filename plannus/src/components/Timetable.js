@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 import Table from 'react-bootstrap/Table'
 import Task from './Task'
-import moduleslist from '../api/moduleslist.json'
-import AutoComplete from './AutoComplete'
-import nusmodsAPI from '../api/nusmodsAPI'
-import AutomatedScheduler from './AutomatedScheduler'
 
 class Timetable extends Component {
     
@@ -140,13 +136,10 @@ class Timetable extends Component {
             marginLeft: '1%',
         }
         return (
-            <div>
             <Table striped bordered hover variant="dark" style={tableStyle}>
                 {this.genTableHead()}
                 {this.genTableBody()}
             </Table>
-            <AutomatedScheduler />
-            </div>
         )
     }
 }

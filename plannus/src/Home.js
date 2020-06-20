@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import Timetable from './components/Timetable'
 import Button from 'react-bootstrap/Button'
+import moduleslist from './api/moduleslist.json'
+import AutoComplete from './components/AutoComplete'
+import nusmodsAPI from './api/nusmodsAPI'
+import AutomatedScheduler from './components/AutomatedScheduler'
 
 class Home extends Component {
     constructor(props) {
@@ -48,6 +52,7 @@ class Home extends Component {
                     <Button variant="outline-dark" style={{float:'left', marginLeft:"5%"}} onClick={()=>this.navWeek(1)}> {'>'} </Button>
                 </div>
                 <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateHome={this.updateHome}/>
+                <AutomatedScheduler />
             </React.Fragment>
         )
     }
