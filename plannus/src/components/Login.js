@@ -9,6 +9,7 @@ const onLogout = () => {
     Cookies.set("loggedIn", false);
     Redirect("/");
 }
+
 export const Login = () => (
-    !Auth.isAuthenticated() ? <Nav.Link href="http://116.14.246.142:80/openid.php?nusnet_id">Login</Nav.Link> : <Nav.Link href="/" onClick={onLogout}>Logout</Nav.Link>
+    !Auth.isAuthenticated() ? <Nav.Link href="http://116.14.246.142:80/openid.php?nusnet">Login</Nav.Link> : <Nav.Link href="/" onClick={onLogout}>Logout</Nav.Link>
 )
