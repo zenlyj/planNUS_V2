@@ -44,11 +44,15 @@ class Autocomplete extends Component {
     };
 
     onClick = e => {
+        if (e.currentTarget.innerText != undefined){
+            const moduleCode = e.currentTarget.innerText.toUpperCase().split(" ")[0];
+            this.props.onChange(moduleCode);
+        }
         this.setState({
         activeSuggestion: 0,
         filteredSuggestions: [],
         showSuggestions: false,
-        userInput: e.currentTarget.innerText
+        userInput: ""
         });
     };
 
@@ -57,11 +61,15 @@ class Autocomplete extends Component {
 
         // User pressed the enter key
         if (e.keyCode === 13) {
-        this.setState({
-            activeSuggestion: 0,
-            showSuggestions: false,
-            userInput: filteredSuggestions[activeSuggestion]
-        });
+            if (filteredSuggestions[activeSuggestion] != undefined){
+                const moduleCode = filteredSuggestions[activeSuggestion].toUpperCase().split(" ")[0];
+                this.props.onChange(moduleCode);
+            }
+            this.setState({
+                activeSuggestion: 0,
+                showSuggestions: false,
+                userInput: ""
+            });
         }
         // User pressed the up arrow
         else if (e.keyCode === 38) {
@@ -99,7 +107,7 @@ class Autocomplete extends Component {
         if (showSuggestions && userInput) {
         if (filteredSuggestions.length) {
             suggestionsListComponent = (
-            <ul class="suggestions">
+            <ul className="suggestions">
                 {filteredSuggestions.map((suggestion, index) => {
                 let classname;
 
@@ -109,7 +117,7 @@ class Autocomplete extends Component {
                 }
 
                 return (
-                    <li class={classname}key={suggestion} onClick={onClick}>
+                    <li className={classname}key={suggestion} onClick={onClick}>
                     {suggestion}
                     </li>
                 );
@@ -117,9 +125,7 @@ class Autocomplete extends Component {
             </ul>
             );
         } else {
-            suggestionsListComponent = (
-                <div></div>
-            );
+            suggestionsListComponent = "";
         }
         }
 
