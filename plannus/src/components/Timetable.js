@@ -64,7 +64,6 @@ class Timetable extends Component {
             // to delete task from table
             updated.delete(updatedTask.id)
         }
-        this.setState({tasksAdded: updated})
         this.props.updateHome(this.state.id, updated)
     }
 

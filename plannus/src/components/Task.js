@@ -29,7 +29,6 @@ class Task extends Component {
             timeTo: updatedInfo.timeTo,
             description: updatedInfo.description
         }
-        this.setState(updatedTask)
         this.props.updateTable(updatedTask)
     }   
 
