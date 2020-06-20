@@ -4,35 +4,68 @@ import Task from './Task'
 
 class Timetable extends Component {
     
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            tasksAdded: new Map()
+            id: this.props.id,
+            tasksAdded: this.props.tasksAdded
         }
         this.updateTable = this.updateTable.bind(this)
     }
 
-    updateTable(id, timeFrom, timeTo, toAdd) {
-        let duration = (timeTo-timeFrom)/100
-        let updated = new Map(this.state.tasksAdded)
-        this.setState(prevState => {
-            if (toAdd) {
-                if (this.state.tasksAdded.has(id)) {
-                    // edit task info
-                    updated.delete(id)
-                    updated.set(id, duration)
-                    return {tasksAdded: updated}
-                } else {
-                    // add brand new task
-                    updated.set(id, duration)
-                    return {tasksAdded: updated}
-                }
-            } else {
-                // to delete task from table
-                updated.delete(id)
-                return {tasksAdded: updated}
+    componentDidUpdate(prevProps) {
+        if (prevProps.id !== this.props.id) {
+            this.setState({id: this.props.id})
+        }
+        for (let key of prevProps.tasksAdded.keys()) {
+            let curr = this.props.tasksAdded.get(key)
+            let prev = prevProps.tasksAdded.get(key)
+            if (curr === undefined) {
+                this.setState({tasksAdded: this.props.tasksAdded})
+                break
             }
-        })
+            this.compareTasks(prev, curr)
+        }
+
+        for (let key of this.props.tasksAdded.keys()) {
+            let curr = this.props.tasksAdded.get(key)
+            let prev = prevProps.tasksAdded.get(key)
+            if (prev === undefined) {
+                this.setState({tasksAdded: this.props.tasksAdded})
+                break
+            }
+            this.compareTasks(prev, curr)
+        }
+    }
+
+    compareTasks(prev, curr) {
+        if ((prev.taskPresent !== curr.taskPresent) || 
+            (prev.taskName !== curr.taskName) || 
+            (prev.module !== curr.module) ||
+            (prev.timeTo !== curr.timeTo) ||
+            (prev.description !== curr.description)
+            ) {
+                this.setState({tasksAdded: this.props.tasksAdded})
+            }
+    }
+
+    updateTable(updatedTask) {
+        let updated = new Map(this.state.tasksAdded)
+        if (updatedTask.taskPresent) {
+            if (this.state.tasksAdded.has(updatedTask.id)) {
+                // edit task info
+                updated.delete(updatedTask.id)
+                updated.set(updatedTask.id, updatedTask)
+            } else {
+                // add brand new task
+                updated.set(updatedTask.id, updatedTask)
+            }
+        } else {
+            // to delete task from table
+            updated.delete(updatedTask.id)
+        }
+        this.setState({tasksAdded: updated})
+        this.props.updateHome(this.state.id, updated)
     }
 
     genTableHead() {
@@ -65,9 +98,28 @@ class Timetable extends Component {
             row.push(<td key={day+"0"}>{day}</td>)
             for (let x = 1; x <= 13; x++) {
                 let cellKey = day+x
-                let colSpan = this.state.tasksAdded.has(cellKey) ? this.state.tasksAdded.get(cellKey) : 1
+                let colSpan = 1
+                let initTask = {}
+                if (this.state.tasksAdded.has(cellKey)) {
+                    // determine length of button representing task on timetable
+                    let task = this.state.tasksAdded.get(cellKey)
+                    colSpan = (task.timeTo-task.timeFrom)/100
+                    // initialize task if it has been added previously
+                    initTask = task
+                } else {
+                    // default task initialization
+                    initTask = {
+                        id: cellKey,
+                        taskPresent: false,
+                        taskName: "",
+                        module: "",
+                        timeFrom: x===1 ? '0'+(x+8)*100 : ""+(x+8)*100,
+                        timeTo: "",
+                        description: ""
+                    }
+                }
                 row.push(<td key={cellKey} colSpan={colSpan}> 
-                            <Task id={cellKey} updateTable={this.updateTable} timeFrom={x===1 ? '0'+(x+8)*100 : ""+(x+8)*100} />
+                            <Task initTask={initTask} updateTable={this.updateTable} />
                         </td>)
                 x += (colSpan-1)
             }
@@ -80,7 +132,7 @@ class Timetable extends Component {
 
     render() {
         const tableStyle = {
-            marginTop: '10%',
+            marginTop: '3%',
             marginLeft: '1%',
         }
         return (

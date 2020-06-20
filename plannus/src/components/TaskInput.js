@@ -25,11 +25,11 @@ class TaskInput extends Component {
     openModal() {
         this.setState({
             open: true,
-            taskName: this.props.taskName,
-            module: this.props.module,
-            timeFrom: this.props.timeFrom,
-            timeTo: this.props.timeTo,
-            description: this.props.description
+            taskName: this.props.taskInfo.taskName,
+            module: this.props.taskInfo.module,
+            timeFrom: this.props.taskInfo.timeFrom,
+            timeTo: this.props.taskInfo.timeTo,
+            description: this.props.taskInfo.description
         })
     }
 
@@ -56,12 +56,22 @@ class TaskInput extends Component {
     }
 
     editTask() {
-        this.props.updateTask(true, this.state.taskName, this.state.module, this.state.timeFrom, this.state.timeTo, this.state.description)
+        let editedFields = {taskName: this.state.taskName, 
+                            module: this.state.module, 
+                            timeFrom: this.state.timeFrom, 
+                            timeTo: this.state.timeTo, 
+                            description: this.state.description}
+        this.props.updateTask(true, editedFields)
         this.closeModal()
     }
 
     removeTask() {
-        this.props.updateTask(false, "", "", "", "", "")
+        let removedFields = {taskName: "", 
+                             module: "", 
+                             timeFrom: this.state.timeFrom, 
+                             timeTo: "", 
+                             description: ""}
+        this.props.updateTask(false, removedFields)
         this.closeModal()
     }
 
@@ -111,8 +121,8 @@ class TaskInput extends Component {
 
         return (
             <div>
-                {this.props.taskPresent ? 
-                    <Button style={{width:'100%', fontSize:'12px', whiteSpace:'nowrap'}} onClick={this.openModal}> {this.props.taskName} </Button> :
+                {this.props.taskInfo.taskPresent ? 
+                    <Button style={{width:'100%', fontSize:'12px', whiteSpace:'nowrap'}} onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
                     <button style={buttonStyle}
                         onMouseOver={() => this.setState({hovered:true})}
                         onMouseLeave={() => this.setState({hovered:false})}
@@ -130,7 +140,7 @@ class TaskInput extends Component {
                         <a style={closeStyle} onClick={this.closeModal}>
                             &times;
                         </a>
-                        <div style={headerStyle}> {this.props.taskPresent ? this.props.taskName : "New Task"} </div>
+                        <div style={headerStyle}> {this.props.taskInfo.taskPresent ? this.props.taskInfo.taskName : "New Task"} </div>
                         <form style={contentStyle}>
                            <div>
                                <div style={{float: 'left'}}> Task Name: </div>
@@ -208,14 +218,14 @@ class TaskInput extends Component {
                             <br />
                         
                             <div>
-                                <div style={{float: 'left', paddingLeft: this.props.taskPresent ? '5%' : '25%'}}> 
+                                <div style={{float: 'left', paddingLeft: this.props.taskInfo.taskPresent ? '5%' : '25%'}}> 
                                     <Button variant="primary" 
                                             onClick={this.editTask}
                                     > 
-                                        {this.props.taskPresent ? "Save Changes" : "Add Task"} 
+                                        {this.props.taskInfo.taskPresent ? "Save Changes" : "Add Task"} 
                                     </Button>
                                 </div>
-                                {this.props.taskPresent ? 
+                                {this.props.taskInfo.taskPresent ? 
                                     <div style={{float:'right'}}>
                                         <Button variant="primary"
                                             onClick={this.removeTask}

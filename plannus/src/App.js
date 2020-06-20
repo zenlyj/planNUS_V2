@@ -9,7 +9,7 @@ import {
 } from "react-router-dom";
 import axios from "axios";
 import Popup from "reactjs-popup";
-import { Home } from './Home';
+import Home from './Home';
 import { Diary } from './Diary';
 import { Stats } from './Stats';
 import { Settings } from './Settings';

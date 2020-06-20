@@ -4,38 +4,38 @@ import TaskInput from './TaskInput'
 class Task extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            id: props.id,
-            taskPresent: false,
-            taskName: "",
-            module: "",
-            timeFrom: "",
-            timeTo: "",
-            description: ""
-        }
+        this.state = this.props.initTask
         this.updateTask = this.updateTask.bind(this)
     }
 
-    updateTask(taskPresent, taskName, module, timeFrom, timeTo, description) {
-        this.setState({
+    componentDidUpdate(prevProps) {
+        if ((prevProps.initTask.taskPresent !== this.props.initTask.taskPresent) || 
+            (prevProps.initTask.taskName !== this.props.initTask.taskName) || 
+            (prevProps.initTask.module !== this.props.initTask.module) ||
+            (prevProps.initTask.timeTo !== this.props.initTask.timeTo) ||
+            (prevProps.initTask.description !== this.props.initTask.description)
+        ) {
+            this.setState(this.props.initTask)
+        }
+    }
+
+    updateTask(taskPresent, updatedInfo) {
+        let updatedTask = {
+            id: this.state.id,
             taskPresent: taskPresent,
-            taskName: taskName,
-            module: module,
-            timeFrom: timeFrom,
-            timeTo: timeTo,
-            description: description
-        })
-        this.props.updateTable(this.state.id, timeFrom, timeTo, taskPresent)
+            taskName: updatedInfo.taskName,
+            module: updatedInfo.module,
+            timeFrom: updatedInfo.timeFrom,
+            timeTo: updatedInfo.timeTo,
+            description: updatedInfo.description
+        }
+        this.setState(updatedTask)
+        this.props.updateTable(updatedTask)
     }   
 
     render() {
         return (<TaskInput
-                    taskPresent={this.state.taskPresent} 
-                    taskName={this.state.taskName}
-                    module={this.state.module}
-                    timeFrom={this.props.timeFrom}
-                    timeTo={this.state.timeTo}
-                    description={this.state.description}
+                    taskInfo={this.state}
                     updateTask={this.updateTask}
                 />)
     } 
