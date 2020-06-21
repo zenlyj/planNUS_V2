@@ -1,13 +1,7 @@
 <?php
     require_once('Connections/connDB.php');
-    
-?>
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
-<?php
+    header("Access-Control-Allow-Origin: *");
+    header('Content-type:application/json;charset=utf-8');
     # usage http://116.14.246.142/retrievetask.php?nusnet=e0407306
     try {
         if (isset($_GET['nusnet'])) {
@@ -28,5 +22,4 @@
         echo $e->getMessage();
     }
 ?>
-</body>
-</html>
+
