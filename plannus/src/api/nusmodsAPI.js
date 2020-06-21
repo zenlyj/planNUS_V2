@@ -4,7 +4,6 @@ import modulelist from './moduleslist.json';
 class nusmodsAPI {
     constructor() {
         this.baseLink = "https://api.nusmods.com/v2/";
-        this.result = {data:{}, status:"NOK"};
     }
 
     /* 
@@ -41,7 +40,6 @@ class nusmodsAPI {
         for (var key in fullList) {
             moduleList.push(fullList[key].moduleCode + " " + fullList[key].title);
         }
-        console.log(moduleList);
         return moduleList;
     }
 }
