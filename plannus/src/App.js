@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 import Popup from "reactjs-popup";
 import Home from './Home';
-import { Diary } from './Diary';
+import Diary from './Diary';
 import { Stats } from './Stats';
 import { Settings } from './Settings';
 import { NotFound } from './NotFound';

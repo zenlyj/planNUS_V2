@@ -1,6 +1,16 @@
 import React, { Component } from "react";
-export const Diary = (props) => (
-    <div>
-        <p>Diary</p>
-    </div>
-)
+
+class Diary extends Component{
+    constructor(props) {
+        super(props)
+        this.state = {
+
+        }
+    }
+
+    render() {
+        return (<div><p>Diary</p></div>)
+    }
+}
+
+export default Diary
