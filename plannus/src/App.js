@@ -51,13 +51,23 @@ class App extends Component {
     this.readCookie();
   }
 
-  getData() {
+  verifyLogin(nusnet, hash) { 
+    let url = 'http://116.14.246.142/verifylogin.php?nusnet=' + nusnet + '&hash=' + hash;
+    const response = fetch(url).then(res => res.json()).then(obj => obj.success);
+    return response;
+  }
+
+  async getData() {
     let currentURL = window.location.href;
     let append = currentURL.split('?')[1];
     if (append !== undefined) {
-      Cookies.set("user", append.split('=')[1]);
-      Cookies.set("loggedIn", true);
-      Auth.login(() => {this.setState(() => ({loggedIn: true}))});
+      const nusnet = append.split('&')[0].split('=')[1];
+      const hash = append.split('&')[1].split('=')[1];
+      if (await this.verifyLogin(nusnet, hash)) {
+        Cookies.set("user", nusnet);
+        Cookies.set("loggedIn", true);
+        Auth.login(() => {this.setState(() => ({loggedIn: true}))});
+      }
     }
   }
 
