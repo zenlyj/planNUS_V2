@@ -4,6 +4,8 @@ import Auth from '../components/Auth';
 class nusmodsAPI {
     constructor() {
         this.baseLink = "https://api.nusmods.com/v2/";
+        this.phpHost = "http://localhost/";
+        // this.phpHost = "http://116.14.246.142/";
     }
 
     /* 
@@ -44,14 +46,14 @@ class nusmodsAPI {
     }
 
     calculateWorkload(modules) {
-        let url = 'http://116.14.246.142/calculateworkload.php?modules=' + modules.toString();
+        let url = this.phpHost + "calculateworkload.php?modules=" + modules.toString();
         const response = fetch(url).then(res => res.json()).then(obj => obj.hours);
         return response;
     }
 
     addTask(id, taskPresent, taskName, module, timeFrom, timeTo, description, week) {
         const nusnet = Auth.getNUSNET();
-        let url = "http://116.14.246.142/addtask.php?nusnet="+ nusnet +
+        let url = this.phpHost + "addtask.php?nusnet="+ nusnet +
                 "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
                 "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + 
                 "&description=" + description + "&week=" + week;
@@ -60,7 +62,7 @@ class nusmodsAPI {
 
     retrieveTask() {
         const nusnet = Auth.getNUSNET();
-        let url = "http://116.14.246.142/retrievetask.php?nusnet=" + nusnet;
+        let url = this.phpHost + "retrievetask.php?nusnet=" + nusnet;
         const response = fetch(url).then(res => res.json());
         return response;
 

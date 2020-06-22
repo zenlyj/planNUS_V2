@@ -4,7 +4,7 @@
     
     try {
         # Change 'localhost' to your domain name.
-        $openid = new LightOpenID('116.14.246.142:80');
+        $openid = new LightOpenID('localhost:80');
         if(!$openid->mode) {
             if (isset($_GET['nusnet'])) {
                 $openid->identity = "https://openid.nus.edu.sg/".$_GET['nusnet'];
@@ -53,7 +53,7 @@
         echo $e->getMessage();
     }
 ?>
-<form method=get name="login" action="http://116.14.246.142:3000">
+<form method=get name="login" action="http://localhost:3000">
     <input type="hidden" name="nusnet" value=<?php echo $nusnet; ?>></input>
     <input type="hidden" name="hash" value=
     <?php 
