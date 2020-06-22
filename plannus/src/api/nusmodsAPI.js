@@ -46,7 +46,6 @@ class nusmodsAPI {
     calculateWorkload(modules) {
         let url = 'http://116.14.246.142/calculateworkload.php?modules=' + modules.toString();
         const response = fetch(url).then(res => res.json()).then(obj => obj.hours);
-        this.addTask("MON1", true, "NAME", "module", "timefrom", "timeto", "");
         return response;
     }
 
