@@ -67,6 +67,14 @@ class nusmodsAPI {
         return response;
 
     }
+
+    // usage importFromNUSMODS(https://nusmods.com/timetable/sem-1/share?CS1101S=REC:09,TUT:09B,LEC:2&ES1103=SEC:C01&IS1103=SEC:1,TUT:18&MA1301=LEC:1,TUT:3&PC1221=TUT:6,LEC:1,LAB:9);
+    // the url is from nusmods -> share -> copy link
+    importFromNUSMODS(nusmodsURL) {
+        let url = this.phpHost + "importnusmods.php?url=" + nusmodsURL.split("&").join("|");
+        const response = fetch(url).then(res => res.json());
+        return response;
+    }
 }
 
 export default new nusmodsAPI();
