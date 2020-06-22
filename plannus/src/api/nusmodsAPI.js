@@ -55,8 +55,15 @@ class nusmodsAPI {
                 "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
                 "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + 
                 "&description=" + description + "&week=" + week;
-        console.log(url);
         const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
+    }
+
+    retrieveTask() {
+        const nusnet = Auth.getNUSNET();
+        let url = "http://116.14.246.142/retrievetask.php?nusnet=" + nusnet;
+        const response = fetch(url).then(res => res.json());
+        return response;
+
     }
 }
 
