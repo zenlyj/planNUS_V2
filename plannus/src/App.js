@@ -41,7 +41,7 @@ class App extends Component {
     const user = Cookies.get("user");
     const loggedIn = Cookies.get("loggedIn");
     if (loggedIn === "true") {
-      Auth.login(() => {this.setState(() => ({loggedIn: true}))});
+      Auth.login(user, () => {this.setState(() => ({loggedIn: true}))});
     } else {
       Auth.logout(() => {this.setState(() => ({loggedIn: false}))});
     }
@@ -66,7 +66,7 @@ class App extends Component {
       if (await this.verifyLogin(nusnet, hash)) {
         Cookies.set("user", nusnet);
         Cookies.set("loggedIn", true);
-        Auth.login(() => {this.setState(() => ({loggedIn: true}))});
+        Auth.login(nusnet, () => {this.setState(() => ({loggedIn: true}))});
       }
     }
   }
