@@ -49,11 +49,12 @@ class nusmodsAPI {
         return response;
     }
 
-    addTask(id, taskPresent, taskName, module, timeFrom, timeTo, description) {
+    addTask(id, taskPresent, taskName, module, timeFrom, timeTo, description, week) {
         const nusnet = Auth.getNUSNET();
         let url = "http://116.14.246.142/addtask.php?nusnet="+ nusnet +
                 "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
-                "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + "&description=" + description;
+                "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + 
+                "&description=" + description + "&week=" + week;
         console.log(url);
         const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
     }
