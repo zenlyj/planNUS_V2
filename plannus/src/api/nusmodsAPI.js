@@ -1,5 +1,5 @@
-import axios from 'axios';
 import modulelist from './moduleslist.json';
+import Auth from '../components/Auth';
 
 class nusmodsAPI {
     constructor() {
@@ -46,7 +46,17 @@ class nusmodsAPI {
     calculateWorkload(modules) {
         let url = 'http://116.14.246.142/calculateworkload.php?modules=' + modules.toString();
         const response = fetch(url).then(res => res.json()).then(obj => obj.hours);
+        this.addTask("MON1", true, "NAME", "module", "timefrom", "timeto", "");
         return response;
+    }
+
+    addTask(id, taskPresent, taskName, module, timeFrom, timeTo, description) {
+        const nusnet = Auth.getNUSNET();
+        let url = "http://116.14.246.142/addtask.php?nusnet="+ nusnet +
+                "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
+                "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + "&description=" + description;
+        console.log(url);
+        const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
     }
 }
 
