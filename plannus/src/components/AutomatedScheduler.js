@@ -33,10 +33,10 @@ class FormTab extends Component {
                         <tbody>
                             <tr>
                                 <td colSpan='1'>Start</td>
-                                <td colSpan='4'><input name={this.state[day] + '-start'} defaultValue='0900'/></td>
+                                <td colSpan='4'><input name={[day] + '-start'} defaultValue='0900'/></td>
                                 <td colSpan='1'></td>
                                 <td colSpan='1'>End</td>
-                                <td colSpan='4'><input name={this.state[day] + '-end'} defaultValue='1900'/></td>
+                                <td colSpan='4'><input name={[day] + '-end'} defaultValue='1900'/></td>
                             </tr>
                             <tr className="timeSlider">
                                 <td colSpan='1'>Workload (hrs):</td>
@@ -192,14 +192,14 @@ class AutomatedScheduler extends Component {
                         </a>
                         <div style={headerStyle}> Automated Scheduler </div>
                         <div style={contentStyle}>
-                            <form>
+                            <form action="/">
                                 <table align="left" className="AutomatedForm">
                                     <tbody>
                                         <tr><td colSpan='1'></td><td colSpan='1'>Calculated Workload:</td><td colSpan='9'><input value={this.state.calculatedWorkload} readOnly /></td><td colSpan='1'></td></tr>
                                         <tr><td colSpan='1'></td><td colSpan='1'>Modules:</td><td colSpan='9'><AutoComplete suggestions={nusmodsAPI.getModuleList(1)} onChange={this.addModule} /></td><td colSpan='1'></td></tr>
-                                        <tr><td colSpan='2'></td><td colSpan='9'><AddedModules modules={this.state.modules} onChange={this.removeModule}/></td><td></td></tr>
+                                        <tr><td colSpan='2'></td><td colSpan='9'><AddedModules modules={this.state.modules} onChange={this.removeModule}/></td><td><input type="hidden" name="modules" value={this.state.modules} /></td></tr>
                                         <tr><td colSpan='1'></td><td colSpan='10'><FormTab/></td><td colSpan='1'></td></tr>
-                                        <tr><td colSpan='7'></td><td colSpan='2'><Button className="fullButton btn-secondary">Reset</Button></td><td colSpan='2'><Button className="fullButton btn-success">Automate</Button></td><td colSpan='1'></td></tr>
+                                        <tr><td colSpan='7'></td><td colSpan='2'><Button className="fullButton btn-secondary">Reset</Button></td><td colSpan='2'><Button type="submit" className="fullButton btn-success">Automate</Button></td><td colSpan='1'></td></tr>
                                     </tbody>
                                 </table>
                             </form>

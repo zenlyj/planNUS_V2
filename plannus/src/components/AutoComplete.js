@@ -62,6 +62,7 @@ class Autocomplete extends Component {
         // User pressed the enter key
         if (e.keyCode === 13) {
             if (filteredSuggestions[activeSuggestion] != undefined){
+                e.preventDefault();
                 const moduleCode = filteredSuggestions[activeSuggestion].toUpperCase().split(" ")[0];
                 this.props.onChange(moduleCode);
             }
