@@ -75,7 +75,7 @@ class App extends Component {
   }
 
   verifyLogin(nusnet, hash) { 
-    let url = 'http://116.14.246.142/verifylogin.php?nusnet=' + nusnet + '&hash=' + hash;
+    let url = 'http://localhost/verifylogin.php?nusnet=' + nusnet + '&hash=' + hash;
     const response = fetch(url).then(res => res.json()).then(obj => obj.success);
     return response;
   }
