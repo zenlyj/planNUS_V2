@@ -223,7 +223,7 @@ class TaskInput extends Component {
                             <br />
                         
                             <div>
-                                <div style={{float: 'left', paddingLeft: this.props.taskInfo.taskPresent ? '5%' : '25%'}}> 
+                                <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '5%' : '25%'}}> 
                                     <Button variant="primary" 
                                             onClick={this.editTask}
                                     > 

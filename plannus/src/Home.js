@@ -5,25 +5,26 @@ import moduleslist from './api/moduleslist.json'
 import AutoComplete from './components/AutoComplete'
 import nusmodsAPI from './api/nusmodsAPI'
 import AutomatedScheduler from './components/AutomatedScheduler'
+import Deadline from './components/Deadline'
 
 class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            weekNum: 1,
-            timetables: new Map()
+            weekNum: this.props.currWeek,
+            timetables: this.props.initHome
         }
         this.navWeek = this.navWeek.bind(this)
-        this.updateHome = this.updateHome.bind(this)
+        this.updateHomeTask = this.updateHomeTask.bind(this)
+        this.updateHomeDeadline = this.updateHomeDeadline.bind(this)
     }
 
-    updateHome(id, updatedTimetable) {
-        let timetables = new Map(this.state.timetables)
-        if (this.state.timetables.has(id)) {
-            timetables.delete(id)
-        }
-        timetables.set(id, updatedTimetable)
-        this.setState({timetables: timetables})
+    updateHomeTask(id, updatedTimetable) {
+        this.props.updateTaskDatabase(id, updatedTimetable)
+    }
+
+    updateHomeDeadline(id, updatedDeadline) {
+        this.props.updateDLDatabase(id, updatedDeadline)
     }
 
     navWeek(diff) {
@@ -46,13 +47,18 @@ class Home extends Component {
         }
         return (
             <React.Fragment>
-                <div style={{marginTop:'3%', marginLeft:'40%', paddingBottom: '3%'}}> 
+                <div style={{marginTop:'2%', marginLeft:'40%', paddingBottom: '3%'}}> 
                     <Button variant="outline-dark" style={{float:'left', marginRight:"5%"}} onClick={()=>this.navWeek(-1)}> {'<'} </Button>
                     <h3 style={{float:'left', color:'#404040'}}> {'Week ' + this.state.weekNum} </h3> 
                     <Button variant="outline-dark" style={{float:'left', marginLeft:"5%"}} onClick={()=>this.navWeek(1)}> {'>'} </Button>
                 </div>
-                <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateHome={this.updateHome}/>
-                <AutomatedScheduler />
+                <div>
+                    <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateHomeTask={this.updateHomeTask}/> </div>
+                    <div style={{float:'right', marginRight:'0.8%'}}> <Deadline updateHomeDeadline={this.updateHomeDeadline}/> </div>
+                </div>
+                <div style={{marginTop:'35%', marginLeft:'13.5%'}}>
+                    <AutomatedScheduler />
+                </div>
             </React.Fragment>
         )
     }

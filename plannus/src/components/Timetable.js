@@ -64,7 +64,7 @@ class Timetable extends Component {
             // to delete task from table
             updated.delete(updatedTask.id)
         }
-        this.props.updateHome(this.state.id, updated)
+        this.props.updateHomeTask(this.state.id, updated)
     }
 
     genTableHead() {
@@ -132,7 +132,8 @@ class Timetable extends Component {
     render() {
         const tableStyle = {
             marginTop: '3%',
-            marginLeft: '1%',
+            marginLeft: '23%',
+            width:'130%'
         }
         return (
             <Table striped bordered hover variant="dark" style={tableStyle}>
