@@ -26,9 +26,32 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      taskDB: new Map(),
+      deadlineDB: new Map(),
+      currWeek: 1
     };
     this.handleChange = this.handleChange.bind(this);
+    this.updateTaskDatabase = this.updateTaskDatabase.bind(this);
+    this.updateDLDatabase = this.updateDLDatabase.bind(this)
+  }
+
+  updateTaskDatabase(id, updatedTimetable) {  
+    let taskDB = new Map(this.state.taskDB)
+    if (this.state.taskDB.has(id)) {
+      taskDB.delete(id)
+    }
+    taskDB.set(id, updatedTimetable)
+    this.setState({taskDB: taskDB, currWeek: id})
+  }
+
+  updateDLDatabase(id, updatedDeadline) {
+    let deadlineDB = new Map(this.state.deadlineDB)
+    if (this.state.deadlineDB.has(id)) {
+      deadlineDB.delete(id)
+    }
+    deadlineDB.set(id, updatedDeadline)
+    this.setState({deadlineDB: deadlineDB})
   }
 
   handleChange(event) {
@@ -75,7 +98,14 @@ class App extends Component {
             <NavigationBar />
             <Layout>
               <Switch>
-                <Route exact path="/" component={Home} />
+                <Route exact path="/" component={() => (<Home initHome={this.state.taskDB} 
+                                                              currWeek={this.state.currWeek} 
+                                                              updateTaskDatabase={this.updateTaskDatabase}
+                                                              updateDLDatabase={this.updateDLDatabase}
+                                                        />
+                                                        )
+                                                } 
+                />
                 <ProtectedRoute path="/Diary" component={Diary}/>
                 <ProtectedRoute path="/Stats" component={Stats}/>
                 <ProtectedRoute path="/Settings" component={Settings}/>
