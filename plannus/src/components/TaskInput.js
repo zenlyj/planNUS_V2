@@ -76,13 +76,21 @@ class TaskInput extends Component {
     }
 
     render() {
-        const buttonStyle = {   
+        const defaultButtonStyle = {   
             background: 'transparent',
             border: 0,
             width:'100%',
             height:'30px',
             color: 'white',
             fontSize: 20
+        }
+
+        const taskButtonStyle = {
+            width:'100%', 
+            fontSize:'12px', 
+            whiteSpace:'nowrap',
+            overflow:'hidden',
+            textOverflow:'ellipsis'
         }
 
         const modalStyle = {
@@ -122,8 +130,8 @@ class TaskInput extends Component {
         return (
             <div>
                 {this.props.taskInfo.taskPresent ? 
-                    <Button style={{width:'100%', fontSize:'12px', whiteSpace:'nowrap'}} onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
-                    <button style={buttonStyle}
+                    <Button style={taskButtonStyle} onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
+                    <button style={defaultButtonStyle}
                         onMouseOver={() => this.setState({hovered:true})}
                         onMouseLeave={() => this.setState({hovered:false})}
                         onClick={this.openModal}
