@@ -1,34 +1,24 @@
 <?php
     require_once('Connections/connDB.php');
-    
-?>
-<!DOCTYPE html>
-<html>
-<head>
-</head>
-<body>
-<?php
-    # usage http://116.14.246.142/addtask.php?nusnet=e0407306&moduleCode=cp2106&date=2020-05-05&startTime=1600&endTime=1700
+    header("Access-Control-Allow-Origin: *");
+    header('Content-type:application/json;charset=utf-8');
+    # params
+    # nusnet:str, id: str (MON1, MON2, THURS4, etc.), taskPresent: true, taskName: str, module: str, timeFrom: str (24hr format), timeTo: str(24hr format), description: str
+    # usage http://116.14.246.142/addtask.php?nusnet=e0407306&id=MON1&taskPresent=true&taskName=ABC&module=cp2106&timeFrom=1600&timeTo=1700&description=xyz&week=1
     try {
-        if (isset($_GET['nusnet']) && isset($_GET['title']) && isset($_GET['moduleCode']) && isset($_GET['date']) && isset($_GET['startTime'])
-            && isset($_GET['endTime'])) {
-            $queryInsertLogin = sprintf("INSERT INTO `task` (nusnet, title, moduleCode, date, startTime, endTime, description)"
-                    . " VALUES ('%s', '%s', '%s', '%s' ,'%s', '%s', '%s')", $_GET['nusnet'], $_GET['title'], $_GET['moduleCode'], $_GET['date'], $_GET['startTime'],
-                $_GET['endTime'], isset($_GET['description']) ? $_GET['description'] : "");
-            $rsInsertLogin = mysqli_query($conn, $queryInsertLogin);
-            $rsID = mysqli_insert_id($conn);
-            if ($rsID > 0) {
-                echo "success";
-            } else {
-                echo "failed";
-            }
-        } else {
-            echo "failed";
-        }
+        $message = new \stdClass();
+        $message->success = false;
+        if (isset($_GET['nusnet']) && isset($_GET['id'])) {
+            $queryInsertTask = sprintf("INSERT INTO `task` (nusnet, id, taskPresent, taskName, module, timeFrom, timeTo, description, week)"
+                    . " VALUES ('%s', '%s', '%s', '%s', '%s' ,'%s', '%s', '%s', '%s')", $_GET['nusnet'], $_GET['id'], $_GET['taskPresent'] == "true" ? 1 : 0, $_GET['taskName'], $_GET['module'],
+                $_GET['timeFrom'], $_GET['timeTo'], $_GET['description'], $_GET['week']);
+            $rsInsertTask = mysqli_query($conn, $queryInsertTask);
+            if ($rsInsertTask == 1) {
+                $message->success = true;
+            } 
+        } 
+        echo json_encode($message);
     } catch(ErrorException $e) {
-        echo "failed";
         echo $e->getMessage();
     }
 ?>
-</body>
-</html>

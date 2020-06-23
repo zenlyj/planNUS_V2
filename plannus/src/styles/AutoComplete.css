@@ -10,7 +10,7 @@ position: absolute;
 border-top-width: 0;
 list-style: none;
 margin-top: 0;
-max-height: 250px;
+max-height: 150px;
 overflow-y: auto;
 padding-left: 0;
 width: 500px;
@@ -34,8 +34,12 @@ border-bottom: 1px solid #999;
 }
 
 .AutomatedForm tr td {
-    width: 10%;
     overflow-y:auto;
+    height: 40px;
+}
+
+.AutomatedForm {
+    table-layout: fixed;
 }
 
 .AutomatedForm {
@@ -44,6 +48,14 @@ border-bottom: 1px solid #999;
     width: 100%;
 }
 
+.timeSlider {
+    overflow: hidden;
+    height: 70px;
+}
 .modules {
     margin-right:5px;
+}
+
+.fullButton {
+    width:100%;
 }

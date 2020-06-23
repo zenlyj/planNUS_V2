@@ -4,7 +4,7 @@
     
     try {
         # Change 'localhost' to your domain name.
-        $openid = new LightOpenID('116.14.246.142:80');
+        $openid = new LightOpenID('localhost:80');
         if(!$openid->mode) {
             if (isset($_GET['nusnet'])) {
                 $openid->identity = "https://openid.nus.edu.sg/".$_GET['nusnet'];
@@ -41,20 +41,24 @@
                 }
                 $count++;
             }
-
-            $queryInsertLogin = sprintf("INSERT INTO `user` (nusnet, name)"
-			            . " VALUES ('%s', '%s')", $nusnet, $name);
+            $hash = base64_encode(password_hash(rand() . $nusnet . rand(), PASSWORD_DEFAULT));
+            $queryInsertLogin = sprintf("INSERT INTO `user` (nusnet, name, hash)"
+			            . " VALUES ('%s', '%s', '%s')", $nusnet, $name, $hash);
             $rsInsertLogin = mysqli_query($conn, $queryInsertLogin);
             $rsID = mysqli_insert_id($conn);
-            # redirect to frontend
-            //header("Location: http://116.14.246.142:3000");
+            $queryUpdate = sprintf("UPDATE `user` set hash='%s' where nusnet='%s'", $hash, $nusnet);
+            $conn->query($queryUpdate);
         }
     } catch(ErrorException $e) {
         echo $e->getMessage();
     }
 ?>
-<form method=get name="login" action="http://116.14.246.142:3000">
-    <input type="hidden" name="name" value=<?php echo $nusnet; ?>></input>
+<form method=get name="login" action="http://localhost:3000">
+    <input type="hidden" name="nusnet" value=<?php echo $nusnet; ?>></input>
+    <input type="hidden" name="hash" value=
+    <?php 
+        echo $hash;
+    ?> />
 </form>
 <script>document.forms['login'].submit();</script>
 </body>
