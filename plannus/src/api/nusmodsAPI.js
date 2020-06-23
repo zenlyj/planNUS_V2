@@ -63,7 +63,7 @@ class nusmodsAPI {
     retrieveTask() {
         const nusnet = Auth.getNUSNET();
         let url = this.phpHost + "retrievetask.php?nusnet=" + nusnet;
-        const response = fetch(url).then(res => res.json());
+        const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
         return response;
 
     }
@@ -71,9 +71,34 @@ class nusmodsAPI {
     // usage importFromNUSMODS(https://nusmods.com/timetable/sem-1/share?CS1101S=REC:09,TUT:09B,LEC:2&ES1103=SEC:C01&IS1103=SEC:1,TUT:18&MA1301=LEC:1,TUT:3&PC1221=TUT:6,LEC:1,LAB:9);
     // the url is from nusmods -> share -> copy link
     importFromNUSMODS(nusmodsURL) {
-        let url = this.phpHost + "importnusmods.php?url=" + nusmodsURL.split("&").join("|");
-        const response = fetch(url).then(res => res.json());
+        let url = this.phpHost + "importnusmods.php?url=" + nusmodsURL.split("%3D").join("=").split("%3A").join(":")
+        .split("%2F").join("/").split("%3F").join("?").split("%2C").join(",").split("%26").join("&").split("&").join("|");
+        console.log(url);
+        const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
         return response;
+    }
+
+    dbtoMap(json) {
+        let timetableMap = new Map();
+        let weekMaps = {};
+        json.forEach((taskObj) => {
+            let task = {};
+            task.description = taskObj.description;
+            task.id = taskObj.id;
+            task.module = taskObj.module;
+            task.taskName = taskObj.taskName;
+            task.taskPresent = taskObj.taskPresent;
+            task.timeFrom = taskObj.timeFrom;
+            task.timeTo = taskObj.timeTo;
+            if (weekMaps[taskObj.week] == undefined) {
+                weekMaps[taskObj.week] = new Map();
+            }
+            weekMaps[taskObj.week].set(task.id, task);
+        });
+        for (var key in weekMaps) {
+            timetableMap.set(parseInt(key), weekMaps[key]);
+        }
+        return timetableMap;
     }
 }
 

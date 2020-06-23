@@ -54,6 +54,7 @@
     }
 ?>
 <form method=get name="login" action="http://localhost:3000">
+    <input type="hidden" name="type" value="login"></input>
     <input type="hidden" name="nusnet" value=<?php echo $nusnet; ?>></input>
     <input type="hidden" name="hash" value=
     <?php 

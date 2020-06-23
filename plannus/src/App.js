@@ -20,6 +20,7 @@ import { NavigationBar } from './components/NavigationBar';
 import Cookies from 'js-cookie';
 import Auth from './components/Auth';
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import nusmodsAPI from "./api/nusmodsAPI";
 
 class App extends Component {
 
@@ -84,15 +85,23 @@ class App extends Component {
     let currentURL = window.location.href;
     let append = currentURL.split('?')[1];
     if (append !== undefined) {
-      const nusnet = append.split('&')[0].split('=')[1];
-      const hash = append.split('&')[1].split('=')[1];
-      if (await this.verifyLogin(nusnet, hash)) {
-        Cookies.set("user", nusnet);
-        Cookies.set("loggedIn", true);
-        Auth.login(nusnet, () => {this.setState(() => ({loggedIn: true}))});
+      const type = append.split('&')[0].split('=')[1];
+      if (type == "login") { 
+        const nusnet = append.split('&')[1].split('=')[1];
+        const hash = append.split('&')[2].split('=')[1];
+        if (await this.verifyLogin(nusnet, hash)) {
+          Cookies.set("user", nusnet);
+          Cookies.set("loggedIn", true);
+          Auth.login(nusnet, () => {this.setState(() => ({loggedIn: true}))});
+        }
+      } else if (type == "nusmods") {
+        const url = append.split('&')[1].split('=')[1];
+        nusmodsAPI.importFromNUSMODS(url).then(taskMap => {
+          this.setState({taskDB: taskMap, currWeek: 1});
+          console.log(this.state.taskDB);
+        });
       }
     }
-  }
 
 
   componentDidMount() {

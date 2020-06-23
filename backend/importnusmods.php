@@ -22,9 +22,9 @@
                 $classDetail->module = $moduleCode;
                 $classDetail->data = array_filter($timetable, function($class) {
                     global $moduleClass;
-                    return in_array($class->classNo, array_map(function($modClass) {
-                        return explode(':', $modClass)[1];
-                    }, $moduleClass));
+                    return in_array(strtoupper(substr($class->lessonType, 0, 3) . ":" . $class->classNo), array_map(function($modClass) {
+                        return strtoupper($modClass);
+                    }, $moduleClass), true);
                 });
                 $resultArr[] = $classDetail;
             }
@@ -35,7 +35,7 @@
                         $task = new \stdClass();
                         $task->id = changeToKey($singleClass->day, $singleClass->startTime);
                         $task->taskPresent = 1;
-                        $task->taskName = $singleClass->lessonType;
+                        $task->taskName = $result->module . " (" . $singleClass->lessonType .")";
                         $task->module = $result->module;
                         $task->timeFrom = $singleClass->startTime;
                         $task->timeTo = $singleClass->endTime;
