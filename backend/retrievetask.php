@@ -5,7 +5,7 @@
     # usage http://116.14.246.142/retrievetask.php?nusnet=e0407306
     try {
         if (isset($_GET['nusnet'])) {
-            $querySearch = sprintf("SELECT id, taskpresent, taskName, module, timeFrom, timeTo, description, week from `task` where nusnet = '%s'", $_GET['nusnet']);
+            $querySearch = sprintf("SELECT id, taskPresent, taskName, module, timeFrom, timeTo, description, week from `task` where nusnet = '%s'", $_GET['nusnet']);
             $result = $conn->query($querySearch);
             if ($result->num_rows > 0 ) {
                 $resultArr = array();
