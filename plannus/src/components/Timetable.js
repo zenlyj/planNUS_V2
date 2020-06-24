@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Table from 'react-bootstrap/Table'
 import Task from './Task'
+import nusmodsAPI from '../api/nusmodsAPI';
 
 class Timetable extends Component {
     
@@ -55,14 +56,20 @@ class Timetable extends Component {
             if (this.state.tasksAdded.has(updatedTask.id)) {
                 // edit task info
                 updated.delete(updatedTask.id)
+                nusmodsAPI.removeTask(updatedTask.id, this.state.id)
                 updated.set(updatedTask.id, updatedTask)
+                nusmodsAPI.addTask(updatedTask.id, updatedTask.taskPresent, updatedTask.taskName, updatedTask.module,
+                    updatedTask.timeFrom, updatedTask.timeTo, updatedTask.description, this.state.id)
             } else {
                 // add brand new task
                 updated.set(updatedTask.id, updatedTask)
+                nusmodsAPI.addTask(updatedTask.id, updatedTask.taskPresent, updatedTask.taskName, updatedTask.module,
+                    updatedTask.timeFrom, updatedTask.timeTo, updatedTask.description, this.state.id)
             }
         } else {
             // to delete task from table
             updated.delete(updatedTask.id)
+            nusmodsAPI.removeTask(updatedTask.id, this.state.id)
         }
         this.props.updateHomeTask(this.state.id, updated)
     }

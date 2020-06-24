@@ -37,6 +37,12 @@ class App extends Component {
     this.retrieveNUSModsTasks = this.retrieveNUSModsTasks.bind(this)
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.loggedIn===false && this.state.loggedIn===true) {
+      nusmodsAPI.retrieveTask().then(taskDB => this.setState({taskDB: taskDB}))
+    }
+  }
+
   updateTaskDatabase(id, updatedTimetable) {  
     let taskDB = new Map(this.state.taskDB)
     if (this.state.taskDB.has(id)) {
@@ -62,7 +68,31 @@ class App extends Component {
   }
 
   retrieveNUSModsTasks(url, weekNum) {
-    nusmodsAPI.importFromNUSMODS(url).then(taskDB => this.setState({taskDB: taskDB, currWeek: weekNum}))
+    // To remove all existing tasks from DB
+    for (let key of this.state.taskDB.keys()) {
+      let timetable = this.state.taskDB.get(key)
+      for (let k of timetable.keys()) {
+        let task = timetable.get(k)
+        nusmodsAPI.removeTask(task.id, key)
+      }
+    }
+
+    // import all lessons from nusmods and store them in DB
+    nusmodsAPI.importFromNUSMODS(url).then(imported => {
+      let retrievedDB = new Map()
+      for (let key of imported.keys()) {
+        let timetable = imported.get(key)
+        retrievedDB.set(key, timetable)
+        for (let k of timetable.keys()) {
+          let task = timetable.get(k)
+          if (this.state.loggedIn) {
+            nusmodsAPI.addTask(task.id, task.taskPresent, task.taskName, task.module, task.timeFrom, 
+            task.timeTo, task.description, key)
+          }
+        }
+      }
+      this.setState({taskDB: retrievedDB}) 
+    })
   }
 
   readCookie() {
@@ -107,7 +137,6 @@ class App extends Component {
       }
     }
   }
-
 
   componentDidMount() {
     this.readCookie();
