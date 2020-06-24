@@ -130,13 +130,8 @@ class Timetable extends Component {
     }
 
     render() {
-        const tableStyle = {
-            marginTop: '3%',
-            marginLeft: '23%',
-            width:'130%',
-        }
         return (
-            <Table striped bordered hover variant="dark" style={tableStyle}>
+            <Table striped bordered hover variant="dark" style={{width:'130%'}}>
                 {this.genTableHead()}
                 {this.genTableBody()}
             </Table>

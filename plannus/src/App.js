@@ -23,7 +23,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import nusmodsAPI from "./api/nusmodsAPI";
 
 class App extends Component {
-
   constructor() {
     super();
     this.state = {
@@ -35,6 +34,7 @@ class App extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.updateTaskDatabase = this.updateTaskDatabase.bind(this);
     this.updateDLDatabase = this.updateDLDatabase.bind(this)
+    this.retrieveNUSModsTasks = this.retrieveNUSModsTasks.bind(this)
   }
 
   updateTaskDatabase(id, updatedTimetable) {  
@@ -59,6 +59,10 @@ class App extends Component {
     this.setState({
       [event.target.name]: event.target.value
     })
+  }
+
+  retrieveNUSModsTasks(url, weekNum) {
+    nusmodsAPI.importFromNUSMODS(url).then(taskDB => this.setState({taskDB: taskDB, currWeek: weekNum}))
   }
 
   readCookie() {
@@ -122,6 +126,7 @@ class App extends Component {
                                                               currWeek={this.state.currWeek} 
                                                               updateTaskDatabase={this.updateTaskDatabase}
                                                               updateDLDatabase={this.updateDLDatabase}
+                                                              submitURL={this.retrieveNUSModsTasks}
                                                         />
                                                         )
                                                 } 
