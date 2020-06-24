@@ -60,6 +60,13 @@ class nusmodsAPI {
         const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
     }
 
+    removeTask(id, week) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "removetask.php?nusnet="+ nusnet +
+                "&id=" + id + "&week=" + week;
+        const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
+    }
+
     retrieveTask() {
         const nusnet = Auth.getNUSNET();
         let url = this.phpHost + "retrievetask.php?nusnet=" + nusnet;
