@@ -101,7 +101,6 @@ class nusmodsAPI {
             url = url + "&" + day + "_start=" + state.formTabData[day+"_start"];
             url = url + "&" + day + "_end=" + state.formTabData[day+"_end"];
         }
-        console.log(url);
         const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
         return response;
     }
