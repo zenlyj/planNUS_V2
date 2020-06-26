@@ -27,7 +27,7 @@
                     $json = file_get_contents($fetchURL);
                     $obj = json_decode($json);
                 }
-                $totalWorkload->hours += $obj->moduleCredit * 2.5 - ($existingWorkHours >= $obj->moduleCredit * 2.5 ? 0 : $existingWorkHours);
+                $totalWorkload->hours += $obj->moduleCredit * 2.5 - ($existingWorkHours >= $obj->moduleCredit * 2.5 ? $obj->moduleCredit * 2.5 : $existingWorkHours);
             }
             echo json_encode($totalWorkload);
         } else {
