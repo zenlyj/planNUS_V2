@@ -66,7 +66,7 @@ class Home extends Component {
                     <div style={{float:'right', marginRight:'0.8%'}}> <Deadline updateHomeDeadline={this.updateHomeDeadline}/> </div>
                 </div>
                 <div style={{position:'absolute', marginTop:'32.9%', marginLeft:'13.1%'}}>
-                    <AutomatedScheduler />
+                    <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} />
                 </div>
             </React.Fragment>
         )

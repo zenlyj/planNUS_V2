@@ -55,6 +55,7 @@
 
     function changeToKey($day, $time) {
         $to_Day = "";
+        $day = ucfirst(strtolower($day));
         if ($day == "Monday") {
             $to_Day = "MON";
         } else if ($day == "Tuesday") {

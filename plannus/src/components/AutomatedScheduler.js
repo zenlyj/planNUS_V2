@@ -12,40 +12,34 @@ import nusmodsAPI from '../api/nusmodsAPI'
 class FormTab extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            Monday: 8,
-            Tuesday: 8,
-            Wednesday: 8,
-            Thursday: 8,
-            Friday: 8,
-            Saturday: 7,
-            Sunday: 3
-        }
     }
     render() {
         return (
         <Tabs defaultActiveKey="Monday" id="uncontrolled-tab-example">
-            {this.state.days.map(day => {
+            {this.props.formTabData.days.map(day => {
                 return (
                     <Tab key={day} eventKey={day} title={day}>
                     <table align="left" className="AutomatedForm">
                         <tbody>
                             <tr>
                                 <td colSpan='1'>Start</td>
-                                <td colSpan='4'><input name={[day] + '-start'} defaultValue='0900'/></td>
+                                <td colSpan='4'><input name={[day] + '_start'} value={this.props.formTabData[day + "_start"]} onChange={(e) => this.props.updateState({
+                                        [day + "_start"]: e.target.value
+                                    })}/></td>
                                 <td colSpan='1'></td>
                                 <td colSpan='1'>End</td>
-                                <td colSpan='4'><input name={[day] + '-end'} defaultValue='1900'/></td>
+                                <td colSpan='4'><input name={[day] + '_end'} value={this.props.formTabData[day + "_end"]} onChange={(e) => this.props.updateState({
+                                        [day + "_end"]: e.target.value
+                                    })}/></td>
                             </tr>
                             <tr className="timeSlider">
                                 <td colSpan='1'>Workload (hrs):</td>
                                     <td colSpan='10' style={{padding: 20 + 'px'}}>
-                                    <InputRange className="timeSlider" maxValue={20} minValue={0} value={this.state[day]} onChange= {(value) => this.setState({
+                                    <InputRange className="timeSlider" maxValue={20} minValue={0} value={this.props.formTabData[day]} onChange={(value) => this.props.updateState({
                                         [day]: value
                                     })} />
                                 </td>
-                                <td colSpan='1'><input type='hidden' name={[day] + '-hours'} value={this.state[day]} /></td>
+                                <td colSpan='1'><input type='hidden' name={[day] + '-hours'} value={this.props.formTabData[day]} /></td>
                             </tr>
                             <tr>
                                 <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
@@ -87,17 +81,90 @@ class AutomatedScheduler extends Component {
     };
 
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             modules: [],
+            distinctmodules: [],
+            week: this.props.id,
             open: false,
-            calculatedWorkload: 0
-        }
+            calculatedWorkload: 0,
+            formTabData: {
+                days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                Monday: 8,
+                Monday_start: '0900',
+                Monday_end: '1900',
+                Tuesday: 8,
+                Tuesday_start: '0900',
+                Tuesday_end: '1900',
+                Wednesday: 8,
+                Wednesday_start: '0900',
+                Wednesday_end: '1900',
+                Thursday: 8,
+                Thursday_start: '0900',
+                Thursday_end: '1900',
+                Friday: 8,
+                Friday_start: '0900',
+                Friday_end: '1900',
+                Saturday: 7,
+                Saturday_start: '0900',
+                Saturday_end: '1900',
+                Sunday: 3,
+                Sunday_start: '0900',
+                Sunday_end: '1900'
+            }
+        };
         this.handleChange = this.handleChange.bind(this);
         this.addModule = this.addModule.bind(this);
         this.removeModule = this.removeModule.bind(this);
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.updateState = this.updateState.bind(this);
+        this.resetState = this.resetState.bind(this);
+        this.handleAutomate = this.handleAutomate.bind(this);
+    }
+    
+    handleAutomate() {
+        this.props.automateSchedule(this.state);
+        this.resetState();
+        this.setState({open: false});
+        
+    }
+
+    resetState() {
+        this.setState({
+            modules: [],
+            week: this.props.id,
+            open: true,
+            calculatedWorkload: 0,
+            formTabData: {
+                days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                Monday: 8,
+                Monday_start: '0900',
+                Monday_end: '1900',
+                Tuesday: 8,
+                Tuesday_start: '0900',
+                Tuesday_end: '1900',
+                Wednesday: 8,
+                Wednesday_start: '0900',
+                Wednesday_end: '1900',
+                Thursday: 8,
+                Thursday_start: '0900',
+                Thursday_end: '1900',
+                Friday: 8,
+                Friday_start: '0900',
+                Friday_end: '1900',
+                Saturday: 7,
+                Saturday_start: '0900',
+                Saturday_end: '1900',
+                Sunday: 3,
+                Sunday_start: '0900',
+                Sunday_end: '1900'
+            }
+        });
+    }
+    
+    componentDidMount() {
+        nusmodsAPI.retrieveDistinctModule(this.state.week == undefined ? 1 : this.state.week).then(result => this.setState({distinctmodules: result}));
     }
 
     openModal() {
@@ -122,7 +189,7 @@ class AutomatedScheduler extends Component {
                 modules: newModules
             });
         }
-        nusmodsAPI.calculateWorkload(this.state.modules).then(hrs => this.setState({calculatedWorkload: hrs}));
+        nusmodsAPI.calculateWorkload(this.state.week, this.state.modules).then(hrs => this.setState({calculatedWorkload: hrs}));
     }
 
     removeModule(mc) {
@@ -130,7 +197,15 @@ class AutomatedScheduler extends Component {
         this.setState({
             modules: newModules
         });
-        nusmodsAPI.calculateWorkload(this.state.modules).then(hrs => this.setState({calculatedWorkload: hrs}));
+        nusmodsAPI.calculateWorkload(this.state.week, newModules).then(hrs => this.setState({calculatedWorkload: hrs}));
+    }
+
+    updateState(newState) {
+        let newFormTabData = this.state.formTabData;
+        for (var key in newState) {
+            newFormTabData[key] = newState[key];
+        }
+        this.setState({formTabData: newFormTabData});
     }
 
     render() {
@@ -192,14 +267,14 @@ class AutomatedScheduler extends Component {
                         </a>
                         <div style={headerStyle}> Automated Scheduler </div>
                         <div style={contentStyle}>
-                            <form action="/">
+                            <form id="autoschedule">
                                 <table align="left" className="AutomatedForm">
                                     <tbody>
                                         <tr><td colSpan='1'></td><td colSpan='1'>Calculated Workload:</td><td colSpan='9'><input value={this.state.calculatedWorkload} readOnly /></td><td colSpan='1'></td></tr>
-                                        <tr><td colSpan='1'></td><td colSpan='1'>Modules:</td><td colSpan='9'><AutoComplete suggestions={nusmodsAPI.getModuleList(1)} onChange={this.addModule} /></td><td colSpan='1'></td></tr>
+                                        <tr><td colSpan='1'></td><td colSpan='1'>Modules:</td><td colSpan='9'><AutoComplete suggestions={this.state.distinctmodules} onChange={this.addModule} /></td><td colSpan='1'></td></tr>
                                         <tr><td colSpan='2'></td><td colSpan='9'><AddedModules modules={this.state.modules} onChange={this.removeModule}/></td><td><input type="hidden" name="modules" value={this.state.modules} /></td></tr>
-                                        <tr><td colSpan='1'></td><td colSpan='10'><FormTab/></td><td colSpan='1'></td></tr>
-                                        <tr><td colSpan='7'></td><td colSpan='2'><Button className="fullButton btn-secondary">Reset</Button></td><td colSpan='2'><Button type="submit" className="fullButton btn-success">Automate</Button></td><td colSpan='1'></td></tr>
+                                        <tr><td colSpan='1'></td><td colSpan='10'><FormTab formTabData={this.state.formTabData} updateState={this.updateState}/></td><td colSpan='1'></td></tr>
+                                        <tr><td colSpan='7'></td><td colSpan='2'><Button onClick={this.resetState} className="fullButton btn-secondary">Reset</Button></td><td colSpan='2'><Button onClick={this.handleAutomate} className="fullButton btn-success">Automate</Button></td><td colSpan='1'></td></tr>
                                     </tbody>
                                 </table>
                             </form>
