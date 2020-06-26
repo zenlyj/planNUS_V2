@@ -13,7 +13,8 @@ class Home extends Component {
         super(props)
         this.state = {
             weekNum: this.props.currWeek,
-            timetables: this.props.initHome
+            timetables: this.props.initHome,
+            deadlines: this.props.deadlineDB
         }
         this.navWeek = this.navWeek.bind(this)
         this.updateHomeTask = this.updateHomeTask.bind(this)
@@ -25,8 +26,8 @@ class Home extends Component {
         this.props.updateTaskDatabase(id, updatedTimetable)
     }
 
-    updateHomeDeadline(id, updatedDeadline) {
-        this.props.updateDLDatabase(id, updatedDeadline)
+    updateHomeDeadline(updatedDeadline, toRemove) {
+        this.props.updateDLDatabase(updatedDeadline, toRemove)
     }
 
     submitURL(url) {
@@ -51,6 +52,14 @@ class Home extends Component {
         if (this.state.timetables.has(this.state.weekNum)) {
             tasksAdded = this.state.timetables.get(this.state.weekNum)
         }
+        let deadlines
+        let arr = []
+        for (let key of this.state.deadlines.keys()) {
+            arr.push(key)
+        }
+        arr.sort()
+        deadlines = arr.map(key => this.state.deadlines.get(key))
+        console.log(deadlines)
         return (
             <React.Fragment>
                 <div style={{marginTop:'2%', marginLeft:'40%', paddingBottom:'1.5%'}}> 
@@ -63,7 +72,7 @@ class Home extends Component {
                 </div>
                 <div style={{marginLeft:'13%', marginTop:'3%'}}>
                     <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateHomeTask={this.updateHomeTask}/> </div>
-                    <div style={{float:'right', marginRight:'0.8%'}}> <Deadline updateHomeDeadline={this.updateHomeDeadline}/> </div>
+                    <div style={{float:'right', marginRight:'0.8%'}}> <Deadline deadlines={deadlines} updateHomeDeadline={this.updateHomeDeadline}/> </div>
                 </div>
                 <div style={{position:'absolute', marginTop:'32.9%', marginLeft:'13.1%'}}>
                     <AutomatedScheduler />

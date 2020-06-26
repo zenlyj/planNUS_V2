@@ -52,12 +52,15 @@ class App extends Component {
     this.setState({taskDB: taskDB, currWeek: id})
   }
 
-  updateDLDatabase(id, updatedDeadline) {
+  updateDLDatabase(updatedDeadline, toRemove) {
+    console.log(updatedDeadline)
     let deadlineDB = new Map(this.state.deadlineDB)
-    if (this.state.deadlineDB.has(id)) {
-      deadlineDB.delete(id)
+    if (this.state.deadlineDB.has(updatedDeadline.id)) {
+      deadlineDB.delete(updatedDeadline.id)
     }
-    deadlineDB.set(id, updatedDeadline)
+    if (!toRemove) {
+      deadlineDB.set(updatedDeadline.id, updatedDeadline)
+    }
     this.setState({deadlineDB: deadlineDB})
   }
 
@@ -156,6 +159,7 @@ class App extends Component {
                                                               updateTaskDatabase={this.updateTaskDatabase}
                                                               updateDLDatabase={this.updateDLDatabase}
                                                               submitURL={this.retrieveNUSModsTasks}
+                                                              deadlineDB={this.state.deadlineDB}
                                                         />
                                                         )
                                                 } 
