@@ -151,7 +151,7 @@ class App extends Component {
           currentDB.set(key, map);
         }
       }
-      this.setState({taskDB: currentDB});
+      this.setState({taskDB: currentDB, currWeek: state.week});
     });
   }
 
