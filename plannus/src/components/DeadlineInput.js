@@ -145,7 +145,7 @@ class DeadlineInput extends Component {
         }
 
         return (<div>
-                    {this.props.viewMode ? <button style={buttonView} onClick={this.openModal}> View Tasks </button>: 
+                    {this.props.viewMode ? <button style={buttonView} onClick={this.openModal}> View Deadlines </button>: 
                     <button style={buttonAdd} onClick={this.openModal}> + </button> }
                     <Popup
                         open={this.state.open}
