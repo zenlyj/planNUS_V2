@@ -35,6 +35,7 @@ class App extends Component {
     this.updateTaskDatabase = this.updateTaskDatabase.bind(this);
     this.updateDLDatabase = this.updateDLDatabase.bind(this)
     this.retrieveNUSModsTasks = this.retrieveNUSModsTasks.bind(this)
+    this.automateSchedule = this.automateSchedule.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -131,14 +132,30 @@ class App extends Component {
           Cookies.set("loggedIn", true);
           Auth.login(nusnet, () => {this.setState(() => ({loggedIn: true}))});
         }
-      } else if (type == "nusmods") {
-        const url = append.split('&')[1].split('=')[1];
-        nusmodsAPI.importFromNUSMODS(url).then(taskMap => {
-          this.setState({taskDB: taskMap, currWeek: 1});
-          console.log(this.state.taskDB);
-        });
-      }
+      } 
     }
+  }
+
+  automateSchedule(state){
+    
+    nusmodsAPI.automateSchedule(state).then(imported => {
+      let currentDB = this.state.taskDB;
+      for (let key of imported.keys()) {
+        if (currentDB.get(key) == undefined) {
+          currentDB.set(key, imported.get(key));          
+        } else {
+          var map = currentDB.get(key);
+          for (var i of imported.get(key).keys()) {
+            let task = imported.get(key).get(i);
+            map.set(i, task);
+            nusmodsAPI.addTask(task.id, task.taskPresent, task.taskName, task.module, task.timeFrom, 
+              task.timeTo, task.description, key);
+          }
+          currentDB.set(key, map);
+        }
+      }
+      this.setState({taskDB: currentDB, currWeek: state.week});
+    });
   }
 
   componentDidMount() {
@@ -160,6 +177,7 @@ class App extends Component {
                                                               updateDLDatabase={this.updateDLDatabase}
                                                               submitURL={this.retrieveNUSModsTasks}
                                                               deadlineDB={this.state.deadlineDB}
+                                                              automateSchedule={this.automateSchedule}
                                                         />
                                                         )
                                                 } 

@@ -45,8 +45,9 @@ class nusmodsAPI {
         return moduleList;
     }
 
-    calculateWorkload(modules) {
-        let url = this.phpHost + "calculateworkload.php?modules=" + modules.toString();
+    calculateWorkload(week, modules) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "calculateworkload.php?nusnet=" + nusnet + "&week=" + week + "&modules=" + modules.toString();
         const response = fetch(url).then(res => res.json()).then(obj => obj.hours);
         return response;
     }
@@ -57,14 +58,14 @@ class nusmodsAPI {
                 "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
                 "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + 
                 "&description=" + description + "&week=" + week;
-        const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
+        const response = fetch(url).then(res => res.json()).then(obj => obj.success);
     }
 
     removeTask(id, week) {
         const nusnet = Auth.getNUSNET();
         let url = this.phpHost + "removetask.php?nusnet="+ nusnet +
                 "&id=" + id + "&week=" + week;
-        const response = fetch(url).then(res => res.json()).then(obj => console.log(obj.success));
+        const response = fetch(url).then(res => res.json()).then(obj => obj.success);
     }
 
     retrieveTask() {
@@ -75,12 +76,31 @@ class nusmodsAPI {
 
     }
 
+    retrieveDistinctModule(week) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "retrievedistinctmodule.php?nusnet=" + nusnet + "&week=" + week;
+        const response = fetch(url).then(res => res.json()).then(json => json.map(x => x.module));
+        return response;
+    }
+
     // usage importFromNUSMODS(https://nusmods.com/timetable/sem-1/share?CS1101S=REC:09,TUT:09B,LEC:2&ES1103=SEC:C01&IS1103=SEC:1,TUT:18&MA1301=LEC:1,TUT:3&PC1221=TUT:6,LEC:1,LAB:9);
     // the url is from nusmods -> share -> copy link
     importFromNUSMODS(nusmodsURL) {
         let url = this.phpHost + "importnusmods.php?url=" + nusmodsURL.split("%3D").join("=").split("%3A").join(":")
         .split("%2F").join("/").split("%3F").join("?").split("%2C").join(",").split("%26").join("&").split("&").join("|");
-        console.log(url);
+        const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
+        return response;
+    }
+
+    automateSchedule(state) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "workscheduler.php?nusnet=" + nusnet + "&week=" + state.week + "&modules=" + state.modules.toString();
+        for (var key in state.formTabData.days) {
+            const day = state.formTabData.days[key];
+            url = url + "&" + day + "_hours=" + state.formTabData[day];
+            url = url + "&" + day + "_start=" + state.formTabData[day+"_start"];
+            url = url + "&" + day + "_end=" + state.formTabData[day+"_end"];
+        }
         const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
         return response;
     }
