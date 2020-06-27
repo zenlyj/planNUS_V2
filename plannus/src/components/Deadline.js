@@ -33,9 +33,7 @@ class Deadline extends Component{
             width:'140px',
             paddingTop:'2%'
         }
-
         let deadlineInfo = this.props.deadlines.length ? this.props.deadlines[this.state.currDL] : null
-        console.log(deadlineInfo)
         return (<div style={deadlineStyle}> 
                     <div style={{height:'70px', borderBottom:'2px solid gray'}}> 
                         <div> Deadlines </div>

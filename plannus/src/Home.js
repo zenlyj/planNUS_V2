@@ -72,9 +72,11 @@ class Home extends Component {
                 </div>
                 <div style={{marginLeft:'13%', marginTop:'3%'}}>
                     <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateHomeTask={this.updateHomeTask}/> </div>
-                    <div style={{float:'right', marginRight:'0.8%'}}> <Deadline deadlines={deadlines} updateHomeDeadline={this.updateHomeDeadline}/> </div>
                 </div>
-                <div style={{position:'absolute', marginTop:'32.9%', marginLeft:'13.1%'}}>
+                <div style={{position:'absolute', marginLeft:'90%'}}>
+                    <Deadline deadlines={deadlines} updateHomeDeadline={this.updateHomeDeadline}/>
+                </div>
+                <div style={{position:'absolute', marginTop:'27%', marginLeft:'13%'}}>
                     <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} />
                 </div>
             </React.Fragment>

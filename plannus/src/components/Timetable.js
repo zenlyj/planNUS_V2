@@ -101,7 +101,7 @@ class Timetable extends Component {
         let days = ["MON", "TUES", "WED", "THURS", "FRI", "SAT", "SUN"]
         let daysRows = days.map(day => {
             let row = []
-            row.push(<td style={{width:'30px', maxWidth:'30px'}} key={day+"0"}>{day}</td>)
+            row.push(<td key={day+"0"}>{day}</td>)
             for (let x = 1; x <= 13; x++) {
                 let cellKey = day+x
                 let colSpan = 1
@@ -124,7 +124,7 @@ class Timetable extends Component {
                         description: ""
                     }
                 }
-                row.push(<td style={{width:'30px', maxWidth:'30px'}} key={cellKey} colSpan={colSpan}> 
+                row.push(<td key={cellKey} colSpan={colSpan}> 
                             <Task initTask={initTask} updateTable={this.updateTable} />
                         </td>)
                 x += (colSpan-1)
@@ -138,7 +138,7 @@ class Timetable extends Component {
 
     render() {
         return (
-            <Table striped bordered hover variant="dark" style={{width:'130%'}}>
+            <Table striped bordered hover variant="dark" style={{width:'85%', tableLayout:'fixed'}}>
                 {this.genTableHead()}
                 {this.genTableBody()}
             </Table>

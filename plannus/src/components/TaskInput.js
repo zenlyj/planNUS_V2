@@ -169,7 +169,7 @@ class TaskInput extends Component {
 
                             <div style={{paddingBottom:'2%'}}>
                                 <div style={{float: 'left'}}> Module: </div>
-                                <div style={{float:'left', paddingLeft:'7.7%'}}> 
+                                <div style={{float:'left', paddingLeft:'7.1%'}}> 
                                     <input 
                                         type='text' 
                                         name="module"
@@ -186,7 +186,7 @@ class TaskInput extends Component {
 
                             <div style={{paddingBottom:'2%'}}>
                                 <div style={{float: 'left'}}> From: </div>
-                                <div style={{float:'left', paddingLeft:'10.5%'}}> 
+                                <div style={{float:'left', paddingLeft:'9.3%'}}> 
                                     <input 
                                         type='text' 
                                         name="timeFrom"
@@ -196,7 +196,7 @@ class TaskInput extends Component {
                                     </input> 
                                 </div>
 
-                                <div style={{float: 'left', paddingLeft:"9%"}}> To: </div>
+                                <div style={{float: 'left', marginLeft:"15%"}}> To: </div>
                                 <div style={{float:'left', paddingLeft:'10%'}}> 
                                     <input 
                                         type='text' 
@@ -231,7 +231,7 @@ class TaskInput extends Component {
                             <br />
                         
                             <div>
-                                <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '5%' : '25%'}}> 
+                                <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '13%' : '30%'}}> 
                                     <Button variant="primary" 
                                             onClick={this.editTask}
                                     > 
@@ -239,7 +239,7 @@ class TaskInput extends Component {
                                     </Button>
                                 </div>
                                 {this.props.taskInfo.taskPresent ? 
-                                    <div style={{float:'right'}}>
+                                    <div style={{float:'right', marginRight:'7%'}}>
                                         <Button variant="primary"
                                             onClick={this.removeTask}
                                         >

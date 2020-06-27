@@ -195,7 +195,7 @@ class DeadlineInput extends Component {
 
                                 <div style={{paddingBottom:'2%'}}>
                                     <div style={{float: 'left'}}> Module: </div>
-                                    <div style={{float:'left', paddingLeft:'13.2%'}}> 
+                                    <div style={{float:'left', paddingLeft:'11.2%'}}> 
                                         <input 
                                             type='text' 
                                             name="module"
@@ -212,7 +212,7 @@ class DeadlineInput extends Component {
 
                                 <div style={{paddingBottom:'2%'}}>
                                     <div style={{float: 'left'}}> Deadline: </div>
-                                    <div style={{float:'left', paddingLeft:'7.5%'}}> 
+                                    <div style={{float:'left', paddingLeft:'7%'}}> 
                                         <input 
                                             type='text' 
                                             name="deadline"
@@ -230,7 +230,7 @@ class DeadlineInput extends Component {
 
                                 <div>
                                 <div style={{float:'left'}}> 
-                                    <textarea style={{height:'100px', width:'330px'}} 
+                                    <textarea style={{height:'100px', width:'390px'}} 
                                         placeholder='Deadline Description' 
                                         type='text' 
                                         name="description"
@@ -244,11 +244,11 @@ class DeadlineInput extends Component {
                                 <br />
 
                                 <div>
-                                    <div style={{float:'left', marginLeft:this.props.viewMode ? '4%' : '25%', marginTop:'3%'}}>
+                                    <div style={{float:'left', marginLeft:this.props.viewMode ? '10%' : '25%', marginTop:'3%'}}>
                                         <Button onClick={this.editDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
                                     </div>
                                     {this.props.viewMode ? 
-                                    <div style={{float:'left', marginLeft:'2.5%', marginTop:'3%'}}>
+                                    <div style={{float:'left', marginLeft:'8%', marginTop:'3%'}}>
                                         <Button onClick={this.removeDeadline}> Remove Deadline </Button>
                                     </div> : null}
                                 </div>
