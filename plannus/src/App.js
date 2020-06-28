@@ -54,7 +54,6 @@ class App extends Component {
   }
 
   updateDLDatabase(updatedDeadline, toRemove) {
-    console.log(updatedDeadline)
     let deadlineDB = new Map(this.state.deadlineDB)
     if (this.state.deadlineDB.has(updatedDeadline.id)) {
       deadlineDB.delete(updatedDeadline.id)

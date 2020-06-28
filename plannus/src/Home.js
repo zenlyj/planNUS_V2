@@ -59,7 +59,6 @@ class Home extends Component {
         }
         arr.sort()
         deadlines = arr.map(key => this.state.deadlines.get(key))
-        console.log(deadlines)
         return (
             <React.Fragment>
                 <div style={{marginTop:'2%', marginLeft:'40%', paddingBottom:'1.5%'}}> 

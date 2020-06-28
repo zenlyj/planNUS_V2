@@ -17,6 +17,7 @@ class DeadlineInput extends Component {
         this.closeModal = this.closeModal.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.reset = this.reset.bind(this)
+        this.addDeadline = this.addDeadline.bind(this)
         this.editDeadline = this.editDeadline.bind(this)
         this.removeDeadline = this.removeDeadline.bind(this)
     }
@@ -73,8 +74,19 @@ class DeadlineInput extends Component {
         })
     }
 
+    addDeadline() {
+        let addedFields = {id: this.state.deadline + this.state.deadlineName,
+                           deadlineName: this.state.deadlineName,
+                           module: this.state.module,
+                           deadline: this.state.deadline,
+                           description: this.state.description
+        }
+        this.props.updateDeadline(addedFields, false)
+        this.closeModal()
+    }
+
     editDeadline() {
-        let editedFields = {id: this.state.deadline + this.state.deadlineName,
+        let editedFields = {id: this.state.id,
                             deadlineName: this.state.deadlineName, 
                             module: this.state.module, 
                             deadline: this.state.deadline,
@@ -159,7 +171,7 @@ class DeadlineInput extends Component {
 
                             {this.props.viewMode && !this.props.deadlineInfo ? <div> No Deadlines </div> :
                             <div>
-                            <div style={headerStyle}> {this.props.viewMode ? this.state.deadlineName : 'New Deadline'} </div>
+                            <div style={headerStyle}> {this.props.viewMode ? this.props.deadlineInfo.deadlineName : 'New Deadline'} </div>
                             
                             {this.props.viewMode && this.props.deadlineInfo ? 
                                 <div>
@@ -245,7 +257,7 @@ class DeadlineInput extends Component {
 
                                 <div>
                                     <div style={{float:'left', marginLeft:this.props.viewMode ? '10%' : '25%', marginTop:'3%'}}>
-                                        <Button onClick={this.editDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
+                                        <Button onClick={this.props.viewMode ? this.editDeadline : this.addDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
                                     </div>
                                     {this.props.viewMode ? 
                                     <div style={{float:'left', marginLeft:'8%', marginTop:'3%'}}>
