@@ -1,0 +1,43 @@
+.AutomatedForm tr td {
+    height: 40px;
+}
+
+.AutomatedForm {
+    table-layout: fixed;
+    font-size: 0.65vw;
+    border-collapse:separate; 
+    border-spacing: 0 10px;
+    width: 100%;
+}
+
+.nav-tabs a{
+    color:green;
+}
+
+
+.timeSlider {
+    overflow: hidden;
+    height: 70px;
+}
+
+.modules {
+    margin-right:5px;
+}
+
+.fullButton {
+    width:100%;
+}
+
+input {
+    width:100%;
+}
+
+.input-range__slider{
+    background: #3CB043;
+    border: 1px solid #3CB043;;
+}
+
+.input-range__track--active{
+    background: #3CB043;;
+    border: 1px solid #3CB043;;
+}

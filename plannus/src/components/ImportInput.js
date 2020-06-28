@@ -78,7 +78,7 @@ class ImportInput extends Component {
         }
         
         return (<div>
-                    <Button onClick={this.openModal}> Import </Button>
+                    <Button className="btn-home" onClick={this.openModal}> Import </Button>
                     <Popup
                         open={this.state.open}
                         closeOnDocumentClick
@@ -92,8 +92,8 @@ class ImportInput extends Component {
                             <form style={contentStyle}>
                                 <div style={{paddingBottom:'3%'}}>
                                     <div style={{float:'left'}}> Import from: </div>
-                                    <div style={{float:'left', marginLeft:'15%'}}> <Button> NUSMods </Button> </div>
-                                    <div style={{float:'left', marginLeft:'20%'}}> <Button> PlanNUS </Button> </div>
+                                    <div style={{float:'left', marginLeft:'15%'}}> <Button className="btn-info"> NUSMods </Button> </div>
+                                    <div style={{float:'left', marginLeft:'20%'}}> <Button className="btn-info"> PlanNUS </Button> </div>
                                 </div>
 
                                 <br />
@@ -127,7 +127,7 @@ class ImportInput extends Component {
 
                                 <div>
                                     <div style={{float:'left', marginLeft:'85%'}}>
-                                        <Button onClick={this.submitURL}> Import </Button>
+                                        <Button className="btn-success" onClick={this.submitURL}> Import </Button>
                                     </div>
                                 </div>
                             </form>

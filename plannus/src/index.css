@@ -12,4 +12,8 @@ code {
     monospace;
 }
 
+@import "../node_modules/react-input-range/lib/css/index.css";
 @import "./styles/AutoComplete.css";
+@import "./styles/Navigation.css";
+@import "./styles/AutomatedScheduler.css";
+@import "./styles/Timetable.css";

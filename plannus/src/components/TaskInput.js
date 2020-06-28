@@ -85,13 +85,7 @@ class TaskInput extends Component {
             fontSize: 20
         }
 
-        const taskButtonStyle = {
-            width:'100%', 
-            fontSize:'12px', 
-            whiteSpace:'nowrap',
-            overflow:'hidden',
-            textOverflow:'ellipsis'
-        }
+        
 
         const modalStyle = {
             font: '12px',
@@ -130,7 +124,7 @@ class TaskInput extends Component {
         return (
             <div>
                 {this.props.taskInfo.taskPresent ? 
-                    <Button style={taskButtonStyle} onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
+                    <Button className="taskButton" onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
                     <button style={defaultButtonStyle}
                         onMouseOver={() => this.setState({hovered:true})}
                         onMouseLeave={() => this.setState({hovered:false})}
@@ -232,7 +226,7 @@ class TaskInput extends Component {
                         
                             <div>
                                 <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '13%' : '30%'}}> 
-                                    <Button variant="primary" 
+                                    <Button className="btn-success" variant="primary" 
                                             onClick={this.editTask}
                                     > 
                                         {this.props.taskInfo.taskPresent ? "Save Changes" : "Add Task"} 
@@ -240,7 +234,7 @@ class TaskInput extends Component {
                                 </div>
                                 {this.props.taskInfo.taskPresent ? 
                                     <div style={{float:'right', marginRight:'7%'}}>
-                                        <Button variant="primary"
+                                        <Button className="btn-success" variant="primary"
                                             onClick={this.removeTask}
                                         >
                                             Remove Task

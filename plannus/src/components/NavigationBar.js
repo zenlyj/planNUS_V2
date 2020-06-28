@@ -1,26 +1,21 @@
 import React from 'react';
 import styled from "styled-components";
 import {Router, Link} from 'react-router-dom';
+import { Navbar } from 'react-bootstrap';
 /* This defines the actual bar going down the screen */
-const StyledSideNav = styled.div`
-  position: absolute;     /* Fixed Sidebar (stay in place on scroll and position relative to viewport) */
-  height: 100%;
-  width: 10%;     /* Set the width of the sidebar */
-  background-color: #444; /* Black */
-  overflow-x: hidden;     /* Disable horizontal scroll */
-  padding-top: 10px;
-`;
+
+
+
 export class NavigationBar extends React.Component {
   render() {
     return (
-      <StyledSideNav>
-        <ul>
-          <li><Link to='/'>Timetable</Link></li>
-          <li><Link to='/Diary'>Diary</Link></li>
-          <li><Link to='/Stats'>Stats</Link></li>
-          <li><Link to='/Settings'>Settings</Link></li>
-        </ul>
-      </StyledSideNav>
+      <nav className="nav flex-column asideNav">
+          <Link className="nav-link" to='/'><img src="https://img.icons8.com/officel/25/000000/calendar.png"/>Timetable</Link>
+          <Link className="nav-link"to='/Diary'><img src="https://img.icons8.com/dusk/25/000000/book.png"/>Diary</Link>
+          <Link className="nav-link"to='/Stats'><img src="https://img.icons8.com/plasticine/25/000000/area-chart.png"/>
+Stats</Link>
+          <Link className="nav-link"to='/Settings'><img src="https://img.icons8.com/flat_round/25/000000/settings--v1.png"/>Settings</Link>
+      </nav>
     );
   }
 }

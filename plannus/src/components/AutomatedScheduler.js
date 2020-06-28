@@ -254,7 +254,7 @@ class AutomatedScheduler extends Component {
 
         return (
             <div>
-                <Button onClick={this.openModal}>Automated Scheduler</Button>
+                <Button className="btn-home" onClick={this.openModal}>Automated Scheduler</Button>
                 <Popup 
                     open={this.state.open}
                     closeOnDocumentClick
@@ -270,8 +270,8 @@ class AutomatedScheduler extends Component {
                             <form id="autoschedule">
                                 <table align="left" className="AutomatedForm">
                                     <tbody>
-                                        <tr><td colSpan='1'></td><td colSpan='1'>Calculated Workload:</td><td colSpan='9'><input value={this.state.calculatedWorkload} readOnly /></td><td colSpan='1'></td></tr>
-                                        <tr><td colSpan='1'></td><td colSpan='1'>Modules:</td><td colSpan='9'><AutoComplete suggestions={this.state.distinctmodules} onChange={this.addModule} /></td><td colSpan='1'></td></tr>
+                                        <tr><td colSpan='1'></td><td colSpan='1'>Calculated Workload:</td><td colSpan='4'><input value={this.state.calculatedWorkload} readOnly /></td><td colSpan='6'></td></tr>
+                                        <tr><td colSpan='1'></td><td colSpan='1'>Modules:</td><td colSpan='4'><AutoComplete suggestions={this.state.distinctmodules} onChange={this.addModule} /></td><td colSpan='6'></td></tr>
                                         <tr><td colSpan='2'></td><td colSpan='9'><AddedModules modules={this.state.modules} onChange={this.removeModule}/></td><td><input type="hidden" name="modules" value={this.state.modules} /></td></tr>
                                         <tr><td colSpan='1'></td><td colSpan='10'><FormTab formTabData={this.state.formTabData} updateState={this.updateState}/></td><td colSpan='1'></td></tr>
                                         <tr><td colSpan='7'></td><td colSpan='2'><Button onClick={this.resetState} className="fullButton btn-secondary">Reset</Button></td><td colSpan='2'><Button onClick={this.handleAutomate} className="fullButton btn-success">Automate</Button></td><td colSpan='1'></td></tr>

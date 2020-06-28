@@ -1,0 +1,90 @@
+.header {
+    height:50px;
+    background-color:#008080;
+}
+
+.asideNav {
+    width: 10rem;
+    float: left;
+    font-size: 16px;
+    height: 95vh;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+
+.asideNav a {
+    margin: 5px;
+    color: #5a8b5a;
+}
+
+.asideNav a img {
+    margin-right:5px;
+    padding-bottom:3px;
+    width:1.5rem;
+    
+}
+
+.asideNav a:hover{
+    color: #18d111;
+}
+
+.header {
+    height:53px;
+    background-color: rgba(90,139,90,0.2);
+    border-bottom: 1px solid #c9cccc;
+}
+
+.header a:hover {
+    color:#008080;
+}
+
+.header .navbar-brand {
+    color:#0d5516;
+    font-weight:550;
+    margin-left:15px;
+}
+
+.btn-home {
+    background-color: #ffffff;
+    border-color: #169927;
+    color: #169927;
+}
+
+.btn-home:hover {
+    background-color: #169927;
+    border-color: #169927;
+    color: #ffffff;
+}
+
+.btn-home:focus{
+    box-shadow:0 0 0 .2rem #169927;
+    background-color: #169927;
+    color: #ffffff;
+}
+
+.btn-home:not(:disabled):not(.disabled).active,.btn-home:not(:disabled):not(.disabled):active,.show>.btn-home.dropdown-toggle{
+    color:#fff;background-color:#169927;border-color:#169927
+}
+
+.btn-home:not(:disabled):not(.disabled).active:focus,.btn-home:not(:disabled):not(.disabled):active:focus,.show>.btn-home.dropdown-toggle:focus{
+    box-shadow:0 0 0 .2rem #169927;
+}
+
+.table{
+    border: 0px;
+    border-collapse: collapse;
+}
+.table-bordered tr th{
+    border-right: 1px solid rgb(172, 201, 168);
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+.table-bordered tr td{
+    border-right: 1px solid rgb(172, 201, 168);
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
