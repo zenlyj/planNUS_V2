@@ -21,6 +21,7 @@ import Cookies from 'js-cookie';
 import Auth from './components/Auth';
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import nusmodsAPI from "./api/nusmodsAPI";
+import LoadingOverlay from 'react-loading-overlay'
 
 class App extends Component {
   constructor() {
@@ -29,13 +30,15 @@ class App extends Component {
       loggedIn: false,
       taskDB: new Map(),
       deadlineDB: new Map(),
-      currWeek: 1
+      currWeek: 1,
+      loading: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateTaskDatabase = this.updateTaskDatabase.bind(this);
     this.updateDLDatabase = this.updateDLDatabase.bind(this)
     this.retrieveNUSModsTasks = this.retrieveNUSModsTasks.bind(this)
     this.automateSchedule = this.automateSchedule.bind(this);
+    this.setLoading = this.setLoading.bind(this);
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -71,6 +74,7 @@ class App extends Component {
   }
 
   retrieveNUSModsTasks(url, weekNum) {
+    this.setLoading(true);
     // To remove all existing tasks from DB
     for (let key of this.state.taskDB.keys()) {
       let timetable = this.state.taskDB.get(key)
@@ -94,7 +98,7 @@ class App extends Component {
           }
         }
       }
-      this.setState({taskDB: retrievedDB}) 
+      this.setState({taskDB: retrievedDB, loading: false}) 
     })
   }
 
@@ -136,7 +140,7 @@ class App extends Component {
   }
 
   automateSchedule(state){
-    
+    this.setLoading(true);
     nusmodsAPI.automateSchedule(state).then(imported => {
       let currentDB = this.state.taskDB;
       for (let key of imported.keys()) {
@@ -153,7 +157,13 @@ class App extends Component {
           currentDB.set(key, map);
         }
       }
-      this.setState({taskDB: currentDB, currWeek: state.week});
+      this.setState({taskDB: currentDB, currWeek: state.week, loading: false});
+    });
+  }
+
+  setLoading(loading) {
+    this.setState({
+      loading: loading
     });
   }
 
@@ -164,7 +174,13 @@ class App extends Component {
 
   render() {
     return (
-      <React.Fragment>
+      <LoadingOverlay
+          active={this.state.loading}
+          styles={{overlay: (base) => ({...base,
+            background:'rgba(0,0,0,0.3)'})}}
+          spinner
+          overlay
+          text='Loading...'>
         <Header />
           <Router>
             <NavigationBar />
@@ -172,11 +188,13 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={() => (<Home initHome={this.state.taskDB} 
                                                               currWeek={this.state.currWeek} 
+                                                              loading={this.state.loading}
                                                               updateTaskDatabase={this.updateTaskDatabase}
                                                               updateDLDatabase={this.updateDLDatabase}
                                                               submitURL={this.retrieveNUSModsTasks}
                                                               deadlineDB={this.state.deadlineDB}
                                                               automateSchedule={this.automateSchedule}
+                                                              setLoading={this.setLoading}
                                                         />
                                                         )
                                                 } 
@@ -188,7 +206,7 @@ class App extends Component {
               </Switch>
             </Layout>
           </Router>
-      </React.Fragment>
+      </LoadingOverlay>
     );
   }
 }
