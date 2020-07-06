@@ -81,7 +81,7 @@ class TaskInput extends Component {
             border: 0,
             width:'100%',
             height:'30px',
-            color: 'white',
+            color: '#a2b2d3',
             fontSize: 20
         }
 
