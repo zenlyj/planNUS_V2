@@ -77,7 +77,7 @@ class Timetable extends Component {
     genTableHead() {
         let hours = []
         hours.push(<th key="h0000">{"FROM"} <br /> {"TO"}</th>)
-        for (let x = 9; x <= 21; x++) {
+        for (let x = 8; x <= 20; x++) {
             let from = "00";
             let to = "00"
             if (x < 10) {
@@ -119,7 +119,7 @@ class Timetable extends Component {
                         taskPresent: false,
                         taskName: "",
                         module: "",
-                        timeFrom: x===1 ? '0'+(x+8)*100 : ""+(x+8)*100,
+                        timeFrom: x===1 ? '0'+(x+7)*100 : ""+(x+7)*100,
                         timeTo: "",
                         description: ""
                     }
