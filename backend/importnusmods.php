@@ -71,6 +71,6 @@
         } else if ($day == "Sunday") {
             $to_Day = "SUN";
         }
-        return $to_Day . ( $time / 100 - 8);
+        return $to_Day . ( $time / 100 - 7);
     }
 ?>
