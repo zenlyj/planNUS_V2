@@ -11,8 +11,8 @@ class Deadline extends Component{
         this.navViewMode = this.navViewMode.bind(this)
     }
 
-    updateDeadline(updatedInfo, toRemove) {
-        this.props.updateHomeDeadline(updatedInfo, toRemove)
+    updateDeadline(updatedInfo, toRemove, toEdit) {
+        this.props.updateHomeDeadline(updatedInfo, toRemove, toEdit)
     }
 
     navViewMode(diff) {
@@ -33,8 +33,12 @@ class Deadline extends Component{
             width:'140px',
             paddingTop:'2%'
         }
-        let deadlineInfo = this.props.deadlines.length ? this.props.deadlines[this.state.currDL] : null
-        return (<div style={deadlineStyle}> 
+        let deadlineInfo
+        if (!this.props.calendarView) {
+            deadlineInfo = this.props.deadlines.length ? this.props.deadlines[this.state.currDL] : null
+        }
+        return (this.props.calendarView ? <DeadlineInput calendarView={true} deadlineInfo={this.props.deadlineInfo}/> :
+                <div style={deadlineStyle}> 
                     <div style={{height:'70px', borderBottom:'2px solid gray'}}> 
                         <div> Deadlines </div>
                         <DeadlineInput viewMode={false} updateDeadline={this.updateDeadline}/>

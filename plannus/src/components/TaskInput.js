@@ -27,8 +27,8 @@ class TaskInput extends Component {
             open: true,
             taskName: this.props.taskInfo.taskName,
             module: this.props.taskInfo.module,
-            timeFrom: this.props.taskInfo.timeFrom,
-            timeTo: this.props.taskInfo.timeTo,
+            timeFrom: this.props.taskInfo.timeFrom.length===3 ? "0"+this.props.taskInfo.timeFrom : this.props.taskInfo.timeFrom,
+            timeTo: this.props.taskInfo.timeTo.length===3 ? "0"+this.props.taskInfo.timeTo : this.props.taskInfo.timeTo,
             description: this.props.taskInfo.description
         })
     }
@@ -118,9 +118,8 @@ class TaskInput extends Component {
             fontSize: '24px',
             background: '#ffffff',
             borderRadius: '18px',
-            border: '1px solid #cfcece'
+            border: '1px solid #cfcece',
         }
-
         return (
             <div>
                 {this.props.taskInfo.taskPresent ? 
@@ -153,6 +152,7 @@ class TaskInput extends Component {
                                         style={{width:'120%'}}
                                         value={this.state.taskName}
                                         onChange={this.handleChange}
+                                        readOnly={this.props.calendarView}
                                     >
                                     </input> 
                                 </div>
@@ -170,6 +170,7 @@ class TaskInput extends Component {
                                         style={{width:'120%'}}
                                         value={this.state.module}
                                         onChange={this.handleChange}
+                                        readOnly={this.props.calendarView}
                                     >
                                     </input> 
                                 </div>
@@ -186,6 +187,7 @@ class TaskInput extends Component {
                                         name="timeFrom"
                                         style={{width:'70%'}}
                                         value={this.state.timeFrom}
+                                        readOnly={true}
                                 >        
                                     </input> 
                                 </div>
@@ -199,6 +201,7 @@ class TaskInput extends Component {
                                         placeholder="24hr format"
                                         value={this.state.timeTo}
                                         onChange={this.handleChange}
+                                        readOnly={this.props.calendarView}
                                     >
                                     </input> 
                                 </div>
@@ -215,6 +218,7 @@ class TaskInput extends Component {
                                         name="description"
                                         value={this.state.description}
                                         onChange={this.handleChange}
+                                        readOnly={this.props.calendarView}
                                     >
                                     </textarea> 
                                 </div>
@@ -224,25 +228,27 @@ class TaskInput extends Component {
                             <br />
                             <br />
                         
-                            <div>
-                                <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '13%' : '30%'}}> 
-                                    <Button className="btn-success" variant="primary" 
-                                            onClick={this.editTask}
-                                    > 
-                                        {this.props.taskInfo.taskPresent ? "Save Changes" : "Add Task"} 
-                                    </Button>
-                                </div>
-                                {this.props.taskInfo.taskPresent ? 
-                                    <div style={{float:'right', marginRight:'7%'}}>
-                                        <Button className="btn-success" variant="primary"
-                                            onClick={this.removeTask}
-                                        >
-                                            Remove Task
+                            {this.props.calendarView ? null :
+                                <div>
+                                    <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '13%' : '30%'}}> 
+                                        <Button className="btn-success" variant="primary" 
+                                                onClick={this.editTask}
+                                        > 
+                                            {this.props.taskInfo.taskPresent ? "Save Changes" : "Add Task"} 
                                         </Button>
-                                    </div> : 
-                                    null
-                                }
-                            </div>
+                                    </div>
+                                    {this.props.taskInfo.taskPresent ? 
+                                        <div style={{float:'right', marginRight:'7%'}}>
+                                            <Button className="btn-success" variant="primary"
+                                                onClick={this.removeTask}
+                                            >
+                                                Remove Task
+                                            </Button>
+                                        </div> : 
+                                        null
+                                    }
+                                </div>
+                            }
                         </form>
                     </div>
                 </Popup>

@@ -30,13 +30,16 @@ class App extends Component {
       loggedIn: false,
       taskDB: new Map(),
       deadlineDB: new Map(),
+      diaryDB: new Map(),
       currWeek: 1,
-      loading: false
+      loading: false,
+      currMonth: 0
     };
     this.handleChange = this.handleChange.bind(this);
     this.updateTaskDatabase = this.updateTaskDatabase.bind(this);
-    this.updateDLDatabase = this.updateDLDatabase.bind(this)
-    this.retrieveNUSModsTasks = this.retrieveNUSModsTasks.bind(this)
+    this.updateDLDatabase = this.updateDLDatabase.bind(this);
+    this.updateDiaryDatabase = this.updateDiaryDatabase.bind(this);
+    this.retrieveNUSModsTasks = this.retrieveNUSModsTasks.bind(this);
     this.automateSchedule = this.automateSchedule.bind(this);
     this.setLoading = this.setLoading.bind(this);
   }
@@ -56,15 +59,28 @@ class App extends Component {
     this.setState({taskDB: taskDB, currWeek: id})
   }
 
-  updateDLDatabase(updatedDeadline, toRemove) {
+  updateDLDatabase(updatedDeadline, toRemove, toEdit) {
     let deadlineDB = new Map(this.state.deadlineDB)
     if (this.state.deadlineDB.has(updatedDeadline.id)) {
       deadlineDB.delete(updatedDeadline.id)
     }
-    if (!toRemove) {
+    if (!toRemove && !toEdit) {
       deadlineDB.set(updatedDeadline.id, updatedDeadline)
     }
+    if (toEdit) {
+      deadlineDB.set(updatedDeadline.deadline+updatedDeadline.deadlineName, updatedDeadline)
+    }
     this.setState({deadlineDB: deadlineDB})
+  }
+
+  updateDiaryDatabase(date, note) {
+    let diaryDB = new Map(this.state.diaryDB)
+    if (this.state.diaryDB.has(date)) {
+      diaryDB.delete(date)
+    }
+    diaryDB.set(date, note)
+    let currMonth = date.substring(3,5)
+    this.setState({diaryDB: diaryDB, currMonth:(parseInt(currMonth)-8)})
   }
 
   handleChange(event) {
@@ -199,7 +215,15 @@ class App extends Component {
                                                         )
                                                 } 
                 />
-                <ProtectedRoute path="/Diary" component={Diary}/>
+                <ProtectedRoute path="/Diary" component={() => (<Diary taskDB={this.state.taskDB}
+                                                                       deadlineDB={this.state.deadlineDB}
+                                                                       diaryDB={this.state.diaryDB}
+                                                                       updateDiaryDatabase={this.updateDiaryDatabase}
+                                                                       currMonth={this.state.currMonth}
+                                                                />
+                                                               )
+                                                        }
+                />
                 <ProtectedRoute path="/Stats" component={Stats}/>
                 <ProtectedRoute path="/Settings" component={Settings}/>
                 <Route component={NotFound} />

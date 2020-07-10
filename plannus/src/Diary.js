@@ -7,7 +7,7 @@ class Diary extends Component{
         super(props)
         this.state = {
             months: ["August", "September", "October", "November"],
-            monthNum: 0
+            monthNum: this.props.currMonth
         }
     }
 
@@ -31,7 +31,7 @@ class Diary extends Component{
                     <Button variant="outline-dark" style={{float:'left', marginLeft:'4%'}} onClick={()=>this.navMonth(1)}> {'>'} </Button>
                 </div>
                 <div style={{marginLeft:'13%', marginTop:'3%'}}>
-                    <Calendar currMonth={this.state.monthNum} />
+                    <Calendar taskDB={this.props.taskDB} deadlineDB={this.props.deadlineDB} currMonth={this.state.monthNum} updateDiaryDatabase={this.props.updateDiaryDatabase} diaryDB={this.props.diaryDB} />
                 </div>
             </React.Fragment>
         )

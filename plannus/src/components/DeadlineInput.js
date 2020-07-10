@@ -39,7 +39,7 @@ class DeadlineInput extends Component {
     }
 
     openModal() {
-        if (this.props.viewMode && this.props.deadlineInfo) {
+        if ((this.props.viewMode && this.props.deadlineInfo) || this.props.calendarView) {
             this.setState({
                 open: true,
                 id: this.props.deadlineInfo.id,
@@ -81,7 +81,7 @@ class DeadlineInput extends Component {
                            deadline: this.state.deadline,
                            description: this.state.description
         }
-        this.props.updateDeadline(addedFields, false)
+        this.props.updateDeadline(addedFields, false, false)
         this.closeModal()
     }
 
@@ -91,7 +91,7 @@ class DeadlineInput extends Component {
                             module: this.state.module, 
                             deadline: this.state.deadline,
                             description: this.state.description}
-        this.props.updateDeadline(editedFields, false)
+        this.props.updateDeadline(editedFields, false, true)
         this.closeModal()
     }
 
@@ -101,7 +101,7 @@ class DeadlineInput extends Component {
                              module: "", 
                              deadline: "",
                              description: ""}
-        this.props.updateDeadline(removedFields, true)
+        this.props.updateDeadline(removedFields, true, false)
         this.closeModal()
     }
 
@@ -157,8 +157,10 @@ class DeadlineInput extends Component {
         }
 
         return (<div>
-                    {this.props.viewMode ? <button style={buttonView} onClick={this.openModal}> View Deadlines </button>: 
-                    <button style={buttonAdd} onClick={this.openModal}> + </button> }
+                    {this.props.calendarView ? 
+                        <Button className="taskButton" onClick={this.openModal}> {this.props.deadlineInfo.deadlineName} </Button> :
+                            this.props.viewMode ? <button style={buttonView} onClick={this.openModal}> View Deadlines </button>: 
+                            <button style={buttonAdd} onClick={this.openModal}> + </button> }
                     <Popup
                         open={this.state.open}
                         closeOnDocumentClick
@@ -171,7 +173,7 @@ class DeadlineInput extends Component {
 
                             {this.props.viewMode && !this.props.deadlineInfo ? <div> No Deadlines </div> :
                             <div>
-                            <div style={headerStyle}> {this.props.viewMode ? this.props.deadlineInfo.deadlineName : 'New Deadline'} </div>
+                            <div style={headerStyle}> {(this.props.viewMode || this.props.calendarView) ? this.props.deadlineInfo.deadlineName : 'New Deadline'} </div>
                             
                             {this.props.viewMode && this.props.deadlineInfo ? 
                                 <div>
@@ -197,6 +199,7 @@ class DeadlineInput extends Component {
                                             style={{width:'120%'}}
                                             value={this.state.deadlineName}
                                             onChange={this.handleChange}
+                                            readOnly={this.props.calendarView}
                                         >
                                         </input> 
                                     </div>
@@ -214,6 +217,7 @@ class DeadlineInput extends Component {
                                             style={{width:'120%'}}
                                             value={this.state.module}
                                             onChange={this.handleChange}
+                                            readOnly={this.props.calendarView}
                                         >
                                         </input> 
                                     </div>
@@ -230,8 +234,9 @@ class DeadlineInput extends Component {
                                             name="deadline"
                                             style={{width:'70%'}}
                                             value={this.state.deadline}
-                                            placeholder={"dd/mm/yyyy"}
+                                            placeholder={"dd-mm-yyyy"}
                                             onChange={this.handleChange}
+                                            readOnly={this.props.calendarView}
                                         >        
                                         </input> 
                                     </div>
@@ -248,6 +253,7 @@ class DeadlineInput extends Component {
                                         name="description"
                                         value={this.state.description}
                                         onChange={this.handleChange}
+                                        readOnly={this.props.calendarView}
                                     >
                                     </textarea> 
                                 </div>
@@ -256,9 +262,10 @@ class DeadlineInput extends Component {
                                 <br />
 
                                 <div>
-                                    <div style={{float:'left', marginLeft:this.props.viewMode ? '10%' : '25%', marginTop:'3%'}}>
-                                        <Button onClick={this.props.viewMode ? this.editDeadline : this.addDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
-                                    </div>
+                                    {this.props.calendarView ? null :
+                                        <div style={{float:'left', marginLeft:this.props.viewMode ? '10%' : '25%', marginTop:'3%'}}>
+                                            <Button onClick={this.props.viewMode ? this.editDeadline : this.addDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
+                                        </div>}
                                     {this.props.viewMode ? 
                                     <div style={{float:'left', marginLeft:'8%', marginTop:'3%'}}>
                                         <Button onClick={this.removeDeadline}> Remove Deadline </Button>

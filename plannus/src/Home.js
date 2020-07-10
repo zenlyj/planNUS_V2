@@ -26,8 +26,8 @@ class Home extends Component {
         this.props.updateTaskDatabase(id, updatedTimetable)
     }
 
-    updateHomeDeadline(updatedDeadline, toRemove) {
-        this.props.updateDLDatabase(updatedDeadline, toRemove)
+    updateHomeDeadline(updatedDeadline, toRemove, toEdit) {
+        this.props.updateDLDatabase(updatedDeadline, toRemove, toEdit)
     }
 
     submitURL(url) {

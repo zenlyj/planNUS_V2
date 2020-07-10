@@ -36,6 +36,7 @@ class Task extends Component {
         return (<TaskInput
                     taskInfo={this.state}
                     updateTask={this.updateTask}
+                    calendarView={this.props.calendarView}
                 />)
     } 
 }
