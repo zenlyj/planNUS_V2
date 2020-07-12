@@ -71,7 +71,7 @@ class Timetable extends Component {
             updated.delete(updatedTask.id)
             nusmodsAPI.removeTask(updatedTask.id, this.state.id)
         }
-        this.props.updateHomeTask(this.state.id, updated)
+        this.props.updateTaskDatabase(this.state.id, updated)
     }
 
     genTableHead() {

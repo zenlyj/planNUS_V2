@@ -17,13 +17,8 @@ class Home extends Component {
             deadlines: this.props.deadlineDB
         }
         this.navWeek = this.navWeek.bind(this)
-        this.updateHomeTask = this.updateHomeTask.bind(this)
         this.updateHomeDeadline = this.updateHomeDeadline.bind(this)
         this.submitURL = this.submitURL.bind(this)
-    }
-
-    updateHomeTask(id, updatedTimetable) {
-        this.props.updateTaskDatabase(id, updatedTimetable)
     }
 
     updateHomeDeadline(updatedDeadline, toRemove, toEdit) {
@@ -70,7 +65,7 @@ class Home extends Component {
                     <ImportInput submitURL={this.submitURL}/>
                 </div>
                 <div style={{marginLeft:'13%', marginTop:'3%'}}>
-                    <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateHomeTask={this.updateHomeTask}/> </div>
+                    <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} /> </div>
                 </div>
                 <div style={{position:'absolute', marginLeft:'90%'}}>
                     <Deadline deadlines={deadlines} updateHomeDeadline={this.updateHomeDeadline}/>
