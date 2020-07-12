@@ -228,7 +228,7 @@ class TaskInput extends Component {
                             <br />
                             <br />
                         
-                            {this.props.calendarView ? <Button className="btn-success" onClick={this.props.updateDiaryDatabase()}> Mark Complete </Button> :
+                            {this.props.calendarView ? <Button className="btn-success"> Mark Complete </Button> :
                                 <div>
                                     <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '13%' : '30%'}}> 
                                         <Button className="btn-success" variant="primary" 

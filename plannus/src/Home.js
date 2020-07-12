@@ -65,7 +65,7 @@ class Home extends Component {
                     <ImportInput submitURL={this.submitURL}/>
                 </div>
                 <div style={{marginLeft:'13%', marginTop:'3%'}}>
-                    <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} /> </div>
+                    <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} /> </div>
                 </div>
                 <div style={{position:'absolute', marginLeft:'90%'}}>
                     <Deadline deadlines={deadlines} updateHomeDeadline={this.updateHomeDeadline}/>

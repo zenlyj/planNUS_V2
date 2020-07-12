@@ -56,20 +56,26 @@ class Timetable extends Component {
             if (this.state.tasksAdded.has(updatedTask.id)) {
                 // edit task info
                 updated.delete(updatedTask.id)
-                nusmodsAPI.removeTask(updatedTask.id, this.state.id)
                 updated.set(updatedTask.id, updatedTask)
-                nusmodsAPI.addTask(updatedTask.id, updatedTask.taskPresent, updatedTask.taskName, updatedTask.module,
-                    updatedTask.timeFrom, updatedTask.timeTo, updatedTask.description, this.state.id)
+                if (this.props.loggedIn) {
+                    nusmodsAPI.removeTask(updatedTask.id, this.state.id)
+                    nusmodsAPI.addTask(updatedTask.id, updatedTask.taskPresent, updatedTask.taskName, updatedTask.module,
+                        updatedTask.timeFrom, updatedTask.timeTo, updatedTask.description, this.state.id)
+                }
             } else {
                 // add brand new task
                 updated.set(updatedTask.id, updatedTask)
-                nusmodsAPI.addTask(updatedTask.id, updatedTask.taskPresent, updatedTask.taskName, updatedTask.module,
-                    updatedTask.timeFrom, updatedTask.timeTo, updatedTask.description, this.state.id)
+                if (this.props.loggedIn) {
+                    nusmodsAPI.addTask(updatedTask.id, updatedTask.taskPresent, updatedTask.taskName, updatedTask.module,
+                        updatedTask.timeFrom, updatedTask.timeTo, updatedTask.description, this.state.id)
+                }
             }
         } else {
             // to delete task from table
             updated.delete(updatedTask.id)
-            nusmodsAPI.removeTask(updatedTask.id, this.state.id)
+            if (this.props.loggedIn) {
+                nusmodsAPI.removeTask(updatedTask.id, this.state.id)
+            }
         }
         this.props.updateTaskDatabase(this.state.id, updated)
     }

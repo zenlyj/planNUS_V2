@@ -211,6 +211,7 @@ class App extends Component {
                                                               deadlineDB={this.state.deadlineDB}
                                                               automateSchedule={this.automateSchedule}
                                                               setLoading={this.setLoading}
+                                                              loggedIn={this.state.loggedIn}
                                                         />
                                                         )
                                                 } 
