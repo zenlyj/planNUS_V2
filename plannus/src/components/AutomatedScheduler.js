@@ -5,9 +5,9 @@ import Button from 'react-bootstrap/Button'
 import Tabs from 'react-bootstrap/Tabs'
 import Tab from 'react-bootstrap/Tab'
 import InputRange from 'react-input-range'
-import moduleslist from '../api/moduleslist.json'
 import AutoComplete from './AutoComplete'
 import nusmodsAPI from '../api/nusmodsAPI'
+import PulseLoader from 'react-spinners/PulseLoader'
 
 class FormTab extends Component {
     constructor(props) {
@@ -87,6 +87,7 @@ class AutomatedScheduler extends Component {
             distinctmodules: [],
             week: this.props.id,
             open: false,
+            loading: false,
             calculatedWorkload: 0,
             formTabData: {
                 days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -180,6 +181,7 @@ class AutomatedScheduler extends Component {
     }
 
     addModule(mc) {
+        this.setState({loading:true});
         if (this.state.modules.indexOf(mc) > -1) {
             
         } else {
@@ -189,15 +191,16 @@ class AutomatedScheduler extends Component {
                 modules: newModules
             });
         }
-        nusmodsAPI.calculateWorkload(this.state.week, this.state.modules).then(hrs => this.setState({calculatedWorkload: hrs}));
+        nusmodsAPI.calculateWorkload(this.state.week, this.state.modules).then(hrs => {this.setState({calculatedWorkload: hrs, loading: false})});
     }
 
     removeModule(mc) {
+        this.setState({loading:true});
         let newModules = this.state.modules.filter(p => p != mc);
         this.setState({
             modules: newModules
         });
-        nusmodsAPI.calculateWorkload(this.state.week, newModules).then(hrs => this.setState({calculatedWorkload: hrs}));
+        nusmodsAPI.calculateWorkload(this.state.week, newModules).then(hrs => this.setState({calculatedWorkload: hrs, loading: false}));
     }
 
     updateState(newState) {
@@ -270,7 +273,7 @@ class AutomatedScheduler extends Component {
                             <form id="autoschedule">
                                 <table align="left" className="AutomatedForm">
                                     <tbody>
-                                        <tr><td colSpan='1'></td><td colSpan='1'>Calculated Workload:</td><td colSpan='4'><input value={this.state.calculatedWorkload} readOnly /></td><td colSpan='6'></td></tr>
+                                        <tr><td colSpan='1'></td><td colSpan='1'>Calculated Workload:</td><td colSpan='4'>{!this.state.loading ? <input value={this.state.calculatedWorkload} readOnly />: <PulseLoader color={"#acacac"} loading={this.state.loading} />}</td><td colSpan='6'></td></tr>
                                         <tr><td colSpan='1'></td><td colSpan='1'>Modules:</td><td colSpan='4'><AutoComplete suggestions={this.state.distinctmodules} onChange={this.addModule} /></td><td colSpan='6'></td></tr>
                                         <tr><td colSpan='2'></td><td colSpan='9'><AddedModules modules={this.state.modules} onChange={this.removeModule}/></td><td><input type="hidden" name="modules" value={this.state.modules} /></td></tr>
                                         <tr><td colSpan='1'></td><td colSpan='10'><FormTab formTabData={this.state.formTabData} updateState={this.updateState}/></td><td colSpan='1'></td></tr>

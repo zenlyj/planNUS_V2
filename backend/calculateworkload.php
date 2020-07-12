@@ -6,9 +6,11 @@
     try {
         $totalWorkload = new \stdClass();
         $totalWorkload->hours = 0;
+        $existingWorkHours = 0;
         if (isset($_GET['modules']) && $_GET['modules'] != "") {
             $modules = explode(',', $_GET['modules']);
             $baseURL = "https://api.nusmods.com/v2/2019-2020/modules/";
+            $totalWorkload->module_hours = array();
             foreach ($modules as $module) {
                 $querySearch = sprintf("SELECT * from `task` where nusnet = '%s' and week = '%s' and module = '%s'", $_GET['nusnet'], $_GET['week'], $module);
                 $result = $conn->query($querySearch);
@@ -28,6 +30,7 @@
                     $obj = json_decode($json);
                 }
                 $totalWorkload->hours += $obj->moduleCredit * 2.5 - ($existingWorkHours >= $obj->moduleCredit * 2.5 ? $obj->moduleCredit * 2.5 : $existingWorkHours);
+                $totalWorkload->module_hours[$module] = $obj->moduleCredit * 2.5;
             }
             echo json_encode($totalWorkload);
         } else {
