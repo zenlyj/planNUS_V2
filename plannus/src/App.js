@@ -73,12 +73,12 @@ class App extends Component {
     this.setState({deadlineDB: deadlineDB})
   }
 
-  updateDiaryDatabase(date, note) {
+  updateDiaryDatabase(date, data) {
     let diaryDB = new Map(this.state.diaryDB)
     if (this.state.diaryDB.has(date)) {
       diaryDB.delete(date)
     }
-    diaryDB.set(date, note)
+    diaryDB.set(date, data)
     let currMonth = date.substring(3,5)
     this.setState({diaryDB: diaryDB, currMonth:(parseInt(currMonth)-8)})
   }
@@ -189,6 +189,7 @@ class App extends Component {
   }
 
   render() {
+    console.log(this.state.diaryDB)
     return (
       <LoadingOverlay
           active={this.state.loading}
