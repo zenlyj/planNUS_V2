@@ -116,6 +116,7 @@ class Timetable extends Component {
                     // determine length of button representing task on timetable
                     let task = this.state.tasksAdded.get(cellKey)
                     colSpan = (task.timeTo-task.timeFrom)/100
+                    colSpan = Math.ceil(colSpan)
                     // initialize task if it has been added previously
                     initTask = task
                 } else {
