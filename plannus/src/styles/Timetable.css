@@ -26,3 +26,32 @@
 .taskButton:not(:disabled):not(.disabled).active:focus,.taskButton:not(:disabled):not(.disabled):active:focus,.show>.taskButton.dropdown-toggle:focus{
     box-shadow:0 0 0 .2rem #549b6e;
 }
+
+.taskButtonIncomplete {
+    width:100%; 
+    font-size: 12px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    background-color: #DC143C;
+    border: #DC143C;
+
+}
+
+.taskButtonIncomplete:hover{
+    color:#fff;
+    background-color:#8B0000;
+    border-color:#8B0000;
+}
+
+.taskButtonIncomplete:focus{
+    box-shadow:0 0 0 .2rem #8B0000;
+}
+
+.taskButtonIncomplete:not(:disabled):not(.disabled).active,.taskButtonIncomplete:not(:disabled):not(.disabled):active,.show>.taskButtonIncomplete.dropdown-toggle{
+    color:#fff;background-color:#8B0000;border-color:#8B0000
+}
+
+.taskButtonIncomplete:not(:disabled):not(.disabled).active:focus,.taskButtonIncomplete:not(:disabled):not(.disabled):active:focus,.show>.taskButtonIncomplete.dropdown-toggle:focus{
+    box-shadow:0 0 0 .2rem #8B0000;
+}

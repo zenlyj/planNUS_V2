@@ -60,7 +60,8 @@ class TaskInput extends Component {
                             module: this.state.module, 
                             timeFrom: this.state.timeFrom, 
                             timeTo: this.state.timeTo, 
-                            description: this.state.description}
+                            description: this.state.description,
+                            }
         this.props.updateTask(true, editedFields)
         this.closeModal()
     }
@@ -70,7 +71,8 @@ class TaskInput extends Component {
                              module: "", 
                              timeFrom: this.state.timeFrom, 
                              timeTo: "", 
-                             description: ""}
+                             description: ""
+                            }
         this.props.updateTask(false, removedFields)
         this.closeModal()
     }
@@ -123,7 +125,7 @@ class TaskInput extends Component {
         return (
             <div>
                 {this.props.taskInfo.taskPresent ? 
-                    <Button className="taskButton" onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
+                    <Button className={!this.props.taskCompleted && this.props.calendarView ? "taskButtonIncomplete" : "taskButton"} onClick={this.openModal}> {this.props.taskInfo.taskName} </Button> :
                     <button style={defaultButtonStyle}
                         onMouseOver={() => this.setState({hovered:true})}
                         onMouseLeave={() => this.setState({hovered:false})}
@@ -228,7 +230,7 @@ class TaskInput extends Component {
                             <br />
                             <br />
                         
-                            {this.props.calendarView ? null :
+                            {this.props.calendarView ? <Button className={this.props.taskCompleted ? "btn-danger" : "btn-success"} onClick={this.props.markTaskCompleted}> {this.props.taskCompleted ? "Mark Incomplete" : "Mark Complete"} </Button> :
                                 <div>
                                     <div style={{float: 'left', marginLeft: this.props.taskInfo.taskPresent ? '13%' : '30%'}}> 
                                         <Button className="btn-success" variant="primary" 

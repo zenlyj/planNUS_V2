@@ -6,6 +6,7 @@ class Task extends Component {
         super(props);
         this.state = this.props.initTask
         this.updateTask = this.updateTask.bind(this)
+        this.markTaskCompleted = this.markTaskCompleted.bind(this)
     }
 
     componentDidUpdate(prevProps) {
@@ -30,13 +31,19 @@ class Task extends Component {
             description: updatedInfo.description
         }
         this.props.updateTable(updatedTask)
-    }   
+    }
+
+    markTaskCompleted() {
+        this.props.markTaskCompleted(this.state.id)
+    }
 
     render() {
         return (<TaskInput
                     taskInfo={this.state}
                     updateTask={this.updateTask}
                     calendarView={this.props.calendarView}
+                    markTaskCompleted={this.markTaskCompleted}
+                    taskCompleted={this.props.taskCompleted}
                 />)
     } 
 }

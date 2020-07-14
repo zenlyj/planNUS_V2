@@ -13,7 +13,8 @@ class CalendarDay extends Component {
             maxTaskPage: 1,
             DLpage : 1,
             maxDLPage: 1,
-            shortNote: this.props.shortNote
+            shortNote: this.props.shortNote,
+            taskCompleted: this.props.taskCompleted
         }
 
         this.openModal = this.openModal.bind(this)
@@ -21,6 +22,7 @@ class CalendarDay extends Component {
         this.navTask = this.navTask.bind(this)
         this.navDL = this.navDL.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.markTaskCompleted = this.markTaskCompleted.bind(this)
     }
 
     componentDidUpdate(prevProps) {
@@ -57,7 +59,20 @@ class CalendarDay extends Component {
 
     closeModal(){
         this.setState({open:false})
-        this.props.updateDiaryDatabase(this.props.fullDate, this.state.shortNote)
+        this.props.updateDiaryDatabase(this.props.fullDate, [this.state.shortNote, this.state.taskCompleted])
+    }
+
+    markTaskCompleted(id) {
+        let taskCompleted = new Map(this.state.taskCompleted)
+        let status = false
+        if (taskCompleted.has(id)) {
+            status = taskCompleted.get(id)
+            taskCompleted.delete(id)
+            taskCompleted.set(id, !status)
+        } else {
+            taskCompleted.set(id, status)
+        }
+        this.setState({taskCompleted: taskCompleted})
     }
 
     computeWeek() {
@@ -130,23 +145,28 @@ class CalendarDay extends Component {
         if (weekTasks) {
             for (let [key, value] of weekTasks) {
                 if (key.substring(0,3) == day) {
-                    retrieved.push(value)
+                    let completed = this.state.taskCompleted.get(key)
+                    if (completed === undefined) {
+                        retrieved.push([value, true])
+                    } else {
+                        retrieved.push([value, completed])
+                    }
                 }
             }
         }
         retrieved.sort((a, b) => {
-            const day = a.id.substring(0,3)
+            const day = a[0].id.substring(0,3)
             let idA = "" 
             let idB = ""
             if (day === "MON" || day === "WED" || day === "FRI" || day === "SAT" || day === "SUN") {
-                idA = a.id.length === 4 ? a.id.substring(3, 4) : a.id.substring(3, 5)
-                idB = b.id.length === 4 ? b.id.substring(3, 4) : b.id.substring(3, 5)
+                idA = a[0].id.length === 4 ? a[0].id.substring(3, 4) : a[0].id.substring(3, 5)
+                idB = b[0].id.length === 4 ? b[0].id.substring(3, 4) : b[0].id.substring(3, 5)
             } else if (day === "TUE") {
-                idA = a.id.length === 5 ? a.id.substring(4, 5) : a.id.substring(4, 6)
-                idB = b.id.length === 5 ? b.id.substring(4, 5) : b.id.substring(4, 6)
+                idA = a[0].id.length === 5 ? a[0].id.substring(4, 5) : a[0].id.substring(4, 6)
+                idB = b[0].id.length === 5 ? b[0].id.substring(4, 5) : b[0].id.substring(4, 6)
             } else {
-                idA = a.id.length === 6 ? a.id.substring(5, 6) : a.id.substring(5, 7)
-                idB = b.id.length === 6 ? b.id.substring(5, 6) : b.id.substring(5, 7)
+                idA = a[0].id.length === 6 ? a[0].id.substring(5, 6) : a[0].id.substring(5, 7)
+                idB = b[0].id.length === 6 ? b[0].id.substring(5, 6) : b[0].id.substring(5, 7)
             }
             idA = parseInt(idA)
             idB = parseInt(idB)
@@ -170,7 +190,7 @@ class CalendarDay extends Component {
                 if (x != 0 && index<tasks.length) {
                     display.shift()
                 }
-                display.push(<div key={this.props.fullDate+"-"+x+y+"-task"} style={{float:'left', marginLeft:'4%', width:'20%'}}> {index < tasks.length ? <Task initTask={tasks[index]} calendarView={true} /> : null} </div>)
+                display.push(<div key={this.props.fullDate+"-"+x+y+"-task"} style={{float:'left', marginLeft:'4%', width:'20%'}}> {index < tasks.length ? <Task initTask={tasks[index][0]} calendarView={true} markTaskCompleted={this.markTaskCompleted} taskCompleted={tasks[index][1]} /> : null} </div>)
             }
         }
         return <div style={{float:'left', width:'80%', textAlign:'center'}}> 
