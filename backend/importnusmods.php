@@ -10,7 +10,7 @@
             $params = explode('/share?', $_GET['url']);
             $modules = explode('|', $params[1]);
             $sem = explode('sem-', $params[0])[1];
-            $baseURL = "https://api.nusmods.com/v2/2019-2020/modules/";
+            $baseURL = "https://api.nusmods.com/v2/2020-2021/modules/";
             foreach ($modules as $module) {
                 $moduleCode = explode('=', $module)[0];
                 $moduleClass = explode(',', explode('=', $module)[1]);
