@@ -48,17 +48,7 @@ class Calendar extends Component {
                     dateRow.push(<th key={key}> <div style={defaultStyle}> {date} </div> </th>)
                 } else {
                     let key = this.state.currMonth+8+"-"+date
-                    let data = this.props.diaryDB.get(this.computeFullDate(date))
-                    let shortNote
-                    let taskCompleted
-                    if (data===undefined) {
-                        shortNote = ""
-                        taskCompleted = new Map()
-                    } else {
-                        shortNote = data[0]
-                        taskCompleted = data[1]
-                    }
-                    dateRow.push(<th key={key}> <CalendarDay taskDB={this.props.taskDB} deadlineDB={this.props.deadlineDB} fullDate={this.computeFullDate(date)} updateDiaryDatabase={this.props.updateDiaryDatabase} shortNote={shortNote} taskCompleted={taskCompleted}/> </th>);
+                    dateRow.push(<th key={key}> <CalendarDay taskDB={this.props.taskDB} deadlineDB={this.props.deadlineDB} fullDate={this.computeFullDate(date)} updateDiaryDatabase={this.props.updateDiaryDatabase} diaryDB={this.props.diaryDB}/> </th>);
                 } 
             }
             datesRow.push(<tr key={this.state.currMonth+"row"+x}>{dateRow}</tr>);

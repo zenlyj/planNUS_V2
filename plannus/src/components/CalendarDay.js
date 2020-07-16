@@ -13,8 +13,9 @@ class CalendarDay extends Component {
             maxTaskPage: 1,
             DLpage : 1,
             maxDLPage: 1,
-            shortNote: this.props.shortNote,
-            taskCompleted: this.props.taskCompleted
+            shortNote: "",
+            taskCompleted: new Map(),
+            weekNum: this.computeWeek()
         }
 
         this.openModal = this.openModal.bind(this)
@@ -23,6 +24,24 @@ class CalendarDay extends Component {
         this.navDL = this.navDL.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.markTaskCompleted = this.markTaskCompleted.bind(this)
+    }
+
+    componentDidMount() {
+        let weekData = this.props.diaryDB.get(this.state.weekNum)
+        let data
+        let shortNote = ""
+        let taskCompleted = new Map()
+        if (weekData) {
+            data = weekData.get(this.props.fullDate)
+        }
+        if (data) {
+            shortNote = data.shortNote
+            taskCompleted = data.taskCompleted
+        }
+        this.setState({
+            shortNote: shortNote,
+            taskCompleted: taskCompleted
+        })
     }
 
     componentDidUpdate(prevProps) {
@@ -59,12 +78,12 @@ class CalendarDay extends Component {
 
     closeModal(){
         this.setState({open:false})
-        this.props.updateDiaryDatabase(this.props.fullDate, [this.state.shortNote, this.state.taskCompleted])
+        this.props.updateDiaryDatabase(this.state.weekNum, this.props.fullDate, {shortNote: this.state.shortNote, taskCompleted: this.state.taskCompleted})
     }
 
     markTaskCompleted(id) {
         let taskCompleted = new Map(this.state.taskCompleted)
-        let status = false
+        let status = true
         if (taskCompleted.has(id)) {
             status = taskCompleted.get(id)
             taskCompleted.delete(id)
@@ -147,7 +166,7 @@ class CalendarDay extends Component {
                 if (key.substring(0,3) == day) {
                     let completed = this.state.taskCompleted.get(key)
                     if (completed === undefined) {
-                        retrieved.push([value, true])
+                        retrieved.push([value, false])
                     } else {
                         retrieved.push([value, completed])
                     }

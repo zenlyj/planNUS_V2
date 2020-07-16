@@ -11,7 +11,7 @@ import axios from "axios";
 import Popup from "reactjs-popup";
 import Home from './Home';
 import Diary from './Diary';
-import { Stats } from './Stats';
+import Stats from './Stats';
 import { Settings } from './Settings';
 import { NotFound } from './NotFound';
 import { Header } from './components/Header';
@@ -73,12 +73,20 @@ class App extends Component {
     this.setState({deadlineDB: deadlineDB})
   }
 
-  updateDiaryDatabase(date, data) {
+  updateDiaryDatabase(week, date, data) {
     let diaryDB = new Map(this.state.diaryDB)
-    if (this.state.diaryDB.has(date)) {
-      diaryDB.delete(date)
+    let weeklyEntry = diaryDB.get(week)
+    if (weeklyEntry === undefined) {
+      weeklyEntry = new Map()
+      weeklyEntry.set(date, data)
+    } else {
+      diaryDB.delete(weeklyEntry)
+      if (weeklyEntry.has(date)) {
+        weeklyEntry.delete(date)
+      }
+      weeklyEntry.set(date, data)
     }
-    diaryDB.set(date, data)
+    diaryDB.set(week, weeklyEntry)
     let currMonth = date.substring(3,5)
     this.setState({diaryDB: diaryDB, currMonth:(parseInt(currMonth)-8)})
   }
@@ -189,7 +197,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state.diaryDB)
     return (
       <LoadingOverlay
           active={this.state.loading}
@@ -226,7 +233,12 @@ class App extends Component {
                                                                )
                                                         }
                 />
-                <ProtectedRoute path="/Stats" component={Stats}/>
+                <ProtectedRoute path="/Stats" component={()=> (<Stats taskDB={this.state.taskDB}
+                                                                      diaryDB={this.state.diaryDB}
+                                                               />
+                                                              )
+                                                        }
+                />
                 <ProtectedRoute path="/Settings" component={Settings}/>
                 <Route component={NotFound} />
               </Switch>
