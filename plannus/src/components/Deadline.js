@@ -7,12 +7,7 @@ class Deadline extends Component{
         this.state = {
             currDL:0
         }
-        this.updateDeadline = this.updateDeadline.bind(this)
         this.navViewMode = this.navViewMode.bind(this)
-    }
-
-    updateDeadline(updatedInfo, toRemove, toEdit) {
-        this.props.updateHomeDeadline(updatedInfo, toRemove, toEdit)
     }
 
     navViewMode(diff) {
@@ -41,9 +36,9 @@ class Deadline extends Component{
                 <div style={deadlineStyle}> 
                     <div style={{height:'70px', borderBottom:'2px solid gray'}}> 
                         <div> Deadlines </div>
-                        <DeadlineInput viewMode={false} updateDeadline={this.updateDeadline}/>
+                        <DeadlineInput viewMode={false} updateDeadline={this.props.updateDLDatabase}/>
                     </div>
-                    <div> <DeadlineInput viewMode={true} updateDeadline={this.updateDeadline} navViewMode={this.navViewMode} deadlineInfo={deadlineInfo}/> </div>
+                    <div> <DeadlineInput viewMode={true} updateDeadline={this.props.updateDLDatabase} navViewMode={this.navViewMode} deadlineInfo={deadlineInfo}/> </div>
                 </div>)
     }
 }

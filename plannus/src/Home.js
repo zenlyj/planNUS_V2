@@ -17,12 +17,7 @@ class Home extends Component {
             deadlines: this.props.deadlineDB
         }
         this.navWeek = this.navWeek.bind(this)
-        this.updateHomeDeadline = this.updateHomeDeadline.bind(this)
         this.submitURL = this.submitURL.bind(this)
-    }
-
-    updateHomeDeadline(updatedDeadline, toRemove, toEdit) {
-        this.props.updateDLDatabase(updatedDeadline, toRemove, toEdit)
     }
 
     submitURL(url) {
@@ -42,11 +37,15 @@ class Home extends Component {
         })
     }
 
-    render() {
+    retrieveTasks() {
         let tasksAdded = new Map()
         if (this.state.timetables.has(this.state.weekNum)) {
             tasksAdded = this.state.timetables.get(this.state.weekNum)
         }
+        return tasksAdded
+    }
+
+    retrieveDeadlines() {
         let deadlines
         let arr = []
         for (let key of this.state.deadlines.keys()) {
@@ -54,6 +53,12 @@ class Home extends Component {
         }
         arr.sort()
         deadlines = arr.map(key => this.state.deadlines.get(key))
+        return deadlines
+    }
+
+    render() {
+        let tasksAdded = this.retrieveTasks()
+        let deadlines = this.retrieveDeadlines()
         return (
             <React.Fragment>
                 <div style={{marginTop:'2%', marginLeft:'40%', paddingBottom:'1.5%'}}> 
@@ -68,7 +73,7 @@ class Home extends Component {
                     <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} /> </div>
                 </div>
                 <div style={{position:'absolute', marginLeft:'90%'}}>
-                    <Deadline deadlines={deadlines} updateHomeDeadline={this.updateHomeDeadline}/>
+                    <Deadline deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/>
                 </div>
                 <div style={{position:'absolute', marginTop:'27%', marginLeft:'13%'}}>
                     <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} />
