@@ -145,7 +145,7 @@ class Timetable extends Component {
 
     render() {
         return (
-            <Table striped bordered hover variant="light" style={{width:'85%', tableLayout:'fixed'}}>
+            <Table striped bordered hover variant="light" style={{tableLayout:'fixed'}}>
                 {this.genTableHead()}
                 {this.genTableBody()}
             </Table>
