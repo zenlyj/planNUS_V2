@@ -61,23 +61,17 @@ class Home extends Component {
         let deadlines = this.retrieveDeadlines()
         return (
             <React.Fragment>
-                <div style={{marginTop:'2%', marginLeft:'40%', paddingBottom:'1.5%'}}> 
-                    <Button variant="outline-dark" style={{float:'left', marginRight:"5%"}} onClick={()=>this.navWeek(-1)}> {'<'} </Button>
-                    <h3 style={{float:'left', color:'#404040'}}> {'Week ' + this.state.weekNum} </h3> 
-                    <Button variant="outline-dark" style={{float:'left', marginLeft:"5%"}} onClick={()=>this.navWeek(1)}> {'>'} </Button>
+                <div style={{marginLeft:'40%', marginTop:'2%'}}> 
+                    <Button variant="outline-dark" style={{float:'left', width:'3.5%'}} onClick={()=>this.navWeek(-1)}> {'<'} </Button>
+                    <h3 style={{float:'left', textAlign:'center', marginLeft:'5%', width:'10%', color:'#404040'}}> {'Week ' + this.state.weekNum} </h3> 
+                    <Button variant="outline-dark" style={{float:'left', marginLeft:"5%", width:'3.5%'}} onClick={()=>this.navWeek(1)}> {'>'} </Button>
                 </div>
-                <div style={{position:'absolute', marginLeft:'83%'}}> 
-                    <ImportInput submitURL={this.submitURL}/>
+                <div style={{marginLeft:'13%', paddingTop:'2%'}}>
+                    <div style={{marginLeft:'80%', paddingBottom:'1%'}}> <ImportInput submitURL={this.submitURL} /> </div>
+                    <div style={{float:'left', width:'85%'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} /> </div>
+                    <div style={{float:'left', marginLeft:'3%'}}> <Deadline deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/> </div>
                 </div>
-                <div style={{marginLeft:'13%', marginTop:'3%'}}>
-                    <div style={{float:'left'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} /> </div>
-                </div>
-                <div style={{position:'absolute', marginLeft:'90%'}}>
-                    <Deadline deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/>
-                </div>
-                <div style={{position:'absolute', marginTop:'27%', marginLeft:'13%'}}>
-                    <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} />
-                </div>
+                <div style={{float:'left', marginLeft:'5%'}}> <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} /> </div>
             </React.Fragment>
         )
     }
