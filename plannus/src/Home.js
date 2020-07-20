@@ -61,10 +61,10 @@ class Home extends Component {
         let deadlines = this.retrieveDeadlines()
         return (
             <React.Fragment>
-                <div style={{marginLeft:'40%', marginTop:'2%'}}> 
-                    <Button variant="outline-dark" style={{float:'left', width:'3.5%'}} onClick={()=>this.navWeek(-1)}> {'<'} </Button>
-                    <h3 style={{float:'left', textAlign:'center', marginLeft:'5%', width:'10%', color:'#404040'}}> {'Week ' + this.state.weekNum} </h3> 
-                    <Button variant="outline-dark" style={{float:'left', marginLeft:"5%", width:'3.5%'}} onClick={()=>this.navWeek(1)}> {'>'} </Button>
+                <div style={{width:'100%', marginTop:'2%'}}> 
+                    <Button variant="outline-dark" style={{float:'left', marginLeft:'30%', width:'2.5%'}} onClick={()=>this.navWeek(-1)}> {'<'} </Button>
+                    <h3 style={{float:'left', textAlign:'center', marginLeft:'2%', width:'10%', color:'#404040'}}> {'Week ' + this.state.weekNum} </h3> 
+                    <Button variant="outline-dark" style={{float:'left', marginLeft:"2%", width:'2.5%'}} onClick={()=>this.navWeek(1)}> {'>'} </Button>
                 </div>
                 <div style={{marginLeft:'13%', paddingTop:'2%'}}>
                     <div style={{marginLeft:'80%', paddingBottom:'1%'}}> <ImportInput submitURL={this.submitURL} /> </div>

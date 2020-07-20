@@ -190,13 +190,13 @@ class DeadlineInput extends Component {
 
                             <form style={contentStyle}>
 
-                                <div style={{paddingBottom:'2%'}}>
-                                <div style={{float: 'left'}}> Deadline Name: </div>
-                                <div style={{float:'left', paddingLeft:'4.5%'}}> 
+                                <div style={{width:'100%'}}>
+                                    <div style={{float: 'left', width:'20%', textAlign:'left'}}> Deadline Name: </div>
+                                    <div style={{float:'left', marginLeft:'6%', width:'35%'}}> 
                                         <input 
                                             type='text' 
                                             name='deadlineName'
-                                            style={{width:'120%'}}
+                                            style={{width:'100%'}}
                                             value={this.state.deadlineName}
                                             onChange={this.handleChange}
                                             readOnly={this.props.calendarView}
@@ -205,16 +205,13 @@ class DeadlineInput extends Component {
                                     </div>
                                 </div>
 
-                                <br />
-                                <br />
-
-                                <div style={{paddingBottom:'2%'}}>
-                                    <div style={{float: 'left'}}> Module: </div>
-                                    <div style={{float:'left', paddingLeft:'11.2%'}}> 
+                                <div style={{marginTop:'8%', width:'100%'}}>
+                                    <div style={{float: 'left', width:'20%', textAlign:'left'}}> Module: </div>
+                                    <div style={{float:'left', marginLeft:'6%', width:'35%'}}> 
                                         <input 
                                             type='text' 
                                             name="module"
-                                            style={{width:'120%'}}
+                                            style={{width:'100%'}}
                                             value={this.state.module}
                                             onChange={this.handleChange}
                                             readOnly={this.props.calendarView}
@@ -223,16 +220,13 @@ class DeadlineInput extends Component {
                                     </div>
                                 </div>
 
-                                <br />
-                                <br />
-
-                                <div style={{paddingBottom:'2%'}}>
-                                    <div style={{float: 'left'}}> Deadline: </div>
-                                    <div style={{float:'left', paddingLeft:'7%'}}> 
+                                <div style={{marginTop:'16%', width:'100%'}}>
+                                    <div style={{float: 'left', width:'20%', textAlign:'left'}}> Deadline: </div>
+                                    <div style={{float:'left', marginLeft:'6%', width:'20%'}}> 
                                         <input 
                                             type='text' 
                                             name="deadline"
-                                            style={{width:'70%'}}
+                                            style={{width:'100%'}}
                                             value={this.state.deadline}
                                             placeholder={"dd-mm-yyyy"}
                                             onChange={this.handleChange}
@@ -242,36 +236,30 @@ class DeadlineInput extends Component {
                                     </div>
                                 </div>
 
-                                <br />
-                                <br />
+                                <div style={{marginTop:'25%', width:'100%'}}>
+                                    <div style={{float:'left', width:'45%', height:'100px'}}> 
+                                        <textarea style={{height:'100%', width:'100%'}} 
+                                            placeholder='Deadline Description' 
+                                            type='text' 
+                                            name="description"
+                                            value={this.state.description}
+                                            onChange={this.handleChange}
+                                            readOnly={this.props.calendarView}
+                                        >
+                                        </textarea> 
+                                    </div>
 
-                                <div>
-                                <div style={{float:'left'}}> 
-                                    <textarea style={{height:'100px', width:'390px'}} 
-                                        placeholder='Deadline Description' 
-                                        type='text' 
-                                        name="description"
-                                        value={this.state.description}
-                                        onChange={this.handleChange}
-                                        readOnly={this.props.calendarView}
-                                    >
-                                    </textarea> 
+                                    <div style={{float:'left', width:'55%', marginTop:'7%'}}>
+                                        {this.props.calendarView ? null :
+                                            <div style={{float:'left', marginLeft:this.props.viewMode ? '30%' : '45%'}}>
+                                                <Button onClick={this.props.viewMode ? this.editDeadline : this.addDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
+                                            </div>}
+                                        {this.props.viewMode ? 
+                                        <div style={{float:'left', marginLeft:'5%'}}>
+                                            <Button onClick={this.removeDeadline}> Remove Deadline </Button>
+                                        </div> : null}
+                                    </div>
                                 </div>
-
-                                <br />
-                                <br />
-
-                                <div>
-                                    {this.props.calendarView ? null :
-                                        <div style={{float:'left', marginLeft:this.props.viewMode ? '10%' : '25%', marginTop:'3%'}}>
-                                            <Button onClick={this.props.viewMode ? this.editDeadline : this.addDeadline}> {this.props.viewMode ? 'Save Changes' : 'Add Deadline'} </Button>
-                                        </div>}
-                                    {this.props.viewMode ? 
-                                    <div style={{float:'left', marginLeft:'8%', marginTop:'3%'}}>
-                                        <Button onClick={this.removeDeadline}> Remove Deadline </Button>
-                                    </div> : null}
-                                </div>
-                            </div>
 
                             </form> </div> }
                         </div>
