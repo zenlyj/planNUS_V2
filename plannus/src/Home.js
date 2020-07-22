@@ -68,10 +68,12 @@ class Home extends Component {
                 </div>
                 <div style={{marginLeft:'13%', paddingTop:'2%'}}>
                     <div style={{marginLeft:'80%', paddingBottom:'1%'}}> <ImportInput submitURL={this.submitURL} /> </div>
-                    <div style={{float:'left', width:'85%'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} /> </div>
-                    <div style={{float:'left', marginLeft:'3%'}}> <Deadline deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/> </div>
                 </div>
-                <div style={{float:'left', marginLeft:'5%'}}> <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} /> </div>
+                <div style={{marginLeft:'13%', width:'87%'}}>
+                        <div style={{display: 'inline-block', width:'85%'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} /> </div>
+                        <div style={{display: 'inline-block', verticalAlign:'top', marginLeft:'3%', width:'12%'}}> <Deadline deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/> </div>
+                </div>
+                <div style={{marginLeft:'14%'}}> <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} /> </div>
             </React.Fragment>
         )
     }
