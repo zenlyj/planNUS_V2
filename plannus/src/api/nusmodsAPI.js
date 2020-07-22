@@ -117,6 +117,7 @@ class nusmodsAPI {
             task.taskPresent = taskObj.taskPresent;
             task.timeFrom = taskObj.timeFrom;
             task.timeTo = taskObj.timeTo;
+            task.completed = taskObj.completed == 1 ? true : false;
             if (weekMaps[taskObj.week] == undefined) {
                 weekMaps[taskObj.week] = new Map();
             }
