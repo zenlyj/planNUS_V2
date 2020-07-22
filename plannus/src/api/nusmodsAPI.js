@@ -68,6 +68,33 @@ class nusmodsAPI {
         const response = fetch(url).then(res => res.json()).then(obj => obj.success);
     }
 
+    // USAGE
+    /* 
+        fields["taskName"] = "newName";
+        fields["description"] = "blablabla";
+        fields["module"] = "xyz";
+        nusmodsAPI.updateTask("FRI5", 1, fields);
+    */
+    updateTask(id, week, fields) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "updatetask.php?nusnet="+ nusnet +
+                "&id=" + id + "&week=" + week + "&fields=";
+        let count = 0;
+        for (var key in fields) {
+            if (count == 0) {
+
+            } else {
+                url += ",";
+            }
+            url += key + "|" + fields[key];
+            count++;
+
+        }
+        console.log(url);
+        const response = fetch(url).then(res => res.json()).then(obj => obj.success);
+        return response;
+    }
+    
     retrieveTask() {
         const nusnet = Auth.getNUSNET();
         let url = this.phpHost + "retrievetask.php?nusnet=" + nusnet;
