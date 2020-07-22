@@ -12,13 +12,76 @@
             $queryInsertTask = sprintf("INSERT INTO `task` (nusnet, id, taskPresent, taskName, module, timeFrom, timeTo, description, week)"
                     . " VALUES ('%s', '%s', '%s', '%s', '%s' ,'%s', '%s', '%s', '%s')", $_GET['nusnet'], $_GET['id'], $_GET['taskPresent'] == "true" ? 1 : 0, $_GET['taskName'], $_GET['module'],
                 $_GET['timeFrom'], $_GET['timeTo'], $_GET['description'], $_GET['week']);
-            $rsInsertTask = mysqli_query($conn, $queryInsertTask);
+           $rsInsertTask = mysqli_query($conn, $queryInsertTask);
             if ($rsInsertTask == 1) {
                 $message->success = true;
-            } 
+            }
         } 
         echo json_encode($message);
     } catch(ErrorException $e) {
         echo $e->getMessage();
+    }
+
+    function computeDate($day, $week) {
+        $startDate = 10;
+        if ($week < 4) {
+           $month = "08"; // Aug
+        } else if ($week == 4) {
+            if (getDayOffset($day) <= 0) {
+                $month = "08";  // Aug
+            } else {
+                $month = "09"; // Sep
+                $startDate = 0;
+                $week = 1;
+            }
+        } else if ($week < 7) {
+            $month = "09";  // Sep
+            $startDate = 0;
+            $week = $week - 3;
+        } else if ($week == 7) {
+            if (getDayOffset($day) <= 2) {
+                $month = "09";
+                $startDate = 28;
+                $week = 1;
+            } else {
+                $month = "10";
+                $startDate = -2;
+                $week = $week - 6;
+            }
+        } else if ($week <= 11) {
+            if (getDayOffset($day) == 6 && $week == 11) {
+                $month = "11";
+                $week = 0;
+                $startDate = 2;
+            } else { 
+                $month = "10";
+                $startDate = 5;
+                $week = $week - 7;
+            }
+        } else {
+            $month = "11";
+            $startDate = 2;
+            $week = $week - 11;
+        }
+        return ($startDate + getDayOffset($day) + (($week - 1) % 4) * 7) . "-" . $month . "\n";
+    }
+
+    function getDayOffset($day) {
+        $day = strtolower(substr($day, 0, 3));
+        if ($day == "mon") {
+            return 0;
+        } else if ($day == "tue") {
+            return 1;
+        } else if ($day == "wed") {
+            return 2;
+        } else if ($day == "thu") {
+            return 3;
+        } else if ($day == "fri") {
+            return 4;
+        } else if ($day == "sat") {
+            return 5;
+        } else if ($day == "sun") {
+            return 6;
+        }
     }
 ?>

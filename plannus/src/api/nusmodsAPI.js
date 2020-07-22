@@ -58,6 +58,7 @@ class nusmodsAPI {
                 "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
                 "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + 
                 "&description=" + description + "&week=" + week;
+        console.log(url);
         const response = fetch(url).then(res => res.json()).then(obj => obj.success);
     }
 
@@ -115,7 +116,8 @@ class nusmodsAPI {
     importFromNUSMODS(nusmodsURL) {
         let url = this.phpHost + "importnusmods.php?url=" + nusmodsURL.split("%3D").join("=").split("%3A").join(":")
         .split("%2F").join("/").split("%3F").join("?").split("%2C").join(",").split("%26").join("&").split("&").join("|");
-        const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
+        const response = fetch(url).then(res => res.json());
+        console.log(url);
         return response;
     }
 
@@ -154,6 +156,44 @@ class nusmodsAPI {
             timetableMap.set(parseInt(key), weekMaps[key]);
         }
         return timetableMap;
+    }
+
+    retrieveDeadline() {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "retrievedeadline.php?nusnet=" + nusnet;
+        const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
+        return response;
+    }
+
+    retrieveDiary() {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "retrievetask.php?nusnet=" + nusnet;
+        const response = fetch(url).then(res => res.json()).then(json => this.dbtoDiary(json));
+        return response;
+    }
+
+    dbtoDiary(json) {
+        let diaryMap = new Map();
+        let weekMaps = {};
+        json.forEach((taskObj) => {
+            let task = {};
+            task.description = taskObj.description;
+            task.id = taskObj.id;
+            task.module = taskObj.module;
+            task.taskName = taskObj.taskName;
+            task.taskPresent = taskObj.taskPresent;
+            task.timeFrom = taskObj.timeFrom;
+            task.timeTo = taskObj.timeTo;
+            task.completed = taskObj.completed == 1 ? true : false;
+            if (weekMaps[taskObj.week] == undefined) {
+                weekMaps[taskObj.week] = new Map();
+            }
+            weekMaps[taskObj.week].set(task.id, task);
+        });
+        for (var key in weekMaps) {
+            diaryMap.set(parseInt(key), weekMaps[key]);
+        }
+        return diaryMap;
     }
 }
 

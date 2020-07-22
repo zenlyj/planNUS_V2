@@ -5,11 +5,15 @@
     # usage http://116.14.246.142/importnusmods.php?url=https://nusmods.com/timetable/sem-1/share?CS1101S=REC:09,TUT:09B,LEC:2|ES1103=SEC:C01|IS1103=SEC:1,TUT:18|MA1301=LEC:1,TUT:3|PC1221=TUT:6,LEC:1,LAB:9
     # replace url & with | for delims
     try {
+        $message = new \stdClass();
+        $message->success = false;
         if (isset($_GET['url'])) {
             $resultArr = array();
             $params = explode('/share?', $_GET['url']);
+            if (!(isset($params[0]) && isset($params[1]))) {
+                throw new Exception("");
+            }
             $modules = explode('|', $params[1]);
-            $sem = explode('sem-', $params[0])[1];
             $baseURL = "https://api.nusmods.com/v2/2020-2021/modules/";
             foreach ($modules as $module) {
                 $moduleCode = explode('=', $module)[0];
@@ -45,12 +49,16 @@
                     }
                 }
             }
-            echo json_encode($taskArr);
+            $message->taskArr = $taskArr;
+            $message->success = true;
+            echo json_encode($message);
         } else {
-
+            $message->success = false;
+            echo json_encode($message);
         }
-    } catch(ErrorException $e) {
-        echo $e->getMessage();
+    } catch(Exception $e) {
+        $message->success = false;
+        echo json_encode($message);
     }
 
     function changeToKey($day, $time) {
