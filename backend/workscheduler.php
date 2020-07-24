@@ -1,6 +1,5 @@
 <?php
     require_once('Connections/connDB.php');
-    require_once('importnusmods.php');
     header("Access-Control-Allow-Origin: *");
     header('Content-type:application/json;charset=utf-8');
     # usage http://116.14.246.142/workscheduler.php?nusnet=e0407306&week=1&modules=CS1101S&Monday-start=0900&Monday-end=1900&Monday-hours=5&Tuesday-start=0900&Tuesday-end=1900&Tuesday-hours=5&Wednesday-start=0900&Wednesday-end=1900&Wednesday-hours=5&Thursday-start=0900&Thursday-end=1900&Thursday-hours=5&Friday-start=0900&Friday-end=1900&Friday-hours=5&Saturday-start=0900&Saturday-end=1900&Saturday-hours=4&Sunday-start=0900&Sunday-end=1900&Sunday-hours=4
@@ -252,5 +251,26 @@
         }
         $workHours = $obj->moduleCredit * 2.5 - ($existingWorkHours >= $obj->moduleCredit * 2.5 ? 0 : $existingWorkHours);
         return $workHours;
+    }
+    
+    function changeToKey($day, $time) {
+        $to_Day = "";
+        $day = ucfirst(strtolower($day));
+        if ($day == "Monday") {
+            $to_Day = "MON";
+        } else if ($day == "Tuesday") {
+            $to_Day = "TUES";
+        } else if ($day == "Wednesday") {
+            $to_Day = "WED";
+        }  else if ($day == "Thursday") {
+            $to_Day = "THURS";
+        } else if ($day == "Friday") {
+            $to_Day = "FRI";
+        } else if ($day == "Saturday") {
+            $to_Day = "SAT";
+        } else if ($day == "Sunday") {
+            $to_Day = "SUN";
+        }
+        return $to_Day . ( $time / 100 - 7);
     }
 ?>
