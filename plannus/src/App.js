@@ -48,7 +48,6 @@ class App extends Component {
     if (prevState.loggedIn===false && this.state.loggedIn===true) {
       nusmodsAPI.retrieveTask().then(taskDB => this.setState({taskDB: taskDB}))
       nusmodsAPI.retrieveDiary().then(diaryDB => {
-        console.log(diaryDB);
         this.setState({diaryDB: diaryDB});
       });
     }
@@ -92,7 +91,7 @@ class App extends Component {
     }
     diaryDB.set(week, weeklyEntry)
     let currMonth = date.substring(3,5)
-    console.log(diaryDB);
+    nusmodsAPI.updateDiary(week, date, data);
     this.setState({diaryDB: diaryDB, currMonth:(parseInt(currMonth)-8)})
   }
 

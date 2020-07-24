@@ -195,6 +195,21 @@ class nusmodsAPI {
         }
         return diaryMap;
     }
+
+    updateDiary(week, date, data) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "updatediary.php?nusnet=" + nusnet + "&date=" + date + "&note=" + data.shortNote;
+        const response = fetch(url).then(res => res.json());
+        let tasks = Array.from(data.taskCompleted);
+        for (var key in tasks) {
+            let task = tasks[key];
+            let fields = [];
+            fields['completed'] = task[1] ? 1 : 0;
+            const id = task[0];
+            this.updateTask(id, week, fields) 
+        }
+        return response;
+    }
 }
 
 export default new nusmodsAPI();
