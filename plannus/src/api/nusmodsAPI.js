@@ -58,7 +58,6 @@ class nusmodsAPI {
                 "&id=" + id + "&taskPresent=" + taskPresent + "&taskName=" + taskName +
                 "&module=" + module + "&timeFrom=" + timeFrom  + "&timeTo=" + timeTo + 
                 "&description=" + description + "&week=" + week;
-        console.log(url);
         const response = fetch(url).then(res => res.json()).then(obj => obj.success);
     }
 
@@ -91,7 +90,6 @@ class nusmodsAPI {
             count++;
 
         }
-        console.log(url);
         const response = fetch(url).then(res => res.json()).then(obj => obj.success);
         return response;
     }
@@ -117,7 +115,6 @@ class nusmodsAPI {
         let url = this.phpHost + "importnusmods.php?url=" + nusmodsURL.split("%3D").join("=").split("%3A").join(":")
         .split("%2F").join("/").split("%3F").join("?").split("%2C").join(",").split("%26").join("&").split("&").join("|");
         const response = fetch(url).then(res => res.json());
-        console.log(url);
         return response;
     }
 
@@ -167,31 +164,34 @@ class nusmodsAPI {
 
     retrieveDiary() {
         const nusnet = Auth.getNUSNET();
-        let url = this.phpHost + "retrievetask.php?nusnet=" + nusnet;
+        let url = this.phpHost + "retrievediary.php?nusnet=" + nusnet;
         const response = fetch(url).then(res => res.json()).then(json => this.dbtoDiary(json));
         return response;
     }
 
     dbtoDiary(json) {
         let diaryMap = new Map();
-        let weekMaps = {};
-        json.forEach((taskObj) => {
-            let task = {};
-            task.description = taskObj.description;
-            task.id = taskObj.id;
-            task.module = taskObj.module;
-            task.taskName = taskObj.taskName;
-            task.taskPresent = taskObj.taskPresent;
-            task.timeFrom = taskObj.timeFrom;
-            task.timeTo = taskObj.timeTo;
-            task.completed = taskObj.completed == 1 ? true : false;
-            if (weekMaps[taskObj.week] == undefined) {
-                weekMaps[taskObj.week] = new Map();
+        let tasks = json.tasks;
+        let weeks = json.weeks;
+        let dates = json.dates;
+        for (var key in weeks) {
+            let week = weeks[key];
+            let filteredDate = dates.filter(date => date.week == week);
+            let dateMap = new Map();
+            for (var dateKey in filteredDate) {
+                let date = filteredDate[dateKey].date;
+                let note = filteredDate[dateKey].note;
+                let filteredTasks = tasks.filter(task => task.date == date);
+                let dateObj = {};
+                dateObj.shortNote = note;
+                dateObj.taskCompleted = new Map();
+                for (var taskKey in filteredTasks) {
+                    let task = filteredTasks[taskKey];
+                    dateObj.taskCompleted.set(task.id, task.completed);
+                }
+                dateMap.set(date, dateObj);
             }
-            weekMaps[taskObj.week].set(task.id, task);
-        });
-        for (var key in weekMaps) {
-            diaryMap.set(parseInt(key), weekMaps[key]);
+            diaryMap.set(parseInt(week), dateMap);
         }
         return diaryMap;
     }

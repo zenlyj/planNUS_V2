@@ -274,6 +274,14 @@ class CalendarDay extends Component {
             fontSize: 20
         }
 
+        const altButtonStyle = {   
+            border: 0,
+            width:'100%',
+            height:'30px',
+            color: '#040404',
+            fontSize: 20
+        }
+
         const closeStyle = {
             color: 'black',
             cursor: 'pointer',
@@ -301,7 +309,7 @@ class CalendarDay extends Component {
 
         return (
             <div>
-                <button style={defaultButtonStyle} onClick={this.openModal}> 
+                <button style={this.retrieveTasks().length == 0 ? defaultButtonStyle : altButtonStyle} onClick={this.openModal}> 
                     {this.props.fullDate.indexOf(0) == "0" ? this.props.fullDate.substring(1,2) : this.props.fullDate.substring(0,2)} 
                 </button>
                 <Popup

@@ -164,7 +164,7 @@ class AutomatedScheduler extends Component {
         });
     }
     
-    componentDidMount() {
+    componentDidUpdate() {
         nusmodsAPI.retrieveDistinctModule(this.state.week == undefined ? 1 : this.state.week).then(result => this.setState({distinctmodules: result}));
     }
 

@@ -4,15 +4,26 @@
     header('Content-type:application/json;charset=utf-8');
     # params
     # nusnet:str, id: str (MON1, MON2, THURS4, etc.), taskPresent: true, taskName: str, module: str, timeFrom: str (24hr format), timeTo: str(24hr format), description: str
-    # usage http://116.14.246.142/addtask.php?nusnet=e0407306&id=MON1&taskPresent=true&taskName=ABC&module=cp2106&timeFrom=1600&timeTo=1700&description=xyz&week=1
+    # usage http://116.14.246.142/addtask.php?nusnet=e0407306&id=WED1&taskPresent=true&taskName=ABC&module=cp2106&timeFrom=1600&timeTo=1700&description=xyz&week=5
     try {
         $message = new \stdClass();
         $message->success = false;
         if (isset($_GET['nusnet']) && isset($_GET['id'])) {
-            $queryInsertTask = sprintf("INSERT INTO `task` (nusnet, id, taskPresent, taskName, module, timeFrom, timeTo, description, week)"
-                    . " VALUES ('%s', '%s', '%s', '%s', '%s' ,'%s', '%s', '%s', '%s')", $_GET['nusnet'], $_GET['id'], $_GET['taskPresent'] == "true" ? 1 : 0, $_GET['taskName'], $_GET['module'],
-                $_GET['timeFrom'], $_GET['timeTo'], $_GET['description'], $_GET['week']);
-           $rsInsertTask = mysqli_query($conn, $queryInsertTask);
+            $date = computeDate($_GET['id'], $_GET['week']);
+            $querySearch = sprintf("SELECT * FROM `diary` WHERE nusnet = '%s' AND `date` ='%s'", $_GET['nusnet'], $date);
+            $result = $conn->query($querySearch);
+            if ($result->num_rows > 0 ) {
+                $row = $result->fetch_assoc();
+                $diaryID = $row['id'];
+            } else {
+                $queryInsertDiary = sprintf("INSERT INTO `diary` (`date`,`nusnet`) VALUES ('%s', '%s')", $date, $_GET['nusnet']);
+                $conn->query($queryInsertDiary);
+                $diaryID = $conn->insert_id;
+            }
+            $queryInsertTask = sprintf("INSERT INTO `task` (nusnet, id, taskPresent, taskName, module, timeFrom, timeTo, description, week, diaryID)"
+                . " VALUES ('%s', '%s', '%s', '%s', '%s' ,'%s', '%s', '%s', '%s', '%s')", $_GET['nusnet'], $_GET['id'], $_GET['taskPresent'] == "true" ? 1 : 0, $_GET['taskName'], $_GET['module'],
+                $_GET['timeFrom'], $_GET['timeTo'], $_GET['description'], $_GET['week'], $diaryID);
+            $rsInsertTask = mysqli_query($conn, $queryInsertTask);
             if ($rsInsertTask == 1) {
                 $message->success = true;
             }
@@ -63,7 +74,7 @@
             $startDate = 2;
             $week = $week - 11;
         }
-        return ($startDate + getDayOffset($day) + (($week - 1) % 4) * 7) . "-" . $month . "\n";
+        return "2020-$month-". ($startDate + getDayOffset($day) + (($week - 1) % 4) * 7);
     }
 
     function getDayOffset($day) {
