@@ -155,13 +155,6 @@ class nusmodsAPI {
         return timetableMap;
     }
 
-    retrieveDeadline() {
-        const nusnet = Auth.getNUSNET();
-        let url = this.phpHost + "retrievedeadline.php?nusnet=" + nusnet;
-        const response = fetch(url).then(res => res.json()).then(json => this.dbtoMap(json));
-        return response;
-    }
-
     retrieveDiary() {
         const nusnet = Auth.getNUSNET();
         let url = this.phpHost + "retrievediary.php?nusnet=" + nusnet;
@@ -208,6 +201,48 @@ class nusmodsAPI {
             const id = task[0];
             this.updateTask(id, week, fields) 
         }
+        return response;
+    }
+
+    addDeadline(id, deadlineName, module, deadline, description) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "adddeadline.php?nusnet="+ nusnet +
+                "&id=" + id + "&deadlineName=" + deadlineName + "&module=" + module + "&deadline=" + deadline + 
+                "&description=" + description;
+        const response = fetch(url).then(res => res.json()).then(obj => obj.success);
+    }
+
+    dbtoDeadline(json) {
+        let deadlineMap = new Map();
+        json.forEach(deadlineObj => {
+            deadlineMap.set(deadlineObj.id, deadlineObj);
+        })
+        return deadlineMap;
+    }
+
+    retrieveDeadline() {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "retrievedeadline.php?nusnet=" + nusnet;
+        const response = fetch(url).then(res => res.json()).then(json => this.dbtoDeadline(json));
+        return response;
+    }
+
+    updateDeadline(id, fields) {
+        const nusnet = Auth.getNUSNET();
+        let url = this.phpHost + "updatedeadline.php?nusnet="+ nusnet + "&id=" + id + "&fields=";
+        let count = 0;
+        for (var key in fields) {
+            if (count == 0) {
+
+            } else {
+                url += ",";
+            }
+            url += key + "|" + fields[key];
+            count++;
+
+        }
+        console.log(url);
+        const response = fetch(url).then(res => res.json()).then(obj => obj.success);
         return response;
     }
 }

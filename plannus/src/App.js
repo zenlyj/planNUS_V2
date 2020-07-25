@@ -50,6 +50,9 @@ class App extends Component {
       nusmodsAPI.retrieveDiary().then(diaryDB => {
         this.setState({diaryDB: diaryDB});
       });
+      nusmodsAPI.retrieveDeadline().then(deadlineDB => {
+        this.setState({deadlineDB: deadlineDB});
+      });
     }
   }
 
@@ -68,9 +71,14 @@ class App extends Component {
       deadlineDB.delete(updatedDeadline.id)
     }
     if (!toRemove && !toEdit) {
+      nusmodsAPI.addDeadline(updatedDeadline.id, updatedDeadline.deadlineName, updatedDeadline.module,
+        updatedDeadline.deadline, updatedDeadline.description);
       deadlineDB.set(updatedDeadline.id, updatedDeadline)
     }
     if (toEdit) {
+      const tempDeadlineID = updatedDeadline.id;
+      updatedDeadline.id = updatedDeadline.deadline+updatedDeadline.deadlineName;
+      nusmodsAPI.updateDeadline(tempDeadlineID, updatedDeadline);
       deadlineDB.set(updatedDeadline.deadline+updatedDeadline.deadlineName, updatedDeadline)
     }
     this.setState({deadlineDB: deadlineDB})
