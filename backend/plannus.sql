@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 24, 2020 at 12:33 PM
+-- Generation Time: Jul 25, 2020 at 11:17 AM
 -- Server version: 10.1.30-MariaDB
 -- PHP Version: 5.6.33
 
@@ -23,6 +23,23 @@ SET time_zone = "+00:00";
 --
 CREATE DATABASE IF NOT EXISTS `plannus` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
 USE `plannus`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `deadline`
+--
+
+DROP TABLE IF EXISTS `deadline`;
+CREATE TABLE `deadline` (
+  `id` varchar(100) NOT NULL,
+  `deadlineName` varchar(100) NOT NULL,
+  `module` varchar(10) NOT NULL,
+  `deadline` date DEFAULT NULL,
+  `description` varchar(255) NOT NULL,
+  `nusnet` varchar(10) NOT NULL,
+  `pk` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -79,6 +96,12 @@ CREATE TABLE `user` (
 --
 
 --
+-- Indexes for table `deadline`
+--
+ALTER TABLE `deadline`
+  ADD PRIMARY KEY (`pk`);
+
+--
 -- Indexes for table `diary`
 --
 ALTER TABLE `diary`
@@ -102,22 +125,28 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `deadline`
+--
+ALTER TABLE `deadline`
+  MODIFY `pk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- AUTO_INCREMENT for table `diary`
 --
 ALTER TABLE `diary`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `idpk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1435;
+  MODIFY `idpk` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2279;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
