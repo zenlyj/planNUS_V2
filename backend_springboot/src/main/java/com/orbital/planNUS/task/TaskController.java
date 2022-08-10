@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import static com.orbital.planNUS.HTTPStatusCode.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/task")
 public class TaskController {
@@ -67,7 +68,7 @@ public class TaskController {
             userResponse.setMessage("Successfully updated task!");
         } catch (Exception e) {
             userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            userResponse.setMessage(e.getLocalizedMessage());
         } finally {
             return userResponse;
         }

@@ -3,6 +3,7 @@ package com.orbital.planNUS.task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,14 +37,14 @@ public class TaskService {
         String name = task.getName();
         String module = task.getModule();
         String description = task.getDescription();
-        int timeFrom = task.getTimeFrom();
-        int timeTo = task.getTimeTo();
-        int week = task.getWeek();
-        boolean isCompleted = task.isCompleted();
+        String timeFrom = task.getTimeFrom();
+        String timeTo = task.getTimeTo();
+        LocalDate date = task.getDate();
+        Boolean isCompleted = task.isCompleted();
         Optional<Task> search = taskRepository.findTaskById(id);
         if (search.isEmpty()) {
             throw new Exception("No such task!");
         }
-        taskRepository.updateTask(name, module, description, timeFrom, timeTo, week, isCompleted, id);
+        taskRepository.updateTask(name, module, description, timeFrom, timeTo, date, isCompleted, id);
     }
 }

@@ -1,6 +1,7 @@
 package com.orbital.planNUS.task;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table
@@ -18,40 +19,37 @@ public class Task {
 
     private Long id;
     private Long studentId;
-    private Long diaryId;
     private String name;
     private String module;
     private String description;
-    private int timeFrom;
-    private int timeTo;
-    private int week;
-    private boolean isCompleted;
+    private String timeFrom;
+    private String timeTo;
+    private LocalDate date;
+    private Boolean isCompleted;
 
     public Task() {}
 
-    public Task(Long id, Long studentId, Long diaryId, String name, String module, String description, int timeFrom, int timeTo, int week, boolean isCompleted) {
+    public Task(Long id, Long studentId, String name, String module, String description, String timeFrom, String timeTo, LocalDate date, Boolean isCompleted) {
         this.id = id;
         this.studentId = studentId;
-        this.diaryId = diaryId;
         this.name = name;
         this.module = module;
         this.description = description;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
-        this.week = week;
+        this.date = date;
         this.isCompleted = isCompleted;
     }
 
 
-    public Task(Long studentId, Long diaryId, String name, String module, String description, int timeFrom, int timeTo, int week, boolean isCompleted) {
+    public Task(Long studentId, String name, String module, String description, String timeFrom, String timeTo, LocalDate date, Boolean isCompleted) {
         this.studentId = studentId;
-        this.diaryId = diaryId;
         this.name = name;
         this.module = module;
         this.description = description;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
-        this.week = week;
+        this.date = date;
         this.isCompleted = isCompleted;
     }
 
@@ -70,14 +68,6 @@ public class Task {
 
     public void setStudentId(Long studentId) {
         this.studentId = studentId;
-    }
-
-    public Long getDiaryId() {
-        return diaryId;
-    }
-
-    public void setDiaryId(Long diaryId) {
-        this.diaryId = diaryId;
     }
 
     public String getName() {
@@ -104,35 +94,35 @@ public class Task {
         this.description = description;
     }
 
-    public int getTimeFrom() {
+    public String getTimeFrom() {
         return timeFrom;
     }
 
-    public void setTimeFrom(int timeFrom) {
+    public void setTimeFrom(String timeFrom) {
         this.timeFrom = timeFrom;
     }
 
-    public int getTimeTo() {
+    public String getTimeTo() {
         return timeTo;
     }
 
-    public void setTimeTo(int timeTo) {
+    public void setTimeTo(String timeTo) {
         this.timeTo = timeTo;
     }
 
-    public int getWeek() {
-        return week;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setWeek(int week) {
-        this.week = week;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public boolean isCompleted() {
+    public Boolean isCompleted() {
         return isCompleted;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         isCompleted = completed;
     }
 
@@ -140,16 +130,15 @@ public class Task {
         return String.format("{" +
                 "\"id\": \"%d\", " +
                 "\"studentId\": \"%d\", " +
-                "\"diaryId\": \"%d\", " +
                 "\"name\": \"%s\", " +
                 "\"module\": \"%s\", " +
                 "\"description\": \"%s\", " +
-                "\"timeFrom\": \"%d\", " +
-                "\"timeTo\": \"%d\", " +
-                "\"week\": \"%d\", " +
+                "\"timeFrom\": \"%s\", " +
+                "\"timeTo\": \"%s\", " +
+                "\"date\": \"%s\", " +
                 "\"isCompleted\": \"%b\"" +
                 "}",
-                id, studentId, diaryId, name, module, description, timeFrom, timeTo, week, isCompleted);
+                id, studentId, name, module, description, timeFrom, timeTo, date.toString(), isCompleted);
     }
 
     @Override
@@ -157,13 +146,12 @@ public class Task {
         return "Task{" +
                 "id=" + id +
                 ", studentId=" + studentId +
-                ", diaryId=" + diaryId +
                 ", name='" + name + '\'' +
                 ", module='" + module + '\'' +
                 ", description='" + description + '\'' +
                 ", timeFrom=" + timeFrom +
                 ", timeTo=" + timeTo +
-                ", week=" + week +
+                ", date=" + date.toString() +
                 ", isCompleted=" + isCompleted +
                 '}';
     }

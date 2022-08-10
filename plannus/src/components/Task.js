@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import TextField from '@mui/material/TextField'
 import PropTypes from 'prop-types'
+import api from '../api/backendInterface'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialogContent-root': {
@@ -51,13 +52,51 @@ BootstrapDialogTitle.propTypes = {
 function Task(props) {
     const [open, setOpen] = React.useState(false)
     const [hovered, setHovered] = React.useState(false)
-    
+    const [name, setName] = React.useState("")
+    const [module, setModule] = React.useState("")
+    const [timeFrom, setTimeFrom] = React.useState("")
+    const [timeTo, setTimeTo] = React.useState("")
+    const [description, setDescription] = React.useState("")
+
     const handleClickOpen = () => {
+        if (props.taskPresent) {
+            setName(props.name)
+            setModule(props.module)
+            setTimeFrom(props.timeFrom)
+            setTimeTo(props.timeTo)
+            setDescription(props.description)
+        }
         setOpen(true)
     }
 
     const handleClose = () => {
         setOpen(false)
+        props.refreshTimetable()
+    }
+
+    const handleSave = () => {
+        let response = null
+        if (!props.taskPresent) {
+            response = api.addTask(name, module, props.timeFrom, timeTo, description, false, props.date)  
+        } else {
+            response = api.updateTask(props.id, name, module, props.timeFrom, timeTo, description, false, props.date)
+        }
+        response.then(val => {
+            console.log(val)
+            if (val.status === 200) {
+                handleClose()
+            }
+            console.log(val.message)
+        })
+    }
+
+    const handleDelete = () => {
+        api.deleteTask(props.id).then(response => {
+            if (response.status === 200) {
+                handleClose()
+            }
+            console.log(response.message)
+        })
     }
 
     const defaultButton = () => {
@@ -77,17 +116,25 @@ function Task(props) {
             </button>
         )
     }
+
+    const taskButton = () => {
+        return (
+            <Button sx={{width:'100%'}} variant="contained" color="success" onClick={() => handleClickOpen()}>
+                {props.name}
+            </Button>
+        )
+    }
     
     return (
         <div>
-            {defaultButton()}
+            {props.taskPresent ? taskButton() : defaultButton()}
             <BootstrapDialog
                 onClose={handleClose}
                 aria-labelledby="customized-dialog-title"
                 open={open}
             >
                 <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    New Task
+                    { props.taskPresent ? props.name : 'New Task' }
                 </BootstrapDialogTitle>
                 <DialogContent dividers>
                     <TextField
@@ -98,6 +145,8 @@ function Task(props) {
                         type="name"
                         fullWidth
                         variant="standard"
+                        onChange={e => setName(e.target.value)}
+                        defaultValue={props.name}
                     />
                     <TextField
                         autoFocus
@@ -107,6 +156,8 @@ function Task(props) {
                         type="module"
                         fullWidth
                         variant="standard"
+                        onChange={e => setModule(e.target.value)}
+                        defaultValue={props.module}
                     />
                     <TextField
                         autoFocus
@@ -116,6 +167,8 @@ function Task(props) {
                         type="timeFrom"
                         fullWidth
                         variant="standard"
+                        onChange={e => setTimeFrom(e.target.value)}
+                        defaultValue={props.timeFrom}
                     />
                     <TextField
                         autoFocus
@@ -125,6 +178,8 @@ function Task(props) {
                         type="timeTo"
                         fullWidth
                         variant="standard"
+                        onChange={e => setTimeTo(e.target.value)}
+                        defaultValue={props.timeTo}
                     />
                     <TextField
                         autoFocus
@@ -134,12 +189,19 @@ function Task(props) {
                         type="description"
                         fullWidth
                         variant="standard"
+                        onChange={e => setDescription(e.target.value)}
+                        defaultValue={props.description}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>
+                    <Button onClick={() => handleSave()}>
                         Save
                     </Button>
+                    {   props.taskPresent ? 
+                            <Button onClick={() => handleDelete()}>
+                                Delete
+                            </Button> : null
+                    }
                 </DialogActions>
             </BootstrapDialog>
         </div>
