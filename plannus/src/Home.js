@@ -5,7 +5,7 @@ import moduleslist from './api/moduleslist.json'
 import AutoComplete from './components/AutoComplete'
 import nusmodsAPI from './api/nusmodsAPI'
 import AutomatedScheduler from './components/AutomatedScheduler'
-import Deadline from './components/Deadline'
+import DeadlineList from './components/DeadlineList'
 import ImportInput from './components/ImportInput'
 
 class Home extends Component {
@@ -71,7 +71,7 @@ class Home extends Component {
                 </div>
                 <div style={{marginLeft:'13%', width:'87%'}}>
                         <div style={{display: 'inline-block', width:'85%'}}> <Timetable id={this.state.weekNum} tasksAdded={tasksAdded} updateTaskDatabase={this.props.updateTaskDatabase} loggedIn={this.props.loggedIn} week={this.state.weekNum}/> </div>
-                        <div style={{display: 'inline-block', verticalAlign:'top', marginLeft:'3%', width:'12%'}}> <Deadline deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/> </div>
+                        <div style={{display: 'inline-block', verticalAlign:'top', marginLeft:'3%', width:'12%'}}> <DeadlineList deadlines={deadlines} updateDLDatabase={this.props.updateDLDatabase}/> </div>
                 </div>
                 <div style={{marginLeft:'14%'}}> <AutomatedScheduler key={this.state.weekNum} id={this.state.weekNum} automateSchedule={this.props.automateSchedule} /> </div>
             </React.Fragment>

@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface DeadlineRepository extends JpaRepository<Deadline, Long> {
-    @Query("SELECT d FROM Deadline d WHERE d.studentId=?1")
+    @Query("SELECT d FROM Deadline d WHERE d.studentId=?1 ORDER BY d.deadline DESC")
     public List<Deadline> findDeadlinesByStudentId(Long studentId);
 
     @Query("SELECT d FROM Deadline d WHERE d.id=?1")

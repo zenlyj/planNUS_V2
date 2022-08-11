@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import static com.orbital.planNUS.HTTPStatusCode.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/deadline")
 public class DeadlineController {
