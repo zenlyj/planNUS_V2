@@ -40,7 +40,7 @@ public class TaskService {
         String timeFrom = task.getTimeFrom();
         String timeTo = task.getTimeTo();
         LocalDate date = task.getDate();
-        Boolean isCompleted = task.isCompleted();
+        Boolean isCompleted = task.getCompleted();
         Optional<Task> search = taskRepository.findTaskById(id);
         if (search.isEmpty()) {
             throw new Exception("No such task!");

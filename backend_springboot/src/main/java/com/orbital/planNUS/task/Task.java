@@ -1,5 +1,7 @@
 package com.orbital.planNUS.task;
 
+import com.orbital.planNUS.diary.Diary;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -27,9 +29,13 @@ public class Task {
     private LocalDate date;
     private Boolean isCompleted;
 
+    @ManyToOne
+    @JoinColumn(name = "diary")
+    private Diary diary;
+
     public Task() {}
 
-    public Task(Long id, Long studentId, String name, String module, String description, String timeFrom, String timeTo, LocalDate date, Boolean isCompleted) {
+    public Task(Long id, Long studentId, String name, String module, String description, String timeFrom, String timeTo, LocalDate date, Boolean isCompleted, Diary diary) {
         this.id = id;
         this.studentId = studentId;
         this.name = name;
@@ -39,10 +45,10 @@ public class Task {
         this.timeTo = timeTo;
         this.date = date;
         this.isCompleted = isCompleted;
+        this.diary = diary;
     }
 
-
-    public Task(Long studentId, String name, String module, String description, String timeFrom, String timeTo, LocalDate date, Boolean isCompleted) {
+    public Task(Long studentId, String name, String module, String description, String timeFrom, String timeTo, LocalDate date, Boolean isCompleted, Diary diary) {
         this.studentId = studentId;
         this.name = name;
         this.module = module;
@@ -51,8 +57,8 @@ public class Task {
         this.timeTo = timeTo;
         this.date = date;
         this.isCompleted = isCompleted;
+        this.diary = diary;
     }
-
 
     public Long getId() {
         return id;
@@ -118,7 +124,7 @@ public class Task {
         this.date = date;
     }
 
-    public Boolean isCompleted() {
+    public Boolean getCompleted() {
         return isCompleted;
     }
 
@@ -126,17 +132,25 @@ public class Task {
         isCompleted = completed;
     }
 
+    public Diary getDiary() {
+        return diary;
+    }
+
+    public void setDiary(Diary diary) {
+        this.diary = diary;
+    }
+
     public String toJSONString() {
         return String.format("{" +
-                "\"id\": \"%d\", " +
-                "\"studentId\": \"%d\", " +
+                "\"id\": %d, " +
+                "\"studentId\": %d, " +
                 "\"name\": \"%s\", " +
                 "\"module\": \"%s\", " +
                 "\"description\": \"%s\", " +
                 "\"timeFrom\": \"%s\", " +
                 "\"timeTo\": \"%s\", " +
                 "\"date\": \"%s\", " +
-                "\"isCompleted\": \"%b\"" +
+                "\"isCompleted\": %b" +
                 "}",
                 id, studentId, name, module, description, timeFrom, timeTo, date.toString(), isCompleted);
     }
@@ -149,9 +163,9 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", module='" + module + '\'' +
                 ", description='" + description + '\'' +
-                ", timeFrom=" + timeFrom +
-                ", timeTo=" + timeTo +
-                ", date=" + date.toString() +
+                ", timeFrom='" + timeFrom + '\'' +
+                ", timeTo='" + timeTo + '\'' +
+                ", date=" + date +
                 ", isCompleted=" + isCompleted +
                 '}';
     }

@@ -1,5 +1,7 @@
 package com.orbital.planNUS.deadline;
 
+import com.orbital.planNUS.diary.Diary;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
@@ -24,24 +26,29 @@ public class Deadline {
     private LocalDate deadline;
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "diary")
+    private Diary diary;
+
     public Deadline() {}
 
-    public Deadline(Long id, Long studentId, String name, String module, LocalDate deadline, String description) {
+    public Deadline(Long studentId, String name, String module, LocalDate deadline, String description, Diary diary) {
+        this.studentId = studentId;
+        this.name = name;
+        this.module = module;
+        this.deadline = deadline;
+        this.description = description;
+        this.diary = diary;
+    }
+
+    public Deadline(Long id, Long studentId, String name, String module, LocalDate deadline, String description, Diary diary) {
         this.id = id;
         this.studentId = studentId;
         this.name = name;
         this.module = module;
         this.deadline = deadline;
         this.description = description;
-    }
-
-
-    public Deadline(Long studentId, String name, String module, LocalDate deadline, String description) {
-        this.studentId = studentId;
-        this.name = name;
-        this.module = module;
-        this.deadline = deadline;
-        this.description = description;
+        this.diary = diary;
     }
 
 
@@ -93,10 +100,18 @@ public class Deadline {
         this.description = description;
     }
 
+    public Diary getDiary() {
+        return diary;
+    }
+
+    public void setDiary(Diary diary) {
+        this.diary = diary;
+    }
+
     public String toJSONString() {
         return String.format("{" +
-                "\"id\": \"%d\", " +
-                "\"studentId\": \"%d\", " +
+                "\"id\": %d, " +
+                "\"studentId\": %d, " +
                 "\"name\": \"%s\", " +
                 "\"module\": \"%s\", " +
                 "\"deadline\": \"%s\", " +
