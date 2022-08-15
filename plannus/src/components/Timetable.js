@@ -138,7 +138,7 @@ function Timetable(props) {
                             timeTo={timeTo} 
                             description={description} 
                             date={date}
-                            refreshTimetable={refresh}
+                            refresh={refresh}
                     />
                 </TableCell>)
             }

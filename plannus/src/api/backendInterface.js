@@ -35,6 +35,7 @@ const api = {
     },
     
     updateTask(id, name, module, timeFrom, timeTo, description, isCompleted, date, diary) {
+        console.log(isCompleted)
         return (
             fetch(`${serverURL}api/task?` + new URLSearchParams({id:id}), {
                 method: 'PUT',

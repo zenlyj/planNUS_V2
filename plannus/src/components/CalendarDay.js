@@ -18,49 +18,56 @@ function CalendarDay(props) {
     const [studentId, setStudentId] = React.useState(-1)
     const [note, setNote] = React.useState('')
 
-    useEffect(() => {
+    useEffect(() => getData(), [])
+
+    const refresh = () => {
+        getData()
+    }
+
+    const getData = () => {
         api.getsertStudentDiary(1, props.date)
-            .then(response => {
-                if (response.status === 200) {
-                    const diary = JSON.parse(response.data)
-                    const tasks = diary.tasks.map(task => {
-                        return (
-                            <Task 
-                                id = {task.id}
-                                studentId = {task.studentId}
-                                date = {task.date}
-                                name = {task.name}
-                                module = {task.module}
-                                timeFrom = {task.timeFrom}
-                                timeTo = {task.timeTo}
-                                description = {task.description}
-                                isCompleted = {task.isCompleted}
-                                taskPresent = {true}
-                                disabled = {true}
-                            />
-                        )
-                    })
-                    const deadlines = diary.deadlines.map(deadline => {
-                        return (
-                            <Deadline
-                                id = {deadline.id}
-                                name = {deadline.name}
-                                module = {deadline.module}
-                                deadline = {deadline.deadline}
-                                description = {deadline.description}
-                                isHeader = {false}
-                                disabled = {true}
-                            />
-                        )
-                    })
-                    setId(diary.id)
-                    setStudentId(diary.studentId)
-                    setTasks(tasks)
-                    setDeadlines(deadlines)
-                    setNote(diary.note)
-                }
-            })
-    }, [])
+        .then(response => {
+            if (response.status === 200) {
+                const diary = JSON.parse(response.data)
+                const tasks = diary.tasks.map(task => {
+                    return (
+                        <Task 
+                            id = {task.id}
+                            studentId = {task.studentId}
+                            date = {task.date}
+                            name = {task.name}
+                            module = {task.module}
+                            timeFrom = {task.timeFrom}
+                            timeTo = {task.timeTo}
+                            description = {task.description}
+                            isCompleted = {task.isCompleted}
+                            taskPresent = {true}
+                            disabled = {true}
+                            refresh = {getData}
+                        />
+                    )
+                })
+                const deadlines = diary.deadlines.map(deadline => {
+                    return (
+                        <Deadline
+                            id = {deadline.id}
+                            name = {deadline.name}
+                            module = {deadline.module}
+                            deadline = {deadline.deadline}
+                            description = {deadline.description}
+                            isHeader = {false}
+                            disabled = {true}
+                        />
+                    )
+                })
+                setId(diary.id)
+                setStudentId(diary.studentId)
+                setTasks(tasks)
+                setDeadlines(deadlines)
+                setNote(diary.note)
+            }
+        })
+    }
 
     const handleClickOpen = () => {
         setOpen(true)

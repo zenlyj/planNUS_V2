@@ -16,7 +16,6 @@ function Task(props) {
     const [description, setDescription] = React.useState("")
 
     const handleClickOpen = () => {
-        console.log(props.disabled)
         if (props.taskPresent) {
             setName(props.name)
             setModule(props.module)
@@ -29,23 +28,23 @@ function Task(props) {
 
     const handleClose = () => {
         setOpen(false)
-        props.refreshTimetable()
+        props.refresh()
     }
 
-    const handleSave = () => {
+    const handleSave = (isCompleted) => {
         api.getsertStudentDiary(1, props.date)
             .then(response => {
                 const diary = JSON.parse(response.data)
-                saveChanges(diary)
+                saveChanges(diary, isCompleted)
             })
     }
 
-    const saveChanges = (diary) => {
+    const saveChanges = (diary, isCompleted) => {
         let response = null
         if (!props.taskPresent) {
-            response = api.addTask(name, module, props.timeFrom, timeTo, description, false, props.date, diary)  
+            response = api.addTask(name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)  
         } else {
-            response = api.updateTask(props.id, name, module, props.timeFrom, timeTo, description, false, props.date, diary)
+            response = api.updateTask(props.id, name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)
         }
         response.then(val => {
             if (val.status === 200) {
@@ -163,9 +162,12 @@ function Task(props) {
                         defaultValue={props.description}
                     />
                 </DialogContent>
-                {   props.disabled ? null :
+                {   props.disabled ? 
                     <DialogActions>
-                        <Button onClick={() => handleSave()}>
+                        <Button onClick={() => handleSave(!props.isCompleted)}> {props.isCompleted ? 'Mark Undone' : 'Mark Complete'} </Button>
+                    </DialogActions> :
+                    <DialogActions>
+                        <Button onClick={() => handleSave(false)}>
                             Save
                         </Button>
                         {   props.taskPresent ? 
@@ -174,7 +176,7 @@ function Task(props) {
                                 </Button> : null
                         }
                     </DialogActions>
-}
+                }
             </ DialogUtils.BootstrapDialog>
         </div>
     )
