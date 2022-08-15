@@ -10,7 +10,7 @@ const api = {
         )
     },
     
-    addTask(name, module, timeFrom, timeTo, description, isCompleted, date) {
+    addTask(name, module, timeFrom, timeTo, description, isCompleted, date, diary) {
         return (
             fetch(`${serverURL}api/task`, {
                 method: 'POST',
@@ -25,7 +25,8 @@ const api = {
                     timeTo: timeTo,
                     description: description,
                     isCompleted: isCompleted,
-                    date: date
+                    date: date,
+                    diary: diary
                 })
             }).then(response => response.json()
                 .then(jsonResponse => jsonResponse)
@@ -33,7 +34,7 @@ const api = {
         )
     },
     
-    updateTask(id, name, module, timeFrom, timeTo, description, isCompleted, date) {
+    updateTask(id, name, module, timeFrom, timeTo, description, isCompleted, date, diary) {
         return (
             fetch(`${serverURL}api/task?` + new URLSearchParams({id:id}), {
                 method: 'PUT',
@@ -48,7 +49,8 @@ const api = {
                     timeTo: timeTo,
                     description: description,
                     isCompleted: isCompleted,
-                    date: date
+                    date: date,
+                    diary: diary
                 })
             }).then(response => response.json()
                 .then(jsonResponse => jsonResponse)
@@ -76,11 +78,7 @@ const api = {
         )
     },
 
-    addDeadline(name, module, deadline, description) {
-        console.log(name)
-        console.log(module)
-        console.log(deadline)
-        console.log(description)
+    addDeadline(name, module, deadline, description, diary) {
         return (
             fetch(`${serverURL}api/deadline`, {
                 method: 'POST',
@@ -92,7 +90,8 @@ const api = {
                     name: name,
                     module: module,
                     deadline: deadline,
-                    description: description
+                    description: description,
+                    diary: diary
                 })             
             }).then(response => response.json()
                 .then(jsonResponse => jsonResponse)
@@ -100,7 +99,7 @@ const api = {
         )
     },
 
-    updateDeadline(id, name, module, deadline, description) {
+    updateDeadline(id, name, module, deadline, description, diary) {
         return (
             fetch(`${serverURL}api/deadline?` + new URLSearchParams({id:id}), {
                 method: 'PUT',
@@ -112,7 +111,8 @@ const api = {
                     name: name,
                     module: module,
                     deadline: deadline,
-                    description: description
+                    description: description,
+                    diary: diary
                 })
             }).then(response => response.json()
                 .then(jsonResponse => jsonResponse)
@@ -120,7 +120,7 @@ const api = {
         )
     },
 
-    deleteTask(id) {
+    deleteDeadline(id) {
         return (
             fetch(`${serverURL}api/deadline?` + new URLSearchParams({id:id}), {
                 method: 'DELETE'
@@ -128,6 +128,33 @@ const api = {
                 .then(jsonResponse => jsonResponse)
             )
                 
+        )
+    },
+
+    getsertStudentDiary(studentId, date) {
+        return (
+            fetch(`${serverURL}api/diary/${date}/?` + new URLSearchParams({studentId:studentId}))
+                .then(response => response.json()
+                    .then(jsonResponse => jsonResponse)
+                )
+        )
+    },
+
+    updateStudentDiary(id, studentId, date, note) {
+        return (
+            fetch(`${serverURL}api/diary?` + new URLSearchParams({id:id}), {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    studentId: studentId,
+                    date: date,
+                    note: note
+                })
+            }).then(response => response.json()
+                .then(jsonResponse => jsonResponse)
+            )
         )
     }
 }

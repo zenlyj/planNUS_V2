@@ -32,11 +32,20 @@ function Deadline(props) {
     }
 
     const handleSave = () => {
+        api.getsertStudentDiary(1, deadline)
+            .then(response => {
+                const diary = JSON.parse(response.data)
+                console.log(diary)
+                saveChanges(diary)
+            })
+    }
+    
+    const saveChanges = (diary) => {
         let response = null
         if (props.isHeader) {
-            response = api.addDeadline(name, module, deadline, description)
+            response = api.addDeadline(name, module, deadline, description, diary)
         } else {
-            response = api.updateDeadline(id, name, module, deadline, description)
+            response = api.updateDeadline(id, name, module, deadline, description, diary)
         }
         response.then(response => {
             if (response.status === 200) {
@@ -47,7 +56,7 @@ function Deadline(props) {
     }
 
     const handleDelete = () => {
-        api.deleteTask(id).then(response => {
+        api.deleteDeadline(id).then(response => {
             if (response.status === 200) {
                 handleClose()
             }
@@ -93,6 +102,7 @@ function Deadline(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setName(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.name}
                     />
                     <TextField 
@@ -104,6 +114,7 @@ function Deadline(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setModule(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.module}
                     />
                     <TextField 
@@ -115,6 +126,7 @@ function Deadline(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setDeadline(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.deadline}
                     />
                     <TextField 
@@ -126,20 +138,24 @@ function Deadline(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setDescription(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.description}
                     />                    
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleSave()}>
-                        Save
-                    </Button>
-                    {
-                        props.isHeader ? null : 
-                            <Button onClick={() => handleDelete()}> 
-                                Delete 
-                            </Button>
-                    }
-                </DialogActions>
+                {
+                    props.disabled ? null :
+                    <DialogActions>
+                        <Button onClick={() => handleSave()}>
+                            Save
+                        </Button>
+                        {
+                            props.isHeader ? null : 
+                                <Button onClick={() => handleDelete()}> 
+                                    Delete 
+                                </Button>
+                        }
+                    </DialogActions>
+                }
             </DialogUtils.BootstrapDialog>
         </div>
     ) 

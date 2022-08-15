@@ -3,6 +3,7 @@ package com.orbital.planNUS.diary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,16 @@ public class DiaryService {
     public List<Diary> getStudentDiaryEntries(Long studentId) {
         return diaryRepository.findDiaryEntriesByStudentId(studentId);
     }
+
+    public Diary getsertStudentDiaryByDate(Long studentId, LocalDate date) {
+        Optional<Diary> search = diaryRepository.findStudentDiaryEntryByDate(studentId, date);
+        if (search.isPresent()) {
+            return search.get();
+        }
+        Diary newDiary = new Diary(studentId, date, "");
+        diaryRepository.save(newDiary);
+        return newDiary;
+     }
 
     public void addNewDiaryEntry(Diary diary) {
         diaryRepository.save(diary);

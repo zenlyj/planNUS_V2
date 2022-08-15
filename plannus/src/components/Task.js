@@ -16,6 +16,7 @@ function Task(props) {
     const [description, setDescription] = React.useState("")
 
     const handleClickOpen = () => {
+        console.log(props.disabled)
         if (props.taskPresent) {
             setName(props.name)
             setModule(props.module)
@@ -32,14 +33,21 @@ function Task(props) {
     }
 
     const handleSave = () => {
+        api.getsertStudentDiary(1, props.date)
+            .then(response => {
+                const diary = JSON.parse(response.data)
+                saveChanges(diary)
+            })
+    }
+
+    const saveChanges = (diary) => {
         let response = null
         if (!props.taskPresent) {
-            response = api.addTask(name, module, props.timeFrom, timeTo, description, false, props.date)  
+            response = api.addTask(name, module, props.timeFrom, timeTo, description, false, props.date, diary)  
         } else {
-            response = api.updateTask(props.id, name, module, props.timeFrom, timeTo, description, false, props.date)
+            response = api.updateTask(props.id, name, module, props.timeFrom, timeTo, description, false, props.date, diary)
         }
         response.then(val => {
-            console.log(val)
             if (val.status === 200) {
                 handleClose()
             }
@@ -103,6 +111,7 @@ function Task(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setName(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.name}
                     />
                     <TextField
@@ -114,6 +123,7 @@ function Task(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setModule(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.module}
                     />
                     <TextField
@@ -125,6 +135,7 @@ function Task(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setTimeFrom(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.timeFrom}
                     />
                     <TextField
@@ -136,6 +147,7 @@ function Task(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setTimeTo(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.timeTo}
                     />
                     <TextField
@@ -147,19 +159,22 @@ function Task(props) {
                         fullWidth
                         variant="standard"
                         onChange={e => setDescription(e.target.value)}
+                        disabled={props.disabled}
                         defaultValue={props.description}
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleSave()}>
-                        Save
-                    </Button>
-                    {   props.taskPresent ? 
-                            <Button onClick={() => handleDelete()}>
-                                Delete
-                            </Button> : null
-                    }
-                </DialogActions>
+                {   props.disabled ? null :
+                    <DialogActions>
+                        <Button onClick={() => handleSave()}>
+                            Save
+                        </Button>
+                        {   props.taskPresent ? 
+                                <Button onClick={() => handleDelete()}>
+                                    Delete
+                                </Button> : null
+                        }
+                    </DialogActions>
+}
             </ DialogUtils.BootstrapDialog>
         </div>
     )

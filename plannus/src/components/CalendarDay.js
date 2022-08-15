@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useEffect } from 'react'
 import Popup from 'reactjs-popup'
 import Task from './Task'
 import Deadline from './Deadline'
@@ -8,15 +8,66 @@ import Box from '@mui/material/Box'
 import DialogUtils from './DialogUtils'
 import DialogContent from '@mui/material/DialogContent'
 import { TextareaAutosize } from '@mui/material'
+import api from '../api/backendInterface'
 
 function CalendarDay(props) {
     const [open, setOpen] = React.useState(false)
+    const [tasks, setTasks] = React.useState([])
+    const [deadlines, setDeadlines] = React.useState([])
+    const [id, setId] = React.useState(-1)
+    const [studentId, setStudentId] = React.useState(-1)
+    const [note, setNote] = React.useState('')
+
+    useEffect(() => {
+        api.getsertStudentDiary(1, props.date)
+            .then(response => {
+                if (response.status === 200) {
+                    const diary = JSON.parse(response.data)
+                    const tasks = diary.tasks.map(task => {
+                        return (
+                            <Task 
+                                id = {task.id}
+                                studentId = {task.studentId}
+                                date = {task.date}
+                                name = {task.name}
+                                module = {task.module}
+                                timeFrom = {task.timeFrom}
+                                timeTo = {task.timeTo}
+                                description = {task.description}
+                                isCompleted = {task.isCompleted}
+                                taskPresent = {true}
+                                disabled = {true}
+                            />
+                        )
+                    })
+                    const deadlines = diary.deadlines.map(deadline => {
+                        return (
+                            <Deadline
+                                id = {deadline.id}
+                                name = {deadline.name}
+                                module = {deadline.module}
+                                deadline = {deadline.deadline}
+                                description = {deadline.description}
+                                isHeader = {false}
+                                disabled = {true}
+                            />
+                        )
+                    })
+                    setId(diary.id)
+                    setStudentId(diary.studentId)
+                    setTasks(tasks)
+                    setDeadlines(deadlines)
+                    setNote(diary.note)
+                }
+            })
+    }, [])
 
     const handleClickOpen = () => {
         setOpen(true)
     }
 
     const handleClose = () => {
+        api.updateStudentDiary(id, studentId, props.date, note)
         setOpen(false)
     }
 
@@ -32,7 +83,7 @@ function CalendarDay(props) {
     return (
         <div>
             <button style={dateNumberButtonStyle} onClick={() => handleClickOpen()}>
-                {1}
+                {props.day}
             </button>
             <DialogUtils.BootstrapDialog
                 onClose={handleClose}
@@ -41,21 +92,20 @@ function CalendarDay(props) {
                 fullWidth={true}
             >
                 <DialogUtils.BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    {/* {`${props.dayOfWeek} ${props.date}`} */}
-                    Wednesday 2022-12-12
+                    {`${props.dayOfWeek} ${props.date}`}
                 </DialogUtils.BootstrapDialogTitle>
                 <DialogContent dividers>
                     <Box>
                         <Typography sx={{padding:'5%'}} variant="h6">
                             Tasks
                         </Typography>
-                        <HorizontalMenu limit={1} items={[<Button> Hey </Button>]} />
+                        <HorizontalMenu limit={1} items={tasks} />
                     </Box>
                     <Box>
                         <Typography sx={{padding:'5%'}} variant="h6">
                             Deadline
                         </Typography>
-                        <HorizontalMenu limit={1} items={[<Button> there </Button>]}/>
+                        <HorizontalMenu limit={1} items={deadlines}/>
                     </Box>
                     <Box>
                         <TextareaAutosize
@@ -63,6 +113,8 @@ function CalendarDay(props) {
                             minRows={3}
                             placeholder='Diary Entry'
                             style={{width:'60%', marginTop:'5%', marginLeft:'5%'}}
+                            defaultValue={note}
+                            onChange={e => setNote(e.target.value)}
                         />
                     </Box>
                 </DialogContent>
