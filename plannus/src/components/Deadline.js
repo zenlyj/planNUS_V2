@@ -35,7 +35,6 @@ function Deadline(props) {
         api.getsertStudentDiary(1, deadline)
             .then(response => {
                 const diary = JSON.parse(response.data)
-                console.log(diary)
                 saveChanges(diary)
             })
     }
@@ -65,13 +64,13 @@ function Deadline(props) {
     }
 
     const listItem = () => {
-        const primaryText = props.isHeader ? 'Deadlines' : props.name
+        const primaryText = <Typography noWrap={true} variant="button" display="block"> {props.isHeader ? 'Deadlines' : props.name} </Typography>
         let secondaryText = <div>
-            <div> {props.module} </div>
-            <div> {props.deadline} </div>
+            <Typography noWrap={true} variant="button" display="block"> {props.module} </Typography>
+            <Typography variant="button" display="block"> {props.deadline} </Typography>
         </div>
         if (props.isHeader) {
-            secondaryText = <Typography textAlign={'right'}> + </ Typography>
+            secondaryText = <Typography variant="button" textAlign={'right'} display="block"> + </ Typography>
         }
 
         return <ListItem>

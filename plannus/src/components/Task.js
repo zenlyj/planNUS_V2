@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import api from '../api/backendInterface'
 import DialogUtils from './DialogUtils'
@@ -84,7 +84,7 @@ function Task(props) {
     const taskButton = () => {
         return (
             <Button sx={{width:'100%'}} variant="contained" color="success" onClick={() => handleClickOpen()}>
-                {props.name}
+                <Typography noWrap={true} variant="button" display="block"> {props.name} </Typography>
             </Button>
         )
     }

@@ -9,7 +9,6 @@ function HorizontalMenu(props) {
     const gridItems = () => {
         const gridItems = []
         for (let i = (page-1)*props.limit; i < props.items.length && i < props.limit*page; i++) {
-            console.log(i)
             gridItems.push(
                 <Grid item xs={8/props.limit}> {props.items[i]} </Grid>
             )
@@ -24,18 +23,20 @@ function HorizontalMenu(props) {
 
     const handleRightNav = () => {
         const targetPage = page+1
-        setPage(targetPage*props.limit > props.items.length ? page : targetPage)
+        // round up to multiple of limit
+        const upper = Math.ceil(props.items.length/props.limit)*props.limit
+        setPage(targetPage*props.limit > upper ? page : targetPage)
     }
 
     return (
         <Box textAlign='center'>
             <Grid container spacing={2}>
                 <Grid item xs={2}>
-                    <Button onClick={() => handleLeftNav()}> {'<'} </Button>
+                    <Button onClick={() => handleLeftNav()}> <Typography variant="button" display="block"> {'<'} </Typography> </Button>
                 </Grid>                
                 {gridItems()}
                 <Grid item xs={2}>
-                    <Button onClick={() => handleRightNav()}> {'>'} </Button>
+                    <Button onClick={() => handleRightNav()}> <Typography variant="button" display="block"> {'>'} </Typography> </Button>
                 </Grid>                
             </Grid>
         </Box>

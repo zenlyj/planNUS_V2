@@ -106,13 +106,13 @@ function CalendarDay(props) {
                         <Typography sx={{padding:'5%'}} variant="h6">
                             Tasks
                         </Typography>
-                        <HorizontalMenu limit={1} items={tasks} />
+                        <HorizontalMenu limit={3} items={tasks} />
                     </Box>
                     <Box>
                         <Typography sx={{padding:'5%'}} variant="h6">
                             Deadline
                         </Typography>
-                        <HorizontalMenu limit={1} items={deadlines}/>
+                        <HorizontalMenu limit={2} items={deadlines}/>
                     </Box>
                     <Box>
                         <TextareaAutosize

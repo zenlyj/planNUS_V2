@@ -129,7 +129,7 @@ function Timetable(props) {
                 if (colSpan > 1) {
                     i += (colSpan-1)
                 }
-                cells.push(<TableCell sx={{borderLeft:1, borderLeftColor:'success.light'}} align="center" colSpan={colSpan}>
+                cells.push(<TableCell sx={{borderLeft:1, borderLeftColor:'success.light', maxWidth:'8em'}} align="center" colSpan={colSpan}>
                     <Task id={taskPresent ? task.id : null} 
                             taskPresent={taskPresent} 
                             name={name} 
