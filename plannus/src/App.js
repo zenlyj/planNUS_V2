@@ -22,6 +22,8 @@ import Auth from './components/Auth';
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import nusmodsAPI from "./api/nusmodsAPI";
 import LoadingOverlay from 'react-loading-overlay'
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage"
 
 class App extends Component {
   constructor() {
@@ -246,7 +248,7 @@ class App extends Component {
                                                         )
                                                 } 
                 />
-                <ProtectedRoute path="/Diary" component={() => (<Diary taskDB={this.state.taskDB}
+                <Route path="/Diary" component={() => (<Diary taskDB={this.state.taskDB}
                                                                        deadlineDB={this.state.deadlineDB}
                                                                        diaryDB={this.state.diaryDB}
                                                                        updateDiaryDatabase={this.updateDiaryDatabase}
@@ -262,6 +264,8 @@ class App extends Component {
                                                         }
                 />
                 <ProtectedRoute path="/Settings" component={Settings}/>
+                <Route path="/Login" component={() => <LoginPage />} />
+                <Route path="/Register" component={() => <RegisterPage />}/>
                 <Route component={NotFound} />
               </Switch>
             </Layout>

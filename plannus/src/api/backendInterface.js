@@ -35,7 +35,6 @@ const api = {
     },
     
     updateTask(id, name, module, timeFrom, timeTo, description, isCompleted, date, diary) {
-        console.log(isCompleted)
         return (
             fetch(`${serverURL}api/task?` + new URLSearchParams({id:id}), {
                 method: 'PUT',
@@ -152,6 +151,40 @@ const api = {
                     studentId: studentId,
                     date: date,
                     note: note
+                })
+            }).then(response => response.json()
+                .then(jsonResponse => jsonResponse)
+            )
+        )
+    },
+
+    registerStudentAccount(username, password) {
+        return (
+            fetch(`${serverURL}api/student/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userName: username,
+                    password: password
+                })
+            }).then(response => response.json()
+                .then(jsonResponse => jsonResponse)
+            )
+        )
+    },
+
+    authenticateStudent(username, password) {
+        return (
+            fetch(`${serverURL}api/student/authenticate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userName: username,
+                    password: password
                 })
             }).then(response => response.json()
                 .then(jsonResponse => jsonResponse)
