@@ -190,6 +190,19 @@ const api = {
                 .then(jsonResponse => jsonResponse)
             )
         )
+    },
+
+    importNusMods(studentId, link) {
+        return (
+            fetch(`${serverURL}api/task/import?` + new URLSearchParams({studentId:studentId, link:link}), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => response.json()
+                .then(jsonResponse => jsonResponse)
+            )
+        )
     }
 }
 

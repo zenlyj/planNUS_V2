@@ -28,7 +28,7 @@ function Deadline(props) {
 
     const handleClose = () => {
         setOpen(false)
-        props.refreshList()
+        props.refresh()
     }
 
     const handleSave = () => {

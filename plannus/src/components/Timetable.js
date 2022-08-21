@@ -12,7 +12,6 @@ import { grey } from '@mui/material/colors';
 
 function Timetable(props) {
     const [times, setTimes] = React.useState([])
-    const [tasks, setTasks] = React.useState([])
     const [dates, setDates] = React.useState([])
 
     useEffect(() => {
@@ -48,26 +47,8 @@ function Timetable(props) {
         setDates(weeks)        
     }, [])
 
-    useEffect(() => {
-        getTasks()
-    }, [])
-
-    const refresh = () => {
-        getTasks()
-    }
-
-    const getTasks = () => {
-        api.getStudentTasks(1).then(response => {
-            if (response.status === 200) {
-                const newTasks = JSON.parse(response.data)
-                setTasks(newTasks)
-            }
-            console.log(response.message)
-        })
-    }
-
     const findTask = (date, timeFrom) => {
-        return tasks.find(task => task.date === date && task.timeFrom === timeFrom)
+        return props.tasks.find(task => task.date === date && task.timeFrom === timeFrom)
     }
 
     const findDate = (week, dayIndex) => {
@@ -138,7 +119,7 @@ function Timetable(props) {
                             timeTo={timeTo} 
                             description={description} 
                             date={date}
-                            refresh={refresh}
+                            refresh={props.refresh}
                     />
                 </TableCell>)
             }

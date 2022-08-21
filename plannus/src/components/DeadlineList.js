@@ -9,31 +9,10 @@ import ListItemText from '@mui/material/ListItemText'
 import Divider from '@mui/material/Divider';
 
 function DeadlineList(props) {  
-    const [deadlines, setDeadlines] = React.useState([])
-
-    useEffect(() => {
-        getDeadlines()
-    }, [])
-
-    const getDeadlines = () => {
-        api.getStudentDeadlines(1).then(response => {
-            if (response.status === 200) {
-                const header = [{isHeader:true}]
-                const retreivedDeadlines = JSON.parse(response.data)
-                setDeadlines(header.concat(retreivedDeadlines))
-            }
-            console.log(response.message)
-        })
-    }
-
-    const refreshList = () => {
-        getDeadlines()
-    }
-
     const list = () => {
         return (
             <List>
-                {deadlines.map(deadline => {
+                {props.deadlines.map(deadline => {
                     return (
                         <div>
                             <Deadline
@@ -43,7 +22,7 @@ function DeadlineList(props) {
                                 deadline={deadline.deadline}
                                 description={deadline.description}
                                 isHeader={deadline.isHeader}
-                                refreshList={refreshList}
+                                refresh={props.refresh}
                             />
                             <Divider />
                         </div>
