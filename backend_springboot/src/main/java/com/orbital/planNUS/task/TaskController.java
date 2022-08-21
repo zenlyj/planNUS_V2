@@ -73,4 +73,19 @@ public class TaskController {
             return userResponse;
         }
     }
+
+    @PostMapping("/import")
+    public UserResponse importTasks(@RequestParam Long studentId, @RequestParam String link) {
+        UserResponse userResponse = new UserResponse();
+        try {
+            taskService.importTasks(studentId, link);
+            userResponse.setStatus(OK);
+            userResponse.setMessage("Successfully imported tasks");
+        } catch (Exception e) {
+            userResponse.setStatus(BadRequest);
+            userResponse.setMessage(e.getMessage());
+        } finally {
+            return userResponse;
+        }
+    }
 }
