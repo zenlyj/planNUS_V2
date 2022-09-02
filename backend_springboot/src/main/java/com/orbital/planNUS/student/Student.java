@@ -1,5 +1,7 @@
 package com.orbital.planNUS.student;
 
+import com.orbital.planNUS.role.Role;
+
 import javax.persistence.*;
 
 @Entity
@@ -20,8 +22,11 @@ public class Student {
     private String userName;
     private String password;
 
-    public Student() {}
+    @ManyToOne
+    @JoinColumn(name = "role")
+    private Role role;
 
+    public Student() {}
 
     public Student(Long id, String userName, String password) {
         this.id = id;
@@ -59,8 +64,16 @@ public class Student {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public String toJSONString() {
-        return String.format("{ \"id\": \"%d\", \"userName\": \"%s\"}", this.id, this.userName);
+        return String.format("{ \"id\": \"%d\", \"userName\": \"%s\", \"role\": \"%s\"}", this.id, this.userName, this.role.getName());
     }
 
     @Override
