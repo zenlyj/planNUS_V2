@@ -9,13 +9,13 @@ import DialogUtils from './DialogUtils'
 import DialogContent from '@mui/material/DialogContent'
 import { TextareaAutosize } from '@mui/material'
 import api from '../api/backendInterface'
+import session from '../SessionUtil'
 
 function CalendarDay(props) {
     const [open, setOpen] = React.useState(false)
     const [tasks, setTasks] = React.useState([])
     const [deadlines, setDeadlines] = React.useState([])
     const [id, setId] = React.useState(-1)
-    const [studentId, setStudentId] = React.useState(-1)
     const [note, setNote] = React.useState('')
 
     useEffect(() => getData(), [])
@@ -25,7 +25,8 @@ function CalendarDay(props) {
     }
 
     const getData = () => {
-        api.getsertStudentDiary(1, props.date)
+        const studentId = session.studentId()
+        api.getsertStudentDiary(studentId, props.date)
         .then(response => {
             if (response.status === 200) {
                 const diary = JSON.parse(response.data)
@@ -61,7 +62,6 @@ function CalendarDay(props) {
                     )
                 })
                 setId(diary.id)
-                setStudentId(diary.studentId)
                 setTasks(tasks)
                 setDeadlines(deadlines)
                 setNote(diary.note)
@@ -74,6 +74,7 @@ function CalendarDay(props) {
     }
 
     const handleClose = () => {
+        const studentId = session.studentId()
         api.updateStudentDiary(id, studentId, props.date, note)
         setOpen(false)
     }

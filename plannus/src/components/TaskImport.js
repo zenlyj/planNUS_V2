@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import api from '../api/backendInterface'
+import session from '../SessionUtil'
 
 function TaskImport(props) {
     const [url, setURL] = React.useState('')
@@ -19,7 +20,8 @@ function TaskImport(props) {
     }
 
     const handleImport = () => {
-        api.importNusMods(1, url)
+        const studentId = session.studentId()
+        api.importNusMods(studentId, url)
             .then(response => {
                 console.log(response.message)
                 if (response.status === 200) {

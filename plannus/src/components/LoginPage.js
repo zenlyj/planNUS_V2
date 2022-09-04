@@ -5,6 +5,7 @@ import Button from '@mui/material/Button'
 import React from 'react'
 import api from '../api/backendInterface'
 import {Redirect} from 'react-router-dom'
+import session from '../SessionUtil'
 
 function LoginPage(props) {
     const [isCompleted, setIsCompleted] = React.useState(false)
@@ -14,8 +15,23 @@ function LoginPage(props) {
     const login = () => {
         api.authenticateStudent(username, password)
             .then(response => {
-                console.log(response.message)
-                setIsCompleted(true)
+                console.log(response)
+                if (response.status === 200) cache(response)
+            })
+    }
+
+    const cache = (response) => {
+        const accessToken = response.access_token
+        const refreshToken = response.refresh_token
+        api.getStudent(username, accessToken)
+            .then(response => {
+                if (response.status === 200) {
+                    const studentId = JSON.parse(response.data).id
+                    session.save('access_token', accessToken)
+                    session.save('refresh_token', refreshToken)
+                    session.save('student_id', studentId)
+                    setIsCompleted(true)
+                }
             })
     }
 

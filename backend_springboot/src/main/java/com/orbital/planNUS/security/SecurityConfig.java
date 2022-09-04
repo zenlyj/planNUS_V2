@@ -13,9 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
@@ -35,12 +38,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/api/login");
         http.csrf().disable();
+        http.cors().configurationSource(request -> {
+           CorsConfiguration cors = new CorsConfiguration();
+           cors.setAllowedOrigins(List.of("*"));
+           cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+           cors.setAllowedHeaders(List.of("*"));
+           return cors;
+        });
         http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers("/api/login/**", "/token/refresh", "/api/student/register").permitAll();
+        http.authorizeRequests().antMatchers("/api/login/**", "/api/student/token/**", "/api/student/register").permitAll();
         http.authorizeRequests().antMatchers(GET, "/api/student").hasAnyAuthority("ROLE_SUPERADMIN");
-        http.authorizeRequests().antMatchers(GET,"/api/role/user").permitAll();
-//        http.authorizeRequests().antMatchers("/api/role/**").hasAnyAuthority("ROLE_SUPERADMIN");
-//        http.authorizeRequests().anyRequest().authenticated();
+        http.authorizeRequests().antMatchers("/api/role/**").hasAnyAuthority("ROLE_SUPERADMIN");
+        http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

@@ -85,7 +85,7 @@ public class TaskService {
         List<List<LocalDate>> dates = SemesterCalendar.getSemesterOneDates();
         for (Integer week : weeks) {
             LocalDate date = dates.get(week-1).get(dayIndex);
-            Diary diary = diaryService.getsertStudentDiaryByDate(1L, date);
+            Diary diary = diaryService.getsertStudentDiaryByDate(studentId, date);
             Task task = new Task(
                     studentId,
                     lesson.getModuleCode() + " " + lesson.getLessonType(),

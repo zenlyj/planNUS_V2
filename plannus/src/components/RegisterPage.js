@@ -15,7 +15,7 @@ function RegisterPage(props) {
         api.registerStudentAccount(username, password)
             .then(response => {
                 console.log(response.message)
-                setIsCompleted(true)
+                if (response.status === 200) setIsCompleted(true)
             })
     }
 

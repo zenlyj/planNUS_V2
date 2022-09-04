@@ -8,11 +8,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.UserResponse;
+import com.orbital.planNUS.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +30,12 @@ import java.util.stream.Collectors;
 @RequestMapping(path = "api/student")
 public class StudentController {
     private final StudentService studentService;
+    private final RoleService roleService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, RoleService roleService) {
         this.studentService = studentService;
+        this.roleService = roleService;
     }
 
     @GetMapping
@@ -63,6 +69,26 @@ public class StudentController {
         }
     }
 
+    @GetMapping("/token/verify")
+    public ResponseEntity checkExpiry(String token) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setStatus(OK);
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        boolean isExpired = false;
+        try {
+            Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            verifier.verify(token);
+        } catch (TokenExpiredException tokenExpiredException) {
+            isExpired = true;
+        } catch (JWTVerificationException ex) {
+            userResponse.setStatus(BadRequest);
+            res = ResponseEntity.badRequest();
+        }
+        userResponse.setData(String.format("{ \"isExpired\": %b }", isExpired));
+        return res.body(userResponse);
+    }
+
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
@@ -76,9 +102,9 @@ public class StudentController {
                 Student student = studentService.getStudent(username);
                 String accessToken = JWT.create()
                         .withSubject(student.getUserName())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles", student.getRole().getName())
+                        .withClaim("roles", List.of(student.getRole().getName()))
                         .sign(algorithm);
                 Map<String, String> tokens = new HashMap<>();
                 tokens.put("access_token", accessToken);
@@ -102,6 +128,7 @@ public class StudentController {
     public UserResponse registerStudent(@RequestBody Student student) {
         UserResponse userResponse = new UserResponse();
         try {
+            student.setRole(roleService.getStudentRole());
             studentService.registerStudent(student);
             userResponse.setStatus(OK);
             userResponse.setMessage(String.format("%s successfully registered!", student.getUserName()));

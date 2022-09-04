@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { Button, Typography } from '@mui/material'
+import session from '../SessionUtil'
 
 function Deadline(props) {
     const [open, setOpen] = React.useState(false)
@@ -32,19 +33,21 @@ function Deadline(props) {
     }
 
     const handleSave = () => {
-        api.getsertStudentDiary(1, deadline)
+        const studentId = session.studentId()
+        api.getsertStudentDiary(studentId, deadline)
             .then(response => {
                 const diary = JSON.parse(response.data)
                 saveChanges(diary)
             })
     }
     
-    const saveChanges = (diary) => {
+    const saveChanges = diary => {
+        const studentId = session.studentId()
         let response = null
         if (props.isHeader) {
-            response = api.addDeadline(name, module, deadline, description, diary)
+            response = api.addDeadline(studentId, name, module, deadline, description, diary)
         } else {
-            response = api.updateDeadline(id, name, module, deadline, description, diary)
+            response = api.updateDeadline(studentId, id, name, module, deadline, description, diary)
         }
         response.then(response => {
             if (response.status === 200) {

@@ -73,7 +73,7 @@ public class Student {
     }
 
     public String toJSONString() {
-        return String.format("{ \"id\": \"%d\", \"userName\": \"%s\", \"role\": \"%s\"}", this.id, this.userName, this.role.getName());
+        return String.format("{ \"id\": \"%d\", \"username\": \"%s\", \"role\": \"%s\"}", this.id, this.userName, this.role.getName());
     }
 
     @Override

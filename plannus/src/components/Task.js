@@ -4,6 +4,7 @@ import DialogActions from '@mui/material/DialogActions'
 import { Button, Typography } from '@mui/material'
 import TextField from '@mui/material/TextField'
 import api from '../api/backendInterface'
+import session from '../SessionUtil'
 import DialogUtils from './DialogUtils'
 
 function Task(props) {
@@ -31,8 +32,9 @@ function Task(props) {
         props.refresh()
     }
 
-    const handleSave = (isCompleted) => {
-        api.getsertStudentDiary(1, props.date)
+    const handleSave = isCompleted => {
+        const studentId = session.studentId()
+        api.getsertStudentDiary(studentId, props.date)
             .then(response => {
                 const diary = JSON.parse(response.data)
                 saveChanges(diary, isCompleted)
@@ -40,11 +42,12 @@ function Task(props) {
     }
 
     const saveChanges = (diary, isCompleted) => {
+        const studentId = session.studentId()
         let response = null
         if (!props.taskPresent) {
-            response = api.addTask(name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)  
+            response = api.addTask(studentId, name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)  
         } else {
-            response = api.updateTask(props.id, name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)
+            response = api.updateTask(studentId, props.id, name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)
         }
         response.then(val => {
             if (val.status === 200) {

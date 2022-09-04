@@ -33,23 +33,6 @@ public class RoleController {
         return ResponseEntity.ok().body(userResponse);
     }
 
-    @GetMapping("/user")
-    public ResponseEntity getStudentRole() {
-        UserResponse userResponse = new UserResponse();
-        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
-        try {
-            Role studentRole = roleService.getStudentRole();
-            userResponse.setStatus(OK);
-            userResponse.setData(studentRole.toJSONString());
-        } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
-            res = ResponseEntity.badRequest();
-        } finally {
-            return res.body(userResponse);
-        }
-    }
-
     @PostMapping
     public ResponseEntity addRole(@RequestBody Role role) {
         UserResponse userResponse = new UserResponse();

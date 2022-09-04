@@ -8,6 +8,7 @@ import AutomatedScheduler from './components/AutomatedScheduler'
 import DeadlineList from './components/DeadlineList'
 import TaskImport from './components/TaskImport'
 import api from './api/backendInterface'
+import session from "./SessionUtil"
 
 function Home(props) {
     const [tasks, setTasks] = React.useState([])
@@ -32,7 +33,9 @@ function Home(props) {
     }
 
     const getTasks = () => {
-        api.getStudentTasks(1).then(response => {
+        const studentId = session.studentId()
+        api.getStudentTasks(studentId).then(response => {
+            console.log(response)
             if (response.status === 200) {
                 const newTasks = JSON.parse(response.data)
                 setTasks(newTasks)
@@ -42,7 +45,8 @@ function Home(props) {
     }
 
     const getDeadlines = () => {
-        api.getStudentDeadlines(1).then(response => {
+        const studentId = session.studentId()
+        api.getStudentDeadlines(studentId).then(response => {
             if (response.status === 200) {
                 const header = [{isHeader:true}]
                 const retreivedDeadlines = JSON.parse(response.data)

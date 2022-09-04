@@ -234,7 +234,7 @@ class App extends Component {
             <NavigationBar />
             <Layout>
               <Switch>
-                <Route exact path="/" component={() => (<Home initHome={this.state.taskDB} 
+                <Route exact path="/Home" component={() => (<Home initHome={this.state.taskDB} 
                                                               currWeek={this.state.currWeek} 
                                                               loading={this.state.loading}
                                                               updateTaskDatabase={this.updateTaskDatabase}
