@@ -19,6 +19,9 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query("SELECT t FROM Task t WHERE t.id=?1")
     Optional<Task> findTaskById(Long id);
 
+    @Query("SELECT DISTINCT t.module FROM Task t WHERE t.studentId=?1")
+    List<String> findModuleByStudentId(Long studentId);
+
     @Modifying
     @Query("UPDATE Task t" +
             " SET t.name=?1," +

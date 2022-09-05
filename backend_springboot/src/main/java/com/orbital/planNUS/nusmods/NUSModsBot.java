@@ -3,22 +3,14 @@ package com.orbital.planNUS.nusmods;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.orbital.planNUS.diary.Diary;
-import com.orbital.planNUS.diary.DiaryService;
-import com.orbital.planNUS.task.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import static com.orbital.planNUS.nusmods.SemesterCalendar.getSemesterOneDates;
+import java.util.stream.Collectors;
 
 public class NUSModsBot {
     private String baseUrl = "https://api.nusmods.com/v2/";
@@ -46,6 +38,19 @@ public class NUSModsBot {
             }
         }
         lessons.addAll(multiDayLessons);
+    }
+
+    public List<Integer> mapModuleToWorkload(List<String> modules) throws RuntimeException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return modules.stream().map(module -> {
+            try {
+                URL url = new URL(String.format("%s%s/modules/%s.json", baseUrl, academicYear, module));
+                String response = fetchData(url);
+                return getWorkLoad(objectMapper, response);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
     }
 
     private String fetchData(URL url) throws Exception {

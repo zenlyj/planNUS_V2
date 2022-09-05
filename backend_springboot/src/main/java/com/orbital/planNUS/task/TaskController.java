@@ -1,10 +1,13 @@
 package com.orbital.planNUS.task;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.orbital.planNUS.HTTPStatusCode.*;
@@ -31,6 +34,40 @@ public class TaskController {
                         .collect(Collectors.toList());
         userResponse.setData(jsonTasks.toString());
         return userResponse;
+    }
+
+    @GetMapping("/workload/expected")
+    public ResponseEntity getExpectedWorkload(@RequestParam Long studentId) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        UserResponse userResponse = new UserResponse();
+        try {
+            Map<String, Integer> expectedWorkloads = taskService.getExpectedWorkloads(studentId);
+            userResponse.setStatus(OK);
+            userResponse.setData(new ObjectMapper().writeValueAsString(expectedWorkloads));
+        } catch(RuntimeException e) {
+            res = ResponseEntity.badRequest();
+            userResponse.setStatus(BadRequest);
+            userResponse.setMessage(e.getMessage());
+        } finally {
+            return res.body(userResponse);
+        }
+    }
+
+    @GetMapping("/workload/completed")
+    public ResponseEntity getCompletedWorkload(@RequestParam Long studentId) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        UserResponse userResponse = new UserResponse();
+        try {
+            Map<String, List<Integer>> expectedWorkloads = taskService.getCompletedWorkloads(studentId);
+            userResponse.setStatus(OK);
+            userResponse.setData(new ObjectMapper().writeValueAsString(expectedWorkloads));
+        } catch(RuntimeException e) {
+            res = ResponseEntity.badRequest();
+            userResponse.setStatus(BadRequest);
+            userResponse.setMessage(e.getMessage());
+        } finally {
+            return res.body(userResponse);
+        }
     }
 
     @PostMapping

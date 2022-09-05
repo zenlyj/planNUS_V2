@@ -6,6 +6,7 @@ import com.orbital.planNUS.nusmods.Lesson;
 import com.orbital.planNUS.nusmods.NUSModsBot;
 import com.orbital.planNUS.nusmods.SemesterCalendar;
 import com.orbital.planNUS.nusmods.ShareLinkParser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,18 +14,48 @@ import java.time.LocalDate;
 import java.util.*;
 
 @Service
+@Slf4j
 public class TaskService {
     private final TaskRepository taskRepository;
     private DiaryService diaryService;
+    private NUSModsBot nusModsBot;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository, DiaryService diaryService) {
+    public TaskService(TaskRepository taskRepository, DiaryService diaryService, NUSModsBot nusModsBot) {
         this.taskRepository = taskRepository;
         this.diaryService = diaryService;
+        this.nusModsBot = nusModsBot;
     }
 
     public List<Task> getAllTasks(Long studentId) {
         return taskRepository.findTaskByStudentId(studentId);
+    }
+
+    public Map<String, Integer> getExpectedWorkloads(Long studentId) throws RuntimeException {
+        List<String> modules = getModules(studentId);
+        List<Integer> workloads = nusModsBot.mapModuleToWorkload(modules);
+        Map<String, Integer> expectedWorkloads = new HashMap<>();
+        for (int i = 0; i < workloads.size(); i++) {
+            expectedWorkloads.put(modules.get(i), workloads.get(i));
+        }
+        return expectedWorkloads;
+    }
+
+    public Map<String, List<Integer>> getCompletedWorkloads(Long studentId) throws RuntimeException{
+        List<Task> tasks = getAllTasks(studentId);
+        Map<String, List<Integer>> completedWorkloads = new HashMap<>();
+        for (Task task : tasks) {
+            List<Integer> completedInModule = completedWorkloads.getOrDefault(task.getModule(),
+                    new ArrayList<>(Collections.nCopies(7, 0)));
+            completedWorkloads.put(task.getModule(), completedInModule);
+            if (!task.getIsCompleted()) continue;
+            int duration = (Integer.parseInt(task.getTimeTo()) - Integer.parseInt(task.getTimeFrom())) / 100;
+            int week = getWeek(task);
+            Integer completedInWeek = completedInModule.get(week);
+            completedInModule.set(week, completedInWeek+duration);
+            completedWorkloads.put(task.getModule(), completedInModule);
+        }
+        return completedWorkloads;
     }
 
     public void addNewTask(Task task) {
@@ -57,9 +88,8 @@ public class TaskService {
 
     public void importTasks(Long studentId, String link) throws Exception {
         ShareLinkParser parser = new ShareLinkParser(link);
-        NUSModsBot bot = new NUSModsBot();
         List<Lesson> lessons = parser.parse();
-        bot.fillLessonData(lessons);
+        new NUSModsBot().fillLessonData(lessons);
         taskRepository.deleteAllInBatch();
         List<Task> lessonTasks = new ArrayList<>();
         for (Lesson lesson : lessons) {
@@ -100,5 +130,20 @@ public class TaskService {
             tasks.add(task);
         }
         return tasks;
+    }
+
+    private List<String> getModules(Long studentId) {
+        return taskRepository.findModuleByStudentId(studentId);
+    }
+
+    private int getWeek(Task task) {
+        List<List<LocalDate>> dates = SemesterCalendar.getSemesterOneDates();
+        for (int i = 0; i < dates.size(); i++) {
+             List<LocalDate> weekDates = dates.get(i);
+             if (weekDates.contains(task.getDate())) {
+                 return i;
+             }
+        }
+        return -1;
     }
 }

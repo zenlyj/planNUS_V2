@@ -16,7 +16,6 @@ import com.orbital.planNUS.UserResponse;
 import com.orbital.planNUS.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -102,7 +101,7 @@ public class StudentController {
                 Student student = studentService.getStudent(username);
                 String accessToken = JWT.create()
                         .withSubject(student.getUserName())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", List.of(student.getRole().getName()))
                         .sign(algorithm);

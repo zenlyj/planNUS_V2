@@ -5,6 +5,7 @@ const serverURL = 'http://localhost:8080/'
 const execute = (apiCall) => {
     // verify JWT token before calling server
     const accessToken = session.accessToken()
+    console.log(accessToken)
     return api.verifyToken(accessToken)
         .then(response => response.json())
         .then(body => {
@@ -12,7 +13,10 @@ const execute = (apiCall) => {
             if (tokenExpired) {
                 return api.refreshToken().then(response => {
                     if (!response.ok) return response
-                    return response.json().then(body => apiCall(body.access_token))
+                    return response.json().then(body => {
+                        session.save('access_token', body.access_token)
+                        return apiCall(body.access_token)
+                    })
                 })
             } else {
                 return apiCall(accessToken)
