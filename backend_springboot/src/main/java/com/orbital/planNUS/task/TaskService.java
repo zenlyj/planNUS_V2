@@ -46,7 +46,7 @@ public class TaskService {
         Map<String, List<Integer>> completedWorkloads = new HashMap<>();
         for (Task task : tasks) {
             List<Integer> completedInModule = completedWorkloads.getOrDefault(task.getModule(),
-                    new ArrayList<>(Collections.nCopies(7, 0)));
+                    new ArrayList<>(Collections.nCopies(13, 0)));
             completedWorkloads.put(task.getModule(), completedInModule);
             if (!task.getIsCompleted()) continue;
             int duration = (Integer.parseInt(task.getTimeTo()) - Integer.parseInt(task.getTimeFrom())) / 100;
@@ -56,6 +56,22 @@ public class TaskService {
             completedWorkloads.put(task.getModule(), completedInModule);
         }
         return completedWorkloads;
+    }
+
+    public Map<String, List<Integer>> getPlottedWorkloads(Long studentId) throws RuntimeException{
+        List<Task> tasks = getAllTasks(studentId);
+        Map<String, List<Integer>> plottedWorkloads = new HashMap<>();
+        for (Task task : tasks) {
+            List<Integer> plottedInModule = plottedWorkloads.getOrDefault(task.getModule(),
+                    new ArrayList<>(Collections.nCopies(13, 0)));
+            plottedWorkloads.put(task.getModule(), plottedInModule);
+            int duration = (Integer.parseInt(task.getTimeTo()) - Integer.parseInt(task.getTimeFrom())) / 100;
+            int week = getWeek(task);
+            Integer plottedInWeek = plottedInModule.get(week);
+            plottedInModule.set(week, plottedInWeek+duration);
+            plottedWorkloads.put(task.getModule(), plottedInModule);
+        }
+        return plottedWorkloads;
     }
 
     public void addNewTask(Task task) {

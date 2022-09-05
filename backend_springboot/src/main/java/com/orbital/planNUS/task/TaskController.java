@@ -58,9 +58,26 @@ public class TaskController {
         ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         UserResponse userResponse = new UserResponse();
         try {
-            Map<String, List<Integer>> expectedWorkloads = taskService.getCompletedWorkloads(studentId);
+            Map<String, List<Integer>> completedWorkloads = taskService.getCompletedWorkloads(studentId);
             userResponse.setStatus(OK);
-            userResponse.setData(new ObjectMapper().writeValueAsString(expectedWorkloads));
+            userResponse.setData(new ObjectMapper().writeValueAsString(completedWorkloads));
+        } catch(RuntimeException e) {
+            res = ResponseEntity.badRequest();
+            userResponse.setStatus(BadRequest);
+            userResponse.setMessage(e.getMessage());
+        } finally {
+            return res.body(userResponse);
+        }
+    }
+
+    @GetMapping("/workload/plotted")
+    public ResponseEntity getPlottedWorkload(@RequestParam Long studentId) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        UserResponse userResponse = new UserResponse();
+        try {
+            Map<String, List<Integer>> plottedWorkloads = taskService.getPlottedWorkloads(studentId);
+            userResponse.setStatus(OK);
+            userResponse.setData(new ObjectMapper().writeValueAsString(plottedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
             userResponse.setStatus(BadRequest);
