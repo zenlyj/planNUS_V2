@@ -1,7 +1,8 @@
 package com.orbital.planNUS.deadline;
 
-import com.orbital.planNUS.UserResponse;
+import com.orbital.planNUS.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,56 +22,60 @@ public class DeadlineController {
     }
 
     @GetMapping
-    public UserResponse getStudentDeadlines(@RequestParam Long studentId) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setStatus(OK);
-        userResponse.setMessage("Successfully retrieved deadlines!");
+    public ResponseEntity<ResponseBody> getStudentDeadlines(@RequestParam Long studentId) {
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setStatus(OK);
+        responseBody.setMessage("Successfully retrieved deadlines!");
         List<String> jsonDeadlines = deadlineService.getStudentDeadlines(studentId)
                 .stream()
                 .map(deadline -> deadline.toJSONString())
                 .collect(Collectors.toList());
-        userResponse.setData(jsonDeadlines.toString());
-        return userResponse;
+        responseBody.setData(jsonDeadlines.toString());
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @PostMapping
-    public UserResponse addNewDeadline(@RequestBody Deadline deadline) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> addNewDeadline(@RequestBody Deadline deadline) {
+        ResponseBody responseBody = new ResponseBody();
         deadlineService.addNewDeadline(deadline);
-        userResponse.setStatus(OK);
-        userResponse.setMessage("Successfully added deadline!");
-        userResponse.setData(deadline.toJSONString());
-        return userResponse;
+        responseBody.setStatus(OK);
+        responseBody.setMessage("Successfully added deadline!");
+        responseBody.setData(deadline.toJSONString());
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @DeleteMapping
-    public UserResponse deleteDeadline(@RequestParam Long id) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> deleteDeadline(@RequestParam Long id) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        ResponseBody responseBody = new ResponseBody();
         try {
             Deadline deletedDeadline = deadlineService.deleteDeadline(id);
-            userResponse.setStatus(OK);
-            userResponse.setMessage("Successfully deleted deadline!");
-            userResponse.setData(deletedDeadline.toJSONString());
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully deleted deadline!");
+            responseBody.setData(deletedDeadline.toJSONString());
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.badRequest();
         } finally {
-            return userResponse;
+            return res.body(responseBody);
         }
     }
 
     @PutMapping
-    public UserResponse updateDeadline(@RequestParam Long id, @RequestBody Deadline deadline) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> updateDeadline(@RequestParam Long id, @RequestBody Deadline deadline) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        ResponseBody responseBody = new ResponseBody();
         try {
             deadlineService.updateDeadline(id, deadline);
-            userResponse.setStatus(OK);
-            userResponse.setMessage("Successfully updated deadline!");
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully updated deadline!");
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.badRequest();
         } finally {
-            return userResponse;
+            return res.body(responseBody);
         }
     }
 }

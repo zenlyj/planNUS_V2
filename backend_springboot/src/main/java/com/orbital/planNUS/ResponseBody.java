@@ -1,12 +1,11 @@
 package com.orbital.planNUS;
 
-public class UserResponse {
+public class ResponseBody {
     private int status;
     private String message;
     private String data;
 
-    public UserResponse() {}
-
+    public ResponseBody() {}
 
     public int getStatus() {
         return status;

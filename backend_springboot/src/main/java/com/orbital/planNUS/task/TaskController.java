@@ -1,7 +1,7 @@
 package com.orbital.planNUS.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orbital.planNUS.UserResponse;
+import com.orbital.planNUS.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,122 +24,128 @@ public class TaskController {
     }
 
     @GetMapping
-    public UserResponse getAllTasks(@RequestParam Long studentId) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setStatus(OK);
-        userResponse.setMessage("Successfully retrieved tasks!");
+    public ResponseEntity<ResponseBody> getAllTasks(@RequestParam Long studentId) {
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setStatus(OK);
+        responseBody.setMessage("Successfully retrieved tasks!");
         List<String> jsonTasks = taskService.getAllTasks(studentId)
                         .stream()
                         .map(task -> task.toJSONString())
                         .collect(Collectors.toList());
-        userResponse.setData(jsonTasks.toString());
-        return userResponse;
+        responseBody.setData(jsonTasks.toString());
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @GetMapping("/workload/expected")
-    public ResponseEntity getExpectedWorkload(@RequestParam Long studentId) {
+    public ResponseEntity<ResponseBody> getExpectedWorkload(@RequestParam Long studentId) {
         ResponseEntity.BodyBuilder res = ResponseEntity.ok();
-        UserResponse userResponse = new UserResponse();
+        ResponseBody responseBody = new ResponseBody();
         try {
             Map<String, Integer> expectedWorkloads = taskService.getExpectedWorkloads(studentId);
-            userResponse.setStatus(OK);
-            userResponse.setData(new ObjectMapper().writeValueAsString(expectedWorkloads));
+            responseBody.setStatus(OK);
+            responseBody.setData(new ObjectMapper().writeValueAsString(expectedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
         } finally {
-            return res.body(userResponse);
+            return res.body(responseBody);
         }
     }
 
     @GetMapping("/workload/completed")
-    public ResponseEntity getCompletedWorkload(@RequestParam Long studentId) {
+    public ResponseEntity<ResponseBody> getCompletedWorkload(@RequestParam Long studentId) {
         ResponseEntity.BodyBuilder res = ResponseEntity.ok();
-        UserResponse userResponse = new UserResponse();
+        ResponseBody responseBody = new ResponseBody();
         try {
             Map<String, List<Integer>> completedWorkloads = taskService.getCompletedWorkloads(studentId);
-            userResponse.setStatus(OK);
-            userResponse.setData(new ObjectMapper().writeValueAsString(completedWorkloads));
+            responseBody.setStatus(OK);
+            responseBody.setData(new ObjectMapper().writeValueAsString(completedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
         } finally {
-            return res.body(userResponse);
+            return res.body(responseBody);
         }
     }
 
     @GetMapping("/workload/plotted")
-    public ResponseEntity getPlottedWorkload(@RequestParam Long studentId) {
+    public ResponseEntity<ResponseBody> getPlottedWorkload(@RequestParam Long studentId) {
         ResponseEntity.BodyBuilder res = ResponseEntity.ok();
-        UserResponse userResponse = new UserResponse();
+        ResponseBody responseBody = new ResponseBody();
         try {
             Map<String, List<Integer>> plottedWorkloads = taskService.getPlottedWorkloads(studentId);
-            userResponse.setStatus(OK);
-            userResponse.setData(new ObjectMapper().writeValueAsString(plottedWorkloads));
+            responseBody.setStatus(OK);
+            responseBody.setData(new ObjectMapper().writeValueAsString(plottedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
         } finally {
-            return res.body(userResponse);
+            return res.body(responseBody);
         }
     }
 
     @PostMapping
-    public UserResponse addNewTask(@RequestBody Task task) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> addNewTask(@RequestBody Task task) {
+        ResponseBody responseBody = new ResponseBody();
         taskService.addNewTask(task);
-        userResponse.setStatus(OK);
-        userResponse.setMessage("Successfully added task!");
-        userResponse.setData(task.toJSONString());
-        return userResponse;
+        responseBody.setStatus(OK);
+        responseBody.setMessage("Successfully added task!");
+        responseBody.setData(task.toJSONString());
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @DeleteMapping
-    public UserResponse deleteTask(@RequestParam Long id) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> deleteTask(@RequestParam Long id) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        ResponseBody responseBody = new ResponseBody();
         try {
             Task deletedTask = taskService.deleteTask(id);
-            userResponse.setStatus(OK);
-            userResponse.setMessage("Successfully deleted task!");
-            userResponse.setData(deletedTask.toJSONString());
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully deleted task!");
+            responseBody.setData(deletedTask.toJSONString());
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.badRequest();
         } finally {
-            return userResponse;
+            return res.body(responseBody);
         }
     }
 
     @PutMapping
-    public UserResponse updateTask(@RequestParam Long id, @RequestBody Task task) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> updateTask(@RequestParam Long id, @RequestBody Task task) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        ResponseBody responseBody = new ResponseBody();
         try {
             taskService.updateTask(id, task);
-            userResponse.setStatus(OK);
-            userResponse.setMessage("Successfully updated task!");
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully updated task!");
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getLocalizedMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getLocalizedMessage());
+            res = ResponseEntity.badRequest();
         } finally {
-            return userResponse;
+            return res.body(responseBody);
         }
     }
 
     @PostMapping("/import")
-    public UserResponse importTasks(@RequestParam Long studentId, @RequestParam String link) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> importTasks(@RequestParam Long studentId, @RequestParam String link) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        ResponseBody responseBody = new ResponseBody();
         try {
             taskService.importTasks(studentId, link);
-            userResponse.setStatus(OK);
-            userResponse.setMessage("Successfully imported tasks");
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully imported tasks");
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.badRequest();
         } finally {
-            return userResponse;
+            return res.body(responseBody);
         }
     }
 }

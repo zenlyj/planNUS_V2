@@ -12,7 +12,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orbital.planNUS.UserResponse;
+import com.orbital.planNUS.ResponseBody;
 import com.orbital.planNUS.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -38,40 +38,40 @@ public class StudentController {
     }
 
     @GetMapping
-    public ResponseEntity getAllStudents() {
+    public ResponseEntity<ResponseBody> getAllStudents() {
         List<Student> students = studentService.getAllStudent();
         List<String> jsonStudents = students
                 .stream()
                 .map(student -> student.toJSONString())
                 .collect(Collectors.toList());
-        UserResponse userResponse = new UserResponse();
-        userResponse.setStatus(OK);
-        userResponse.setMessage("Successfully retrieved students");
-        userResponse.setData(jsonStudents.toString());
-        return ResponseEntity.ok().body(userResponse);
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setStatus(OK);
+        responseBody.setMessage("Successfully retrieved students");
+        responseBody.setData(jsonStudents.toString());
+        return ResponseEntity.ok().body(responseBody);
     }
 
     @GetMapping(value = "/{username}")
-    public ResponseEntity getStudent(@PathVariable("username") String username) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> getStudent(@PathVariable("username") String username) {
+        ResponseBody responseBody = new ResponseBody();
         ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         try {
             Student student = studentService.getStudent(username);
-            userResponse.setStatus(OK);
-            userResponse.setData(student.toJSONString());
+            responseBody.setStatus(OK);
+            responseBody.setData(student.toJSONString());
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
+            responseBody.setStatus(BadRequest);
             res = ResponseEntity.badRequest();
-            userResponse.setMessage(e.getMessage());
+            responseBody.setMessage(e.getMessage());
         } finally {
-            return res.body(userResponse);
+            return res.body(responseBody);
         }
     }
 
     @GetMapping("/token/verify")
-    public ResponseEntity checkExpiry(String token) {
-        UserResponse userResponse = new UserResponse();
-        userResponse.setStatus(OK);
+    public ResponseEntity<ResponseBody> checkExpiry(String token) {
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setStatus(OK);
         ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         boolean isExpired = false;
         try {
@@ -81,11 +81,11 @@ public class StudentController {
         } catch (TokenExpiredException tokenExpiredException) {
             isExpired = true;
         } catch (JWTVerificationException ex) {
-            userResponse.setStatus(BadRequest);
+            responseBody.setStatus(BadRequest);
             res = ResponseEntity.badRequest();
         }
-        userResponse.setData(String.format("{ \"isExpired\": %b }", isExpired));
-        return res.body(userResponse);
+        responseBody.setData(String.format("{ \"isExpired\": %b }", isExpired));
+        return res.body(responseBody);
     }
 
     @GetMapping("/token/refresh")
@@ -124,18 +124,20 @@ public class StudentController {
     }
 
     @PostMapping("/register")
-    public UserResponse registerStudent(@RequestBody Student student) {
-        UserResponse userResponse = new UserResponse();
+    public ResponseEntity<ResponseBody> registerStudent(@RequestBody Student student) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
+        ResponseBody responseBody = new ResponseBody();
         try {
             student.setRole(roleService.getStudentRole());
             studentService.registerStudent(student);
-            userResponse.setStatus(OK);
-            userResponse.setMessage(String.format("%s successfully registered!", student.getUserName()));
+            responseBody.setStatus(OK);
+            responseBody.setMessage(String.format("%s successfully registered!", student.getUserName()));
         } catch (Exception e) {
-            userResponse.setStatus(BadRequest);
-            userResponse.setMessage(e.getMessage());
+            responseBody.setStatus(BadRequest);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.badRequest();
         } finally {
-            return userResponse;
+            return res.body(responseBody);
         }
     }
 }
