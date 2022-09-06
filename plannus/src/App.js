@@ -257,7 +257,7 @@ class App extends Component {
                                                                )
                                                         }
                 />
-                <ProtectedRoute path="/Stats" component={()=> (<Stats taskDB={this.state.taskDB}
+                <Route path="/Stats" component={()=> (<Stats taskDB={this.state.taskDB}
                                                                       diaryDB={this.state.diaryDB}
                                                                />
                                                               )

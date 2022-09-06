@@ -271,6 +271,42 @@ const api = {
 
     verifyToken(accessToken) {
         return fetch(`${serverURL}api/student/token/verify?` + new URLSearchParams({token:accessToken}))
+    },
+
+    getExpectedWorkload(studentId) {
+        const call = (accessToken) =>
+            fetch(`${serverURL}api/task/workload/expected?` + new URLSearchParams({studentId:studentId}), {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then(response => response.json())
+            .then(body => body)
+        return execute(call)
+    },
+
+    getPlottedWorkload(studentId) {
+        const call = (accessToken) =>
+            fetch(`${serverURL}api/task/workload/plotted?` + new URLSearchParams({studentId:studentId}), {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then(response => response.json())
+            .then(body => body)
+        return execute(call)
+    },
+
+    getCompletedWorkload(studentId) {
+        const call = (accessToken) =>
+            fetch(`${serverURL}api/task/workload/completed?` + new URLSearchParams({studentId:studentId}), {
+                headers: {
+                    'Authorization': 'Bearer ' + accessToken
+                }
+            })
+            .then(response => response.json())
+            .then(body => body)
+        return execute(call)
     }
 }
 
