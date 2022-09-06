@@ -1,5 +1,6 @@
 package com.orbital.planNUS.diary;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.orbital.planNUS.deadline.Deadline;
 import com.orbital.planNUS.task.Task;
 
@@ -25,7 +26,10 @@ public class Diary {
 
     private Long id;
     private Long studentId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
+
     private String note;
     @OneToMany(mappedBy = "diary", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
@@ -96,27 +100,6 @@ public class Diary {
 
     public void setDeadlines(List<Deadline> deadlines) {
         this.deadlines = deadlines;
-    }
-
-    public String toJSONString() {
-        List<String> jsonTasks = tasks.stream()
-                .map(task -> task.toJSONString())
-                .collect(Collectors.toList());
-
-        List<String> jsonDeadlines = deadlines.stream()
-                .map(deadline -> deadline.toJSONString())
-                .collect(Collectors.toList());
-
-        return String.format("{ " +
-                "\"id\": %d, " +
-                "\"studentId\": %d, " +
-                "\"date\": \"%s\", " +
-                "\"note\": \"%s\", " +
-                        "\"tasks\": %s, " +
-                        "\"deadlines\": %s " +
-                "}",
-                id, studentId, date, note, jsonTasks, jsonDeadlines
-        );
     }
 
     @Override

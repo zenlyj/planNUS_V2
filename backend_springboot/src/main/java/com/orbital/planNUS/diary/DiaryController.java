@@ -1,59 +1,81 @@
 package com.orbital.planNUS.diary;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import static org.springframework.http.HttpStatus.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.orbital.planNUS.HTTPStatusCode.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/diary")
 public class DiaryController {
     private final DiaryService diaryService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public DiaryController(DiaryService diaryService) {
+    public DiaryController(DiaryService diaryService, ObjectMapper objectMapper) {
         this.diaryService = diaryService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
     public ResponseEntity<ResponseBody> getStudentDiary(Long studentId) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully retrieved diary entries");
-        List<String> jsonDiary = diaryService.getStudentDiaryEntries(studentId)
-                .stream()
-                .map(diary -> diary.toJSONString())
-                .collect(Collectors.toList());
-        responseBody.setData(jsonDiary.toString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully retrieved diary entries");
+            List<String> jsonDiary = new ArrayList<>();
+            for (Diary diary : diaryService.getStudentDiaryEntries(studentId)) {
+                jsonDiary.add(objectMapper.writeValueAsString(diary));
+            }
+            responseBody.setData(jsonDiary.toString());
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @GetMapping(value = "/{date}")
     public ResponseEntity<ResponseBody> getsertStudentDiary(Long studentId, @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        Diary diary = diaryService.getsertStudentDiaryByDate(studentId, date);
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully retrieved diary entry");
-        responseBody.setData(diary.toJSONString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            Diary diary = diaryService.getsertStudentDiaryByDate(studentId, date);
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully retrieved diary entry");
+            responseBody.setData(objectMapper.writeValueAsString(diary));
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @PostMapping
     public ResponseEntity<ResponseBody> addNewDiaryEntry(@RequestBody Diary diary) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        diaryService.addNewDiaryEntry(diary);
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully added diary entry!");
-        responseBody.setData(diary.toJSONString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            diaryService.addNewDiaryEntry(diary);
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully added diary entry!");
+            responseBody.setData(objectMapper.writeValueAsString(diary));
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        }
+        return res.body(responseBody);
     }
 
     @DeleteMapping
@@ -64,9 +86,9 @@ public class DiaryController {
             Diary deletedDiaryEntry = diaryService.deleteDiaryEntry(id);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted diary entry!");
-            responseBody.setData(deletedDiaryEntry.toJSONString());
+            responseBody.setData(objectMapper.writeValueAsString(deletedDiaryEntry));
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {
@@ -83,7 +105,7 @@ public class DiaryController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated diary!");
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {

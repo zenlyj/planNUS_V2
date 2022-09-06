@@ -75,6 +75,7 @@ public class TaskService {
     }
 
     public void addNewTask(Task task) {
+        task.setDiary(diaryService.getsertStudentDiaryByDate(task.getStudentId(), task.getDate()));
         taskRepository.saveAndFlush(task);
     }
 

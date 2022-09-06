@@ -1,5 +1,7 @@
 package com.orbital.planNUS.task;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orbital.planNUS.diary.Diary;
 
 import javax.persistence.*;
@@ -7,6 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table
+@JsonIgnoreProperties(value={"diary"})
 public class Task {
     @Id
     @SequenceGenerator(
@@ -26,7 +29,10 @@ public class Task {
     private String description;
     private String timeFrom;
     private String timeTo;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate date;
+
     private Boolean isCompleted;
 
     @ManyToOne
@@ -138,21 +144,6 @@ public class Task {
 
     public void setDiary(Diary diary) {
         this.diary = diary;
-    }
-
-    public String toJSONString() {
-        return String.format("{" +
-                "\"id\": %d, " +
-                "\"studentId\": %d, " +
-                "\"name\": \"%s\", " +
-                "\"module\": \"%s\", " +
-                "\"description\": \"%s\", " +
-                "\"timeFrom\": \"%s\", " +
-                "\"timeTo\": \"%s\", " +
-                "\"date\": \"%s\", " +
-                "\"isCompleted\": %b" +
-                "}",
-                id, studentId, name, module, description, timeFrom, timeTo, date.toString(), isCompleted);
     }
 
     @Override

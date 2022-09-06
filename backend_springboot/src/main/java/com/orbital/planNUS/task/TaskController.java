@@ -6,34 +6,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static com.orbital.planNUS.HTTPStatusCode.*;
+import static org.springframework.http.HttpStatus.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/task")
 public class TaskController {
     private final TaskService taskService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public TaskController(TaskService taskService) {
+    public TaskController(TaskService taskService, ObjectMapper objectMapper) {
         this.taskService = taskService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
     public ResponseEntity<ResponseBody> getAllTasks(@RequestParam Long studentId) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully retrieved tasks!");
-        List<String> jsonTasks = taskService.getAllTasks(studentId)
-                        .stream()
-                        .map(task -> task.toJSONString())
-                        .collect(Collectors.toList());
-        responseBody.setData(jsonTasks.toString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully retrieved tasks!");
+            List<String> jsonTasks = new ArrayList<>();
+            for (Task task : taskService.getAllTasks(studentId)) {
+                jsonTasks.add(objectMapper.writeValueAsString(task));
+            }
+            responseBody.setData(jsonTasks.toString());
+        } catch (Exception e) {
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+            responseBody.setMessage(e.getMessage());
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+        } finally {
+               return res.body(responseBody);
+        }
     }
 
     @GetMapping("/workload/expected")
@@ -43,10 +53,10 @@ public class TaskController {
         try {
             Map<String, Integer> expectedWorkloads = taskService.getExpectedWorkloads(studentId);
             responseBody.setStatus(OK);
-            responseBody.setData(new ObjectMapper().writeValueAsString(expectedWorkloads));
+            responseBody.setData(objectMapper.writeValueAsString(expectedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
         } finally {
             return res.body(responseBody);
@@ -60,10 +70,10 @@ public class TaskController {
         try {
             Map<String, List<Integer>> completedWorkloads = taskService.getCompletedWorkloads(studentId);
             responseBody.setStatus(OK);
-            responseBody.setData(new ObjectMapper().writeValueAsString(completedWorkloads));
+            responseBody.setData(objectMapper.writeValueAsString(completedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
         } finally {
             return res.body(responseBody);
@@ -77,10 +87,10 @@ public class TaskController {
         try {
             Map<String, List<Integer>> plottedWorkloads = taskService.getPlottedWorkloads(studentId);
             responseBody.setStatus(OK);
-            responseBody.setData(new ObjectMapper().writeValueAsString(plottedWorkloads));
+            responseBody.setData(objectMapper.writeValueAsString(plottedWorkloads));
         } catch(RuntimeException e) {
             res = ResponseEntity.badRequest();
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
         } finally {
             return res.body(responseBody);
@@ -89,12 +99,19 @@ public class TaskController {
 
     @PostMapping
     public ResponseEntity<ResponseBody> addNewTask(@RequestBody Task task) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        taskService.addNewTask(task);
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully added task!");
-        responseBody.setData(task.toJSONString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            taskService.addNewTask(task);
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully added task!");
+            responseBody.setData(objectMapper.writeValueAsString(task));
+        } catch(RuntimeException e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @DeleteMapping
@@ -105,9 +122,9 @@ public class TaskController {
             Task deletedTask = taskService.deleteTask(id);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted task!");
-            responseBody.setData(deletedTask.toJSONString());
+            responseBody.setData(objectMapper.writeValueAsString(deletedTask));
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {
@@ -124,7 +141,7 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated task!");
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getLocalizedMessage());
             res = ResponseEntity.badRequest();
         } finally {
@@ -141,7 +158,7 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully imported tasks");
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {

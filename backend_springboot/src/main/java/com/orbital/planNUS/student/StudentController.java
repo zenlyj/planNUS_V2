@@ -1,8 +1,7 @@
 package com.orbital.planNUS.student;
 
-import static com.orbital.planNUS.HTTPStatusCode.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.auth0.jwt.JWT;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -30,25 +28,33 @@ import java.util.stream.Collectors;
 public class StudentController {
     private final StudentService studentService;
     private final RoleService roleService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public StudentController(StudentService studentService, RoleService roleService) {
+    public StudentController(StudentService studentService, RoleService roleService, ObjectMapper objectMapper) {
         this.studentService = studentService;
         this.roleService = roleService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
     public ResponseEntity<ResponseBody> getAllStudents() {
-        List<Student> students = studentService.getAllStudent();
-        List<String> jsonStudents = students
-                .stream()
-                .map(student -> student.toJSONString())
-                .collect(Collectors.toList());
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully retrieved students");
-        responseBody.setData(jsonStudents.toString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully retrieved students");
+            List<String> jsonStudents = new ArrayList<>();
+            for (Student student : studentService.getAllStudent()) {
+                jsonStudents.add(objectMapper.writeValueAsString(student));
+            }
+            responseBody.setData(jsonStudents.toString());
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @GetMapping(value = "/{username}")
@@ -58,9 +64,9 @@ public class StudentController {
         try {
             Student student = studentService.getStudent(username);
             responseBody.setStatus(OK);
-            responseBody.setData(student.toJSONString());
+            responseBody.setData(objectMapper.writeValueAsString(student));
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             res = ResponseEntity.badRequest();
             responseBody.setMessage(e.getMessage());
         } finally {
@@ -81,7 +87,7 @@ public class StudentController {
         } catch (TokenExpiredException tokenExpiredException) {
             isExpired = true;
         } catch (JWTVerificationException ex) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             res = ResponseEntity.badRequest();
         }
         responseBody.setData(String.format("{ \"isExpired\": %b }", isExpired));
@@ -133,7 +139,7 @@ public class StudentController {
             responseBody.setStatus(OK);
             responseBody.setMessage(String.format("%s successfully registered!", student.getUserName()));
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {

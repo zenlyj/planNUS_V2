@@ -1,11 +1,13 @@
 package com.orbital.planNUS.student;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orbital.planNUS.role.Role;
 
 import javax.persistence.*;
 
 @Entity
 @Table
+@JsonIgnoreProperties(value={"password"})
 public class Student {
     @Id
     @SequenceGenerator(
@@ -70,10 +72,6 @@ public class Student {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    public String toJSONString() {
-        return String.format("{ \"id\": \"%d\", \"username\": \"%s\", \"role\": \"%s\"}", this.id, this.userName, this.role.getName());
     }
 
     @Override

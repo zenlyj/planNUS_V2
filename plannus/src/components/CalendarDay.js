@@ -20,15 +20,12 @@ function CalendarDay(props) {
 
     useEffect(() => getData(), [])
 
-    const refresh = () => {
-        getData()
-    }
-
     const getData = () => {
         const studentId = session.studentId()
         api.getsertStudentDiary(studentId, props.date)
         .then(response => {
             if (response.status === 200) {
+                console.log(response)
                 const diary = JSON.parse(response.data)
                 const tasks = diary.tasks.map(task => {
                     return (
@@ -58,6 +55,7 @@ function CalendarDay(props) {
                             description = {deadline.description}
                             isHeader = {false}
                             disabled = {true}
+                            refresh = {getData}
                         />
                     )
                 })

@@ -35,7 +35,6 @@ function Home(props) {
     const getTasks = () => {
         const studentId = session.studentId()
         api.getStudentTasks(studentId).then(response => {
-            console.log(response)
             if (response.status === 200) {
                 const newTasks = JSON.parse(response.data)
                 setTasks(newTasks)

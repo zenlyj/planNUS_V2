@@ -1,36 +1,47 @@
 package com.orbital.planNUS.role;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.orbital.planNUS.HTTPStatusCode.*;
+import static org.springframework.http.HttpStatus.*;
+
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/role")
 public class RoleController {
     private final RoleService roleService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService, ObjectMapper objectMapper) {
         this.roleService = roleService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
     public ResponseEntity<ResponseBody> getRoles() {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        List<Role> roles = roleService.getAllRoles();
-        List<String> jsonRoles = roles.stream()
-                .map(role -> role.toJSONString())
-                .collect(Collectors.toList());
-        responseBody.setStatus(OK);
-        responseBody.setData(jsonRoles.toString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            List<String> jsonRoles = new ArrayList<>();
+            for (Role role : roleService.getAllRoles()) {
+                jsonRoles.add(objectMapper.writeValueAsString(role));
+            }
+            responseBody.setStatus(OK);
+            responseBody.setData(jsonRoles.toString());
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @PostMapping
@@ -41,9 +52,9 @@ public class RoleController {
             roleService.addRole(role);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully added role");
-            responseBody.setData(role.toJSONString());
+            responseBody.setData(objectMapper.writeValueAsString(role));
         } catch (Exception e) {
-            responseBody.setStatus(NotFound);
+            responseBody.setStatus(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {
@@ -60,7 +71,7 @@ public class RoleController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted role");
         } catch (Exception e) {
-            responseBody.setStatus(NotFound);
+            responseBody.setStatus(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {

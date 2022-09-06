@@ -1,5 +1,7 @@
 package com.orbital.planNUS;
 
+import org.springframework.http.HttpStatus;
+
 public class ResponseBody {
     private int status;
     private String message;
@@ -11,8 +13,8 @@ public class ResponseBody {
         return status;
     }
 
-    public void setStatus(HTTPStatusCode status) {
-        this.status = status.getCode();
+    public void setStatus(HttpStatus status) {
+        this.status = status.value();
     }
 
     public String getMessage() {

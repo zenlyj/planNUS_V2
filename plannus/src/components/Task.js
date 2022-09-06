@@ -32,22 +32,13 @@ function Task(props) {
         props.refresh()
     }
 
-    const handleSave = isCompleted => {
-        const studentId = session.studentId()
-        api.getsertStudentDiary(studentId, props.date)
-            .then(response => {
-                const diary = JSON.parse(response.data)
-                saveChanges(diary, isCompleted)
-            })
-    }
-
-    const saveChanges = (diary, isCompleted) => {
+    const handleSave = (isCompleted) => {
         const studentId = session.studentId()
         let response = null
         if (!props.taskPresent) {
-            response = api.addTask(studentId, name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)  
+            response = api.addTask(studentId, name, module, props.timeFrom, timeTo, description, isCompleted, props.date)  
         } else {
-            response = api.updateTask(studentId, props.id, name, module, props.timeFrom, timeTo, description, isCompleted, props.date, diary)
+            response = api.updateTask(studentId, props.id, name, module, props.timeFrom, timeTo, description, isCompleted, props.date)
         }
         response.then(val => {
             if (val.status === 200) {

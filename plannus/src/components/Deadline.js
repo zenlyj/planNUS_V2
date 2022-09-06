@@ -31,23 +31,14 @@ function Deadline(props) {
         setOpen(false)
         props.refresh()
     }
-
-    const handleSave = () => {
-        const studentId = session.studentId()
-        api.getsertStudentDiary(studentId, deadline)
-            .then(response => {
-                const diary = JSON.parse(response.data)
-                saveChanges(diary)
-            })
-    }
     
-    const saveChanges = diary => {
+    const handleSave = () => {
         const studentId = session.studentId()
         let response = null
         if (props.isHeader) {
-            response = api.addDeadline(studentId, name, module, deadline, description, diary)
+            response = api.addDeadline(studentId, name, module, deadline, description)
         } else {
-            response = api.updateDeadline(studentId, id, name, module, deadline, description, diary)
+            response = api.updateDeadline(studentId, id, name, module, deadline, description)
         }
         response.then(response => {
             if (response.status === 200) {

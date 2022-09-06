@@ -37,7 +37,7 @@ const api = {
         return execute(tasks)
     },
     
-    addTask(studentId, name, module, timeFrom, timeTo, description, isCompleted, date, diary) {
+    addTask(studentId, name, module, timeFrom, timeTo, description, isCompleted, date) {
         const call = (accessToken) =>
             fetch(`${serverURL}api/task`, {
                 method: 'POST',
@@ -53,8 +53,7 @@ const api = {
                     timeTo: timeTo,
                     description: description,
                     isCompleted: isCompleted,
-                    date: date,
-                    diary: diary
+                    date: date
                 })
             })
             .then(response => response.json())
@@ -62,7 +61,7 @@ const api = {
         return execute(call)
     },
     
-    updateTask(studentId, id, name, module, timeFrom, timeTo, description, isCompleted, date, diary) {
+    updateTask(studentId, id, name, module, timeFrom, timeTo, description, isCompleted, date) {
         const call = (accessToken) => 
             fetch(`${serverURL}api/task?` + new URLSearchParams({id:id}), {
                 method: 'PUT',
@@ -79,7 +78,6 @@ const api = {
                     description: description,
                     isCompleted: isCompleted,
                     date: date,
-                    diary: diary
                 })
             })
             .then(response => response.json())
@@ -112,7 +110,7 @@ const api = {
         return execute(call)
     },
 
-    addDeadline(studentId, name, module, deadline, description, diary) {
+    addDeadline(studentId, name, module, deadline, description) {
         const call = (accessToken) =>
             fetch(`${serverURL}api/deadline`, {
                 method: 'POST',
@@ -126,7 +124,6 @@ const api = {
                     module: module,
                     deadline: deadline,
                     description: description,
-                    diary: diary
                 })             
             })
             .then(response => response.json())
@@ -134,7 +131,7 @@ const api = {
         return execute(call)
     },
 
-    updateDeadline(studentId, id, name, module, deadline, description, diary) {
+    updateDeadline(studentId, id, name, module, deadline, description) {
         const call = (accessToken) =>
             fetch(`${serverURL}api/deadline?` + new URLSearchParams({id:id}), {
                 method: 'PUT',
@@ -148,7 +145,6 @@ const api = {
                     module: module,
                     deadline: deadline,
                     description: description,
-                    diary: diary
                 })
             })
             .then(response => response.json())

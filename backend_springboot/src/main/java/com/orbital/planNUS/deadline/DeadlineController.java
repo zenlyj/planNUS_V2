@@ -1,47 +1,67 @@
 package com.orbital.planNUS.deadline;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.orbital.planNUS.HTTPStatusCode.*;
+import static org.springframework.http.HttpStatus.*;
 
+@Slf4j
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path = "api/deadline")
 public class DeadlineController {
     private final DeadlineService deadlineService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public DeadlineController(DeadlineService deadlineService) {
+    public DeadlineController(DeadlineService deadlineService, ObjectMapper objectMapper) {
         this.deadlineService = deadlineService;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping
     public ResponseEntity<ResponseBody> getStudentDeadlines(@RequestParam Long studentId) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully retrieved deadlines!");
-        List<String> jsonDeadlines = deadlineService.getStudentDeadlines(studentId)
-                .stream()
-                .map(deadline -> deadline.toJSONString())
-                .collect(Collectors.toList());
-        responseBody.setData(jsonDeadlines.toString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully retrieved deadlines!");
+            List<String> jsonDeadlines = new ArrayList<>();
+            for (Deadline deadline : deadlineService.getStudentDeadlines(studentId)) {
+                jsonDeadlines.add(objectMapper.writeValueAsString(deadline));
+            }
+            responseBody.setData(jsonDeadlines.toString());
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @PostMapping
     public ResponseEntity<ResponseBody> addNewDeadline(@RequestBody Deadline deadline) {
+        ResponseEntity.BodyBuilder res = ResponseEntity.ok();
         ResponseBody responseBody = new ResponseBody();
-        deadlineService.addNewDeadline(deadline);
-        responseBody.setStatus(OK);
-        responseBody.setMessage("Successfully added deadline!");
-        responseBody.setData(deadline.toJSONString());
-        return ResponseEntity.ok().body(responseBody);
+        try {
+            deadlineService.addNewDeadline(deadline);
+            responseBody.setStatus(OK);
+            responseBody.setMessage("Successfully added deadline!");
+            responseBody.setData(objectMapper.writeValueAsString(deadline));
+        } catch(Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+        } finally {
+            return res.body(responseBody);
+        }
     }
 
     @DeleteMapping
@@ -52,9 +72,9 @@ public class DeadlineController {
             Deadline deletedDeadline = deadlineService.deleteDeadline(id);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted deadline!");
-            responseBody.setData(deletedDeadline.toJSONString());
+            responseBody.setData(objectMapper.writeValueAsString(deletedDeadline));
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {
@@ -71,7 +91,7 @@ public class DeadlineController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated deadline!");
         } catch (Exception e) {
-            responseBody.setStatus(BadRequest);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } finally {

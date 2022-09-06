@@ -1,5 +1,6 @@
 package com.orbital.planNUS.role;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orbital.planNUS.student.Student;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table
+@JsonIgnoreProperties(value={"students"})
 public class Role {
     @Id
     @SequenceGenerator(
@@ -60,13 +62,6 @@ public class Role {
 
     public void setStudents(List<Student> students) {
         this.students = students;
-    }
-
-    public String toJSONString() {
-        List<String> usernames = this.students.stream()
-                .map(student -> student.getUserName())
-                .collect(Collectors.toList());
-        return String.format("{ \"id\": \"%d\", \"name\": \"%s\", \"students\": \"%s\"}", this.id, this.name, usernames);
     }
 
     @Override

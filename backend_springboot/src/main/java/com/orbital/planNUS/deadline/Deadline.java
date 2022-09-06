@@ -1,5 +1,7 @@
 package com.orbital.planNUS.deadline;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orbital.planNUS.diary.Diary;
 
 import javax.persistence.*;
@@ -7,6 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table
+@JsonIgnoreProperties(value={"diary"})
 public class Deadline {
     @Id
     @SequenceGenerator(
@@ -23,7 +26,10 @@ public class Deadline {
     private Long studentId;
     private String name;
     private String module;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate deadline;
+
     private String description;
 
     @ManyToOne
@@ -106,18 +112,6 @@ public class Deadline {
 
     public void setDiary(Diary diary) {
         this.diary = diary;
-    }
-
-    public String toJSONString() {
-        return String.format("{" +
-                "\"id\": %d, " +
-                "\"studentId\": %d, " +
-                "\"name\": \"%s\", " +
-                "\"module\": \"%s\", " +
-                "\"deadline\": \"%s\", " +
-                "\"description\": \"%s\"" +
-                "}",
-                id, studentId, name, module, deadline, description);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.orbital.planNUS.deadline;
 
+import com.orbital.planNUS.diary.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,12 @@ import java.util.Optional;
 @Service
 public class DeadlineService {
     private final DeadlineRepository deadlineRepository;
+    private final DiaryService diaryService;
 
     @Autowired
-    public DeadlineService(DeadlineRepository deadlineRepository) {
+    public DeadlineService(DeadlineRepository deadlineRepository, DiaryService diaryService) {
         this.deadlineRepository = deadlineRepository;
+        this.diaryService = diaryService;
     }
 
     public List<Deadline> getStudentDeadlines(Long studentId) {
@@ -21,6 +24,7 @@ public class DeadlineService {
     }
 
     public void addNewDeadline(Deadline deadline) {
+        deadline.setDiary(diaryService.getsertStudentDiaryByDate(deadline.getStudentId(), deadline.getDeadline()));
         deadlineRepository.save(deadline);
     }
 
