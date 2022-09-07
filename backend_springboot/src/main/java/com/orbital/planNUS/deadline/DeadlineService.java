@@ -1,6 +1,7 @@
 package com.orbital.planNUS.deadline;
 
 import com.orbital.planNUS.diary.DiaryService;
+import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,23 +29,23 @@ public class DeadlineService {
         deadlineRepository.save(deadline);
     }
 
-    public Deadline deleteDeadline(Long id) throws Exception {
+    public Deadline deleteDeadline(Long id) throws ServerException {
         Optional<Deadline> search = deadlineRepository.findDeadlineById(id);
         if (search.isEmpty()) {
-            throw new Exception("No such deadline!");
+            throw new ServerException("No such deadline!");
         }
         deadlineRepository.deleteById(id);
         return search.get();
     }
 
-    public void updateDeadline(Long id, Deadline deadline) throws Exception {
+    public void updateDeadline(Long id, Deadline deadline) throws ServerException {
         String name = deadline.getName();
         String module = deadline.getModule();
         LocalDate date = deadline.getDeadline();
         String description = deadline.getDescription();
         Optional<Deadline> search = deadlineRepository.findDeadlineById(id);
         if (search.isEmpty()) {
-            throw new Exception("No such deadline!");
+            throw new ServerException("No such deadline!");
         }
         deadlineRepository.updateDeadline(name, module, date, description, id);
     }

@@ -1,5 +1,7 @@
 package com.orbital.planNUS.nusmods;
 
+import com.orbital.planNUS.exception.ServerException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,22 +18,30 @@ public class ShareLinkParser {
         put("SEC", "Sectional Teaching");
     }};
 
-    public ShareLinkParser(String link) throws MalformedURLException {
-        this.link = new URL(link);
-    }
-
-    public List<Lesson> parse() {
-        String params = link.getQuery();
-        String[] modules = params.split("&");
-        List<Lesson> moduleDetails = new ArrayList<>();
-        for (int i = 0; i < modules.length; i++) {
-            String module = modules[i];
-            moduleDetails.addAll(getModuleDetails(module));
+    public ShareLinkParser(String link) throws ServerException {
+        try {
+            this.link = new URL(link);
+        } catch (MalformedURLException e) {
+            throw new ServerException("Invalid URL!");
         }
-        return moduleDetails;
     }
 
-    private List<Lesson> getModuleDetails(String module) {
+    public List<Lesson> parse() throws ServerException {
+        try {
+            String params = link.getQuery();
+            String[] modules = params.split("&");
+            List<Lesson> moduleDetails = new ArrayList<>();
+            for (int i = 0; i < modules.length; i++) {
+                String module = modules[i];
+                moduleDetails.addAll(getModuleDetails(module));
+            }
+            return moduleDetails;
+        } catch (RuntimeException e) {
+            throw new ServerException("Malformed link!");
+        }
+    }
+
+    private List<Lesson> getModuleDetails(String module) throws RuntimeException {
         String[] split = module.split("=");
         String moduleCode = split[0];
         String moduleClasses = split[1];

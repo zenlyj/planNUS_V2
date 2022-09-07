@@ -1,5 +1,6 @@
 package com.orbital.planNUS.student;
 
+import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,22 +30,22 @@ public class StudentService implements UserDetailsService {
         return studentRepository.findAll();
     }
 
-    public void registerStudent(Student student) throws Exception {
+    public void registerStudent(Student student) throws ServerException {
         boolean studentExists = studentRepository
                 .findStudentByUsername(student.getUserName())
                 .isPresent();
         if (studentExists) {
-            throw new Exception("Student already exists!");
+            throw new ServerException("Student already exists!");
         }
         String encodedPassword = passwordEncoder.encode(student.getPassword());
         student.setPassword(encodedPassword);
         studentRepository.save(student);
     }
 
-    public Student getStudent(String username) throws Exception {
+    public Student getStudent(String username) throws ServerException {
         Optional<Student> search = studentRepository.findStudentByUsername(username);
         if (search.isEmpty()) {
-            throw new Exception("No such student!");
+            throw new ServerException("No such student!");
         }
         return search.get();
     }

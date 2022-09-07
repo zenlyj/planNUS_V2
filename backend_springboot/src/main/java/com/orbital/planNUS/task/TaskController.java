@@ -2,6 +2,7 @@ package com.orbital.planNUS.task;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
+import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -123,10 +124,13 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted task!");
             responseBody.setData(objectMapper.writeValueAsString(deletedTask));
-        } catch (Exception e) {
-            responseBody.setStatus(BAD_REQUEST);
+        } catch (ServerException e) {
+            responseBody.setStatus(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
-            res = ResponseEntity.badRequest();
+            res = ResponseEntity.status(NOT_FOUND);
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -140,10 +144,13 @@ public class TaskController {
             taskService.updateTask(id, task);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated task!");
+        } catch (ServerException e) {
+            responseBody.setStatus(NOT_FOUND);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.status(NOT_FOUND);
         } catch (Exception e) {
-            responseBody.setStatus(BAD_REQUEST);
-            responseBody.setMessage(e.getLocalizedMessage());
-            res = ResponseEntity.badRequest();
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -157,10 +164,13 @@ public class TaskController {
             taskService.importTasks(studentId, link);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully imported tasks");
-        } catch (Exception e) {
+        } catch (ServerException e) {
             responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }

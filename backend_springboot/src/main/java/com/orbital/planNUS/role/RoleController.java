@@ -2,6 +2,7 @@ package com.orbital.planNUS.role;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
+import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,10 +54,12 @@ public class RoleController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully added role");
             responseBody.setData(objectMapper.writeValueAsString(role));
-        } catch (Exception e) {
-            responseBody.setStatus(NOT_FOUND);
+        } catch (ServerException e) {
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
-            res = ResponseEntity.badRequest();
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -70,10 +73,13 @@ public class RoleController {
             roleService.deleteRole(id);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted role");
-        } catch (Exception e) {
+        } catch (ServerException e) {
             responseBody.setStatus(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }

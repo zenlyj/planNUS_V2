@@ -12,6 +12,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
+import com.orbital.planNUS.exception.ServerException;
 import com.orbital.planNUS.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -65,10 +66,13 @@ public class StudentController {
             Student student = studentService.getStudent(username);
             responseBody.setStatus(OK);
             responseBody.setData(objectMapper.writeValueAsString(student));
-        } catch (Exception e) {
-            responseBody.setStatus(BAD_REQUEST);
-            res = ResponseEntity.badRequest();
+        } catch (ServerException e) {
+            responseBody.setStatus(NOT_FOUND);
+            res = ResponseEntity.status(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -138,10 +142,13 @@ public class StudentController {
             studentService.registerStudent(student);
             responseBody.setStatus(OK);
             responseBody.setMessage(String.format("%s successfully registered!", student.getUserName()));
-        } catch (Exception e) {
+        } catch (ServerException e) {
             responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }

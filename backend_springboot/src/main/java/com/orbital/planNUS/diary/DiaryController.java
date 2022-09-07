@@ -2,6 +2,7 @@ package com.orbital.planNUS.diary;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orbital.planNUS.ResponseBody;
+import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import static org.springframework.http.HttpStatus.*;
@@ -87,10 +88,13 @@ public class DiaryController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully deleted diary entry!");
             responseBody.setData(objectMapper.writeValueAsString(deletedDiaryEntry));
-        } catch (Exception e) {
-            responseBody.setStatus(BAD_REQUEST);
+        } catch (ServerException e) {
+            responseBody.setStatus(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
-            res = ResponseEntity.badRequest();
+            res = ResponseEntity.status(NOT_FOUND);
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -104,10 +108,13 @@ public class DiaryController {
             diaryService.updateDiaryEntry(id, diary);
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated diary!");
-        } catch (Exception e) {
-            responseBody.setStatus(BAD_REQUEST);
+        } catch (ServerException e) {
+            responseBody.setStatus(NOT_FOUND);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
+        } catch (Exception e) {
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }

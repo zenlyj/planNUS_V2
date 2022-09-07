@@ -1,5 +1,6 @@
 package com.orbital.planNUS.role;
 
+import com.orbital.planNUS.exception.ServerException;
 import com.orbital.planNUS.student.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,18 +29,18 @@ public class RoleService {
         return search.get();
     }
 
-    public void addRole(Role role) throws Exception {
+    public void addRole(Role role) throws ServerException {
         Optional<Role> search = roleRepository.findRoleByName(role.getName());
         if (search.isPresent()) {
-            throw new Exception("Role already exists!");
+            throw new ServerException("Role already exists!");
         }
         roleRepository.saveAndFlush(role);
     }
 
-    public void deleteRole(Long id) throws Exception {
+    public void deleteRole(Long id) throws ServerException {
         Optional<Role> search = roleRepository.findById(id);
         if (search.isEmpty()) {
-            throw new Exception("Role does not exist");
+            throw new ServerException("Role does not exist");
         }
         roleRepository.deleteById(id);
     }

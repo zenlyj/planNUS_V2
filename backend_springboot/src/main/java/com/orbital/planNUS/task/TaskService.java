@@ -2,6 +2,7 @@ package com.orbital.planNUS.task;
 
 import com.orbital.planNUS.diary.Diary;
 import com.orbital.planNUS.diary.DiaryService;
+import com.orbital.planNUS.exception.ServerException;
 import com.orbital.planNUS.nusmods.Lesson;
 import com.orbital.planNUS.nusmods.NUSModsBot;
 import com.orbital.planNUS.nusmods.SemesterCalendar;
@@ -79,16 +80,16 @@ public class TaskService {
         taskRepository.saveAndFlush(task);
     }
 
-    public Task deleteTask(Long id) throws Exception {
+    public Task deleteTask(Long id) throws ServerException {
         Optional<Task> task = taskRepository.findTaskById(id);
         if (task.isEmpty()) {
-            throw new Exception("No such task!");
+            throw new ServerException("No such task!");
         }
         taskRepository.deleteById(id);
         return task.get();
     }
 
-    public void updateTask(Long id, Task task) throws Exception {
+    public void updateTask(Long id, Task task) throws ServerException {
         String name = task.getName();
         String module = task.getModule();
         String description = task.getDescription();
@@ -98,7 +99,7 @@ public class TaskService {
         Boolean isCompleted = task.getIsCompleted();
         Optional<Task> search = taskRepository.findTaskById(id);
         if (search.isEmpty()) {
-            throw new Exception("No such task!");
+            throw new ServerException("No such task!");
         }
         taskRepository.updateTask(name, module, description, timeFrom, timeTo, date, isCompleted, id);
     }

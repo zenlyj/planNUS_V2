@@ -1,5 +1,6 @@
 package com.orbital.planNUS.diary;
 
+import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,20 +35,20 @@ public class DiaryService {
         diaryRepository.save(diary);
     }
 
-    public Diary deleteDiaryEntry(Long id) throws Exception {
+    public Diary deleteDiaryEntry(Long id) throws ServerException {
         Optional<Diary> search = diaryRepository.findDiaryEntryById(id);
         if (search.isEmpty()) {
-            throw new Exception("No such diary entry!");
+            throw new ServerException("No such diary entry!");
         }
         diaryRepository.deleteById(id);
         return search.get();
     }
 
-    public void updateDiaryEntry(Long id, Diary diary) throws Exception {
+    public void updateDiaryEntry(Long id, Diary diary) throws ServerException {
         String note = diary.getNote();
         Optional<Diary> search = diaryRepository.findDiaryEntryById(id);
         if (search.isEmpty()) {
-            throw new Exception("No such diary entry!");
+            throw new ServerException("No such diary entry!");
         }
         diaryRepository.updateDiaryEntry(note, id);
     }
