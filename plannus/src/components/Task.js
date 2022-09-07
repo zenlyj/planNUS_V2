@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField'
 import api from '../api/backendInterface'
 import session from '../SessionUtil'
 import DialogUtils from './DialogUtils'
+import Alert from '@mui/material/Alert'
 
 function Task(props) {
     const [open, setOpen] = React.useState(false)
@@ -15,6 +16,8 @@ function Task(props) {
     const [timeFrom, setTimeFrom] = React.useState("")
     const [timeTo, setTimeTo] = React.useState("")
     const [description, setDescription] = React.useState("")
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
     const handleClickOpen = () => {
         if (props.taskPresent) {
@@ -23,6 +26,8 @@ function Task(props) {
             setTimeFrom(props.timeFrom)
             setTimeTo(props.timeTo)
             setDescription(props.description)
+            setToDisplayAlert(false)
+            setAlertMessage('')
         }
         setOpen(true)
     }
@@ -43,8 +48,10 @@ function Task(props) {
         response.then(val => {
             if (val.status === 200) {
                 handleClose()
+            } else {
+                setToDisplayAlert(true)
+                setAlertMessage(val.message)
             }
-            console.log(val.message)
         })
     }
 
@@ -52,8 +59,10 @@ function Task(props) {
         api.deleteTask(props.id).then(response => {
             if (response.status === 200) {
                 handleClose()
+            } else {
+                setToDisplayAlert(true)
+                setAlertMessage(response.message)
             }
-            console.log(response.message)
         })
     }
 
@@ -94,6 +103,7 @@ function Task(props) {
                 <DialogUtils.BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     { props.taskPresent ? props.name : 'New Task' }
                 </DialogUtils.BootstrapDialogTitle>
+                {toDisplayAlert ? <Alert severity='error'> {alertMessage} </Alert> : null}
                 <DialogContent dividers>
                     <TextField
                         autoFocus

@@ -109,7 +109,7 @@ public class DiaryController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated diary!");
         } catch (ServerException e) {
-            responseBody.setStatus(NOT_FOUND);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
             res = ResponseEntity.badRequest();
         } catch (Exception e) {

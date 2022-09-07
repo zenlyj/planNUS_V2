@@ -96,9 +96,9 @@ public class DeadlineController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated deadline!");
         } catch (ServerException e) {
-            responseBody.setStatus(NOT_FOUND);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
-            res = ResponseEntity.status(NOT_FOUND);
+            res = ResponseEntity.status(BAD_REQUEST);
         } catch (Exception e) {
             responseBody.setStatus(INTERNAL_SERVER_ERROR);
             res = ResponseEntity.status(INTERNAL_SERVER_ERROR);

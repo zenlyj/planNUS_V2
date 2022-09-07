@@ -104,6 +104,10 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully added task!");
             responseBody.setData(objectMapper.writeValueAsString(task));
+        } catch (ServerException e) {
+            responseBody.setStatus(BAD_REQUEST);
+            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.badRequest();
         } catch(Exception e) {
             responseBody.setStatus(INTERNAL_SERVER_ERROR);
             res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
@@ -142,9 +146,9 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully updated task!");
         } catch (ServerException e) {
-            responseBody.setStatus(NOT_FOUND);
+            responseBody.setStatus(BAD_REQUEST);
             responseBody.setMessage(e.getMessage());
-            res = ResponseEntity.status(NOT_FOUND);
+            res = ResponseEntity.status(BAD_REQUEST);
         } catch (Exception e) {
             responseBody.setStatus(INTERNAL_SERVER_ERROR);
             res = ResponseEntity.status(INTERNAL_SERVER_ERROR);

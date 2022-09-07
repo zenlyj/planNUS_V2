@@ -75,7 +75,8 @@ public class TaskService {
         return plottedWorkloads;
     }
 
-    public void addNewTask(Task task) {
+    public void addNewTask(Task task) throws ServerException {
+        validateTask(task);
         task.setDiary(diaryService.getsertStudentDiaryByDate(task.getStudentId(), task.getDate()));
         taskRepository.saveAndFlush(task);
     }
@@ -90,6 +91,7 @@ public class TaskService {
     }
 
     public void updateTask(Long id, Task task) throws ServerException {
+        validateTask(task);
         String name = task.getName();
         String module = task.getModule();
         String description = task.getDescription();
@@ -163,5 +165,31 @@ public class TaskService {
              }
         }
         return -1;
+    }
+
+    private void validateTask(Task task) throws ServerException {
+        try {
+            Integer.parseInt(task.getTimeFrom());
+            Integer.parseInt(task.getTimeTo());
+        } catch (NumberFormatException e) {
+            throw new ServerException("Time is not in 24hr format!");
+        }
+        if (task.getTimeTo().compareTo(task.getTimeFrom()) <= 0) {
+            throw new ServerException("Start time must be before end time!");
+        }
+        if (task.getTimeFrom().compareTo("0800") < 0 || task.getTimeTo().compareTo("2100") > 0) {
+            throw new ServerException("Timespan is out of timetable range!");
+        }
+        List<Task> currentTasks = taskRepository.findTaskByDate(task.getStudentId(), task.getDate());
+        Collections.sort(currentTasks, Comparator.comparing(Task::getTimeFrom));
+        boolean canAdd = true;
+        for (Task t : currentTasks) {
+            if (task.getTimeFrom().compareTo(t.getTimeFrom()) >= 0) {
+                continue;
+            }
+            if (task.getTimeTo().compareTo(t.getTimeFrom()) > 0) {
+                throw new ServerException("Task timespan overlaps with another task!");
+            }
+        }
     }
 }
