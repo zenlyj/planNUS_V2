@@ -5,6 +5,7 @@ import 'react-dropdown/style.css';
 import Chart from './components/Chart'
 import api from "./api/backendInterface";
 import session from "./SessionUtil";
+import Alert from "@mui/material/Alert";
 
 function Stats(props) {
     const [from, setFrom] = React.useState(1)
@@ -13,14 +14,20 @@ function Stats(props) {
     const [expectedWorkload, setExpectedWorkload] = React.useState({})
     const [plottedWorkload, setPlottedWorkload] = React.useState({})
     const [completedWorkload, setCompletedWorkload] = React.useState({})
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
     useEffect(() => {
+        setToDisplayAlert(false)
+        setAlertMessage('')
         api.getExpectedWorkload(session.studentId())
             .then(response => {
                 if (response.status === 200) {
                     setExpectedWorkload(JSON.parse(response.data))
+                } else {
+                    setToDisplayAlert(true)
+                    setAlertMessage('Internal Server Error')
                 }
-                console.log(response.message)
             })
     }, [])
 
@@ -29,8 +36,10 @@ function Stats(props) {
             .then(response => {
                 if (response.status === 200) {
                     setPlottedWorkload(JSON.parse(response.data))
+                } else {
+                    setToDisplayAlert(true)
+                    setAlertMessage('Internal Server Error')
                 }
-                console.log(response.message)
             })
     }, [])
 
@@ -39,8 +48,10 @@ function Stats(props) {
             .then(response => {
                 if (response.status === 200) {
                     setCompletedWorkload(JSON.parse(response.data))
+                } else {
+                    setToDisplayAlert(true)
+                    setAlertMessage('Internal Server Error')
                 }
-                console.log(response.message)
             })
     }, [])
 
@@ -89,8 +100,8 @@ function Stats(props) {
                 <div style={{float:'left', marginLeft:'4%', width:'8%'}}> 
                     {<Dropdown options={toMenu()} value={"Week " + to} onChange={handleToChange}/>}   
                 </div>
-
                 <div style={{float:'left', marginLeft:'4%', width:'8%'}}> <Button variant="outline-dark" onClick={() => handleShowStats()}> Go </Button></div>
+                {toDisplayAlert ? <Alert severity="error"> {alertMessage} </Alert> : null}
             </div>
             <div style={{width:'70%', marginLeft:'13%', marginTop:'10%'}}> {toShow ? <Chart plottedWorkload={plottedWorkload} completedWorkload={completedWorkload} expectedWorkload={expectedWorkload} from={from} to={to}/> : null} </div>
         </div>

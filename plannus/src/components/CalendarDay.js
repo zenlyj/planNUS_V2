@@ -8,6 +8,7 @@ import Box from '@mui/material/Box'
 import DialogUtils from './DialogUtils'
 import DialogContent from '@mui/material/DialogContent'
 import { TextareaAutosize } from '@mui/material'
+import Alert from '@mui/material/Alert'
 import api from '../api/backendInterface'
 import session from '../SessionUtil'
 
@@ -17,15 +18,18 @@ function CalendarDay(props) {
     const [deadlines, setDeadlines] = React.useState([])
     const [id, setId] = React.useState(-1)
     const [note, setNote] = React.useState('')
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
-    useEffect(() => getData(), [])
+    useEffect(() => {
+        getData()
+    }, [])
 
     const getData = () => {
         const studentId = session.studentId()
         api.getsertStudentDiary(studentId, props.date)
         .then(response => {
             if (response.status === 200) {
-                console.log(response)
                 const diary = JSON.parse(response.data)
                 const tasks = diary.tasks.map(task => {
                     return (
@@ -63,11 +67,16 @@ function CalendarDay(props) {
                 setTasks(tasks)
                 setDeadlines(deadlines)
                 setNote(diary.note)
+            } else {
+                setToDisplayAlert(true)
+                setAlertMessage('Internal Server Error')
             }
         })
     }
 
     const handleClickOpen = () => {
+        setToDisplayAlert(false)
+        setAlertMessage('')
         setOpen(true)
     }
 
@@ -100,6 +109,7 @@ function CalendarDay(props) {
                 <DialogUtils.BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     {`${props.dayOfWeek} ${props.date}`}
                 </DialogUtils.BootstrapDialogTitle>
+                {toDisplayAlert ? <Alert severity='error'> {alertMessage} </Alert> : null}
                 <DialogContent dividers>
                     <Box>
                         <Typography sx={{padding:'5%'}} variant="h6">

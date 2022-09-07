@@ -5,18 +5,25 @@ import Button from '@mui/material/Button'
 import React from 'react'
 import api from '../api/backendInterface'
 import {Redirect} from 'react-router-dom'
+import Alert from '@mui/material/Alert'
 import session from '../SessionUtil'
 
 function LoginPage(props) {
     const [isCompleted, setIsCompleted] = React.useState(false)
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
     const login = () => {
         api.authenticateStudent(username, password)
             .then(response => {
-                console.log(response)
-                if (response.status === 200) cache(response)
+                if (response.status === 200) {
+                    cache(response)
+                } else {
+                    setToDisplayAlert(true)
+                    setAlertMessage(response.message)
+                }
             })
     }
 
@@ -70,6 +77,7 @@ function LoginPage(props) {
                         <Button onClick={() => login()}>
                             Sign In
                         </Button>
+                        {toDisplayAlert ? <Alert severity='error'> {alertMessage} </Alert> : null}
                     </Grid>
                 </Grid>
                 }

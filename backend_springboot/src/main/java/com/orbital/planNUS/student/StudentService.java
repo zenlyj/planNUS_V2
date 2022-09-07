@@ -35,7 +35,7 @@ public class StudentService implements UserDetailsService {
                 .findStudentByUsername(student.getUserName())
                 .isPresent();
         if (studentExists) {
-            throw new ServerException("Student already exists!");
+            throw new ServerException("Username is taken!");
         }
         String encodedPassword = passwordEncoder.encode(student.getPassword());
         student.setPassword(encodedPassword);

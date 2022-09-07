@@ -56,9 +56,8 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setData(objectMapper.writeValueAsString(expectedWorkloads));
         } catch(RuntimeException e) {
-            res = ResponseEntity.badRequest();
-            responseBody.setStatus(BAD_REQUEST);
-            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -73,9 +72,8 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setData(objectMapper.writeValueAsString(completedWorkloads));
         } catch(RuntimeException e) {
-            res = ResponseEntity.badRequest();
-            responseBody.setStatus(BAD_REQUEST);
-            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -90,9 +88,8 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setData(objectMapper.writeValueAsString(plottedWorkloads));
         } catch(RuntimeException e) {
-            res = ResponseEntity.badRequest();
-            responseBody.setStatus(BAD_REQUEST);
-            responseBody.setMessage(e.getMessage());
+            res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
+            responseBody.setStatus(INTERNAL_SERVER_ERROR);
         } finally {
             return res.body(responseBody);
         }
@@ -107,7 +104,7 @@ public class TaskController {
             responseBody.setStatus(OK);
             responseBody.setMessage("Successfully added task!");
             responseBody.setData(objectMapper.writeValueAsString(task));
-        } catch(RuntimeException e) {
+        } catch(Exception e) {
             responseBody.setStatus(INTERNAL_SERVER_ERROR);
             res = ResponseEntity.status(INTERNAL_SERVER_ERROR);
         } finally {

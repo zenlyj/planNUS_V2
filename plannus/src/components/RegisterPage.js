@@ -5,17 +5,24 @@ import Button from '@mui/material/Button'
 import React from 'react'
 import api from '../api/backendInterface'
 import {Redirect} from 'react-router-dom'
+import Alert from '@mui/material/Alert'
 
 function RegisterPage(props) {
     const [isCompleted, setIsCompleted] = React.useState(false)
     const [username, setUsername] = React.useState('')
     const [password, setPassword] = React.useState('')
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
     const register = () => {
         api.registerStudentAccount(username, password)
             .then(response => {
-                console.log(response.message)
-                if (response.status === 200) setIsCompleted(true)
+                if (response.status === 200) {
+                    setIsCompleted(true)
+                } else {
+                    setToDisplayAlert(true)
+                    setAlertMessage(response.message)
+                }
             })
     }
 
@@ -54,6 +61,7 @@ function RegisterPage(props) {
                         <Button onClick={() => register()}>
                             Register
                         </Button>
+                        {toDisplayAlert ? <Alert severity="error"> {alertMessage} </Alert> : null}
                     </Grid>
                 </Grid>
                 }

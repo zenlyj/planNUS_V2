@@ -6,6 +6,7 @@ import com.orbital.planNUS.exception.ServerException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -104,5 +105,14 @@ public class DeadlineController {
         } finally {
             return res.body(responseBody);
         }
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ResponseBody> handleException() {
+        String error = "Invalid deadline field(s). Make sure that date follows yyyy-mm-dd format.";
+        ResponseBody responseBody = new ResponseBody();
+        responseBody.setStatus(BAD_REQUEST);
+        responseBody.setMessage(error);
+        return ResponseEntity.badRequest().body(responseBody);
     }
 }

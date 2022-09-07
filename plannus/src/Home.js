@@ -1,9 +1,7 @@
 import React, { useEffect } from "react";
 import Timetable from './components/Timetable'
 import Button from 'react-bootstrap/Button'
-import moduleslist from './api/moduleslist.json'
-import AutoComplete from './components/AutoComplete'
-import nusmodsAPI from './api/nusmodsAPI'
+import Alert from "@mui/material/Alert";
 import AutomatedScheduler from './components/AutomatedScheduler'
 import DeadlineList from './components/DeadlineList'
 import TaskImport from './components/TaskImport'
@@ -14,6 +12,8 @@ function Home(props) {
     const [tasks, setTasks] = React.useState([])
     const [deadlines, setDeadlines] = React.useState([])
     const [weekNum, setWeekNum] = React.useState(1)
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
     useEffect(() => {
         getTasks()
@@ -38,8 +38,10 @@ function Home(props) {
             if (response.status === 200) {
                 const newTasks = JSON.parse(response.data)
                 setTasks(newTasks)
+            } else {
+                setToDisplayAlert(true)
+                setAlertMessage('Internal server error: Unable to fetch data')
             }
-            console.log(response.message)
         })
     }
 
@@ -50,18 +52,23 @@ function Home(props) {
                 const header = [{isHeader:true}]
                 const retreivedDeadlines = JSON.parse(response.data)
                 setDeadlines(header.concat(retreivedDeadlines))
+            } else {
+                setToDisplayAlert(true)
+                setAlertMessage('Internal server error: Unable to fetch data')
             }
-            console.log(response.message)
         })
     }
 
     const refresh = () => {
         getTasks()
         getDeadlines()
+        setAlertMessage('')
+        setToDisplayAlert(false)
     }
 
     return (
         <div>
+            {toDisplayAlert ? <Alert severity="error"> {alertMessage} </Alert> : null}
             <div style={{width:'100%', marginTop:'2%'}}> 
                 <Button variant="outline-dark" style={{float:'left', marginLeft:'30%', width:'2.5%'}} onClick={()=>navWeek(-1)}> {'<'} </Button>
                 <h3 style={{float:'left', textAlign:'center', marginLeft:'2%', width:'10%', color:'#404040'}}> {'Week ' + weekNum} </h3> 

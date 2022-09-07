@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
 import { Button, Typography } from '@mui/material'
+import Alert from '@mui/material/Alert'
 import session from '../SessionUtil'
 
 function Deadline(props) {
@@ -17,6 +18,8 @@ function Deadline(props) {
     const [module, setModule] = React.useState('')
     const [deadline, setDeadline] = React.useState('')
     const [description, setDescription] = React.useState('')
+    const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
+    const [alertMessage, setAlertMessage] = React.useState('')
 
     const handleClickOpen = () => {
         setId(props.id)
@@ -25,6 +28,8 @@ function Deadline(props) {
         setDeadline(props.deadline)
         setDescription(props.description)
         setOpen(true)
+        setToDisplayAlert(false)
+        setAlertMessage('')
     } 
 
     const handleClose = () => {
@@ -43,8 +48,13 @@ function Deadline(props) {
         response.then(response => {
             if (response.status === 200) {
                 handleClose()
+            } else if (response.status === 500) {
+                setToDisplayAlert(true)
+                setAlertMessage('Internal Server Error')
+            } else {
+                setToDisplayAlert(true)
+                setAlertMessage(response.message)
             }
-            console.log(response.message)
         })
     }
 
@@ -85,6 +95,7 @@ function Deadline(props) {
                 <DialogUtils.BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
                     { props.isHeader ? 'New Deadline' : props.name }
                 </DialogUtils.BootstrapDialogTitle>
+                {toDisplayAlert ? <Alert severity='error'> {alertMessage} </Alert> : null}
                 <DialogContent dividers>
                     <TextField 
                         autoFocus
