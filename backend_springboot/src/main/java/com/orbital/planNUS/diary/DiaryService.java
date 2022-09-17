@@ -27,12 +27,12 @@ public class DiaryService {
             return search.get();
         }
         Diary newDiary = new Diary(studentId, date, "");
-        diaryRepository.save(newDiary);
+        diaryRepository.saveAndFlush(newDiary);
         return newDiary;
      }
 
     public void addNewDiaryEntry(Diary diary) {
-        diaryRepository.save(diary);
+        diaryRepository.saveAndFlush(diary);
     }
 
     public Diary deleteDiaryEntry(Long id) throws ServerException {
@@ -41,6 +41,7 @@ public class DiaryService {
             throw new ServerException("No such diary entry!");
         }
         diaryRepository.deleteById(id);
+        diaryRepository.flush();
         return search.get();
     }
 
@@ -51,5 +52,6 @@ public class DiaryService {
             throw new ServerException("No such diary entry!");
         }
         diaryRepository.updateDiaryEntry(note, id);
+        diaryRepository.flush();
     }
 }

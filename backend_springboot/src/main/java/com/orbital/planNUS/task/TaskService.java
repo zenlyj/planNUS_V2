@@ -87,6 +87,7 @@ public class TaskService {
             throw new ServerException("No such task!");
         }
         taskRepository.deleteById(id);
+        taskRepository.flush();
         return task.get();
     }
 
@@ -104,6 +105,7 @@ public class TaskService {
             throw new ServerException("No such task!");
         }
         taskRepository.updateTask(name, module, description, timeFrom, timeTo, date, isCompleted, id);
+        taskRepository.flush();
     }
 
     public void importTasks(Long studentId, String link) throws Exception {
@@ -182,7 +184,6 @@ public class TaskService {
         }
         List<Task> currentTasks = taskRepository.findTaskByDate(task.getStudentId(), task.getDate());
         Collections.sort(currentTasks, Comparator.comparing(Task::getTimeFrom));
-        boolean canAdd = true;
         for (Task t : currentTasks) {
             if (task.getTimeFrom().compareTo(t.getTimeFrom()) >= 0) {
                 continue;

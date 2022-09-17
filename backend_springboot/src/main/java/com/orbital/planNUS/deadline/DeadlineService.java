@@ -1,5 +1,6 @@
 package com.orbital.planNUS.deadline;
 
+import com.orbital.planNUS.diary.Diary;
 import com.orbital.planNUS.diary.DiaryService;
 import com.orbital.planNUS.exception.ServerException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ public class DeadlineService {
 
     public void addNewDeadline(Deadline deadline) {
         deadline.setDiary(diaryService.getsertStudentDiaryByDate(deadline.getStudentId(), deadline.getDeadline()));
-        deadlineRepository.save(deadline);
+        deadlineRepository.saveAndFlush(deadline);
     }
 
     public Deadline deleteDeadline(Long id) throws ServerException {
@@ -35,6 +36,7 @@ public class DeadlineService {
             throw new ServerException("No such deadline!");
         }
         deadlineRepository.deleteById(id);
+        deadlineRepository.flush();
         return search.get();
     }
 
@@ -43,10 +45,12 @@ public class DeadlineService {
         String module = deadline.getModule();
         LocalDate date = deadline.getDeadline();
         String description = deadline.getDescription();
+        Diary diary = diaryService.getsertStudentDiaryByDate(deadline.getStudentId(), date);
         Optional<Deadline> search = deadlineRepository.findDeadlineById(id);
         if (search.isEmpty()) {
             throw new ServerException("No such deadline!");
         }
-        deadlineRepository.updateDeadline(name, module, date, description, id);
+        deadlineRepository.updateDeadline(name, module, date, description, diary, id);
+        deadlineRepository.flush();
     }
 }

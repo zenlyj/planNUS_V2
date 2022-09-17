@@ -39,7 +39,7 @@ public class StudentService implements UserDetailsService {
         }
         String encodedPassword = passwordEncoder.encode(student.getPassword());
         student.setPassword(encodedPassword);
-        studentRepository.save(student);
+        studentRepository.saveAndFlush(student);
     }
 
     public Student getStudent(String username) throws ServerException {

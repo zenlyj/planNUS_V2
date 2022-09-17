@@ -1,5 +1,6 @@
 package com.orbital.planNUS.deadline;
 
+import com.orbital.planNUS.diary.Diary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -24,7 +25,8 @@ public interface DeadlineRepository extends JpaRepository<Deadline, Long> {
             " SET d.name=?1," +
             "d.module=?2," +
             "d.deadline=?3," +
-            "d.description=?4" +
-            " WHERE d.id=?5")
-    public void updateDeadline(String name, String module, LocalDate deadline, String description, Long id);
+            "d.description=?4," +
+            "d.diary=?5" +
+            " WHERE d.id=?6")
+    public void updateDeadline(String name, String module, LocalDate deadline, String description, Diary diary, Long id);
 }

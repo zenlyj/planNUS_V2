@@ -43,5 +43,6 @@ public class RoleService {
             throw new ServerException("Role does not exist");
         }
         roleRepository.deleteById(id);
+        roleRepository.flush();
     }
 }
