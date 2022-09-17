@@ -14,23 +14,20 @@ import Diary from './Diary';
 import Stats from './Stats';
 import { Settings } from './Settings';
 import { NotFound } from './NotFound';
-import { Header } from './components/Header';
+import Header from './components/Header';
 import { Layout } from './components/Layout';
 import { NavigationBar } from './components/NavigationBar';
-import Auth from './components/Auth';
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import LoadingOverlay from 'react-loading-overlay'
 import LoginPage from "./components/LoginPage";
 import RegisterPage from "./components/RegisterPage"
+import session from "./SessionUtil";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      loggedIn: false,
-      currWeek: 1,
-      loading: false,
-      currMonth: 0
+      loading: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.setLoading = this.setLoading.bind(this);
@@ -62,9 +59,9 @@ class App extends Component {
             <NavigationBar />
             <Layout>
               <Switch>
-                <Route exact path="/Home" component={() => (<Home loading={this.state.loading} setLoading={this.setLoading} /> )}/>
-                <Route path="/Diary" component={() => (<Diary />)}/>
-                <Route path="/Stats" component={()=> (<Stats />)}/>
+                <ProtectedRoute exact path="/" component={() => (<Home loading={this.state.loading} setLoading={this.setLoading} /> )}/>
+                <ProtectedRoute path="/Diary" component={() => (<Diary />)}/>
+                <ProtectedRoute path="/Stats" component={()=> (<Stats />)}/>
                 <ProtectedRoute path="/Settings" component={Settings}/>
                 <Route path="/Login" component={() => <LoginPage />} />
                 <Route path="/Register" component={() => <RegisterPage />}/>

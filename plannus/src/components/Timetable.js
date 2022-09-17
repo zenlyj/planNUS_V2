@@ -6,7 +6,6 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Task from './Task'
-import nusmodsAPI from '../api/nusmodsAPI';
 import api from '../api/backendInterface';
 import { grey } from '@mui/material/colors';
 

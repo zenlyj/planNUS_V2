@@ -7,7 +7,6 @@ import Tab from 'react-bootstrap/Tab'
 import InputRange from 'react-input-range'
 import moduleslist from '../api/moduleslist.json'
 import AutoComplete from './AutoComplete'
-import nusmodsAPI from '../api/nusmodsAPI'
 
 
 class ImportTimetable extends Component {

@@ -7,6 +7,10 @@ const session = {
         return localStorage.getItem(key)
     },
 
+    clear() {
+        localStorage.clear()
+    },
+
     studentId() {
         return localStorage.getItem("student_id")
     },
