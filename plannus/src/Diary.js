@@ -6,8 +6,6 @@ function Diary(props) {
     const [monthNum, setMonth] = React.useState(8)
     const [months, setMonths] = React.useState(['August', 'September', 'October', 'November'])
 
-    
-
     const navMonth = (diff) => {
         const outOfBound = monthNum+diff < 8 || monthNum+diff > 11
         const newMonth =  outOfBound ? monthNum : monthNum+diff

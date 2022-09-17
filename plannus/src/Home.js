@@ -81,7 +81,7 @@ function Home(props) {
                     <div style={{display: 'inline-block', width:'85%'}}> <Timetable id={weekNum} week={weekNum} tasks={tasks} refresh={refresh}/> </div>
                     <div style={{display: 'inline-block', verticalAlign:'top', marginLeft:'3%', width:'12%'}}> <DeadlineList deadlines={deadlines} refresh={refresh}/> </div>
             </div>
-            <div style={{marginLeft:'14%'}}> <AutomatedScheduler key={weekNum} id={weekNum} automateSchedule={props.automateSchedule} /> </div>
+            {/* <div style={{marginLeft:'14%'}}> <AutomatedScheduler key={weekNum} id={weekNum} automateSchedule={props.automateSchedule} /> </div> */}
         </div>
     )
 }
