@@ -44,7 +44,7 @@ function TaskImport(props) {
 
     return (
         <div>
-            <Button variant="contained" color="success" onClick={() => handleClickOpen()}>
+            <Button variant="outlined" color="success" onClick={() => handleClickOpen()}>
                 Import
             </Button>
             <DialogUtils.BootstrapDialog
