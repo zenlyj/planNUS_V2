@@ -32,7 +32,15 @@ function DeadlineList(props) {
         )
     }
 
-    return <Box sx={{width: '100%'}}> {list()} </Box>
+    return <Box sx={{
+                width: '100%', 
+                height: '100%', 
+                overflow: 'auto', 
+                '&::-webkit-scrollbar': {backgroundColor: 'white'},
+                '&::-webkit-scrollbar-thumb': {backgroundColor: 'white'}
+            }}> 
+                {list()} 
+            </Box>
 }
 
 export default DeadlineList
