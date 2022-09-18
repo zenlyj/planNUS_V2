@@ -21,10 +21,6 @@ function CalendarDay(props) {
     const [toDisplayAlert, setToDisplayAlert] = React.useState(false)
     const [alertMessage, setAlertMessage] = React.useState('')
 
-    useEffect(() => {
-        getData()
-    }, [])
-
     const getData = () => {
         const studentId = session.studentId()
         api.getsertStudentDiary(studentId, props.date)
@@ -75,6 +71,7 @@ function CalendarDay(props) {
     }
 
     const handleClickOpen = () => {
+        getData()
         setToDisplayAlert(false)
         setAlertMessage('')
         setOpen(true)

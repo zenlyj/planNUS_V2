@@ -21,7 +21,6 @@ function Calendar(props) {
     }
 
     const fillBeforeMonth = (row, dayOfWeek, date) => {
-        console.log(date)
         for (let i = 0; i < dayOfWeek; i++) {
             const defaultStyle = {color: '#a2b2d3', fontSize: 20, opacity:'50%', textAlign:'center'}
             const beforeDate = new Date(date)
