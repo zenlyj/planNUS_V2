@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         });
         http.sessionManagement().sessionCreationPolicy(STATELESS);
         http.authorizeRequests().antMatchers("/api/login/**", "/api/student/token/**", "/api/student/register").permitAll();
-        http.authorizeRequests().antMatchers(GET, "/api/student").hasAnyAuthority("ROLE_SUPERADMIN");
+        http.authorizeRequests().antMatchers(GET, "/api/student/**").hasAnyAuthority("ROLE_SUPERADMIN");
         http.authorizeRequests().antMatchers("/api/role/**").hasAnyAuthority("ROLE_SUPERADMIN");
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(customAuthenticationFilter);
