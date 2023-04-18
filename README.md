@@ -1,6 +1,3 @@
-# Motivation
-Having been through multiple semesters at National University of Singapore (NUS), I often find it difficult to manage my time efficiently. This is especially true during the mid-term and end of semester "crunch time", where deadlines and submissions pile up. PlanNUS was developed with the intention of helping students with work scheduling, deadline meeting and progress tracking.
-
 # Tools and Technologies
 1. ReactJS
 2. Spring Boot, Spring Security
